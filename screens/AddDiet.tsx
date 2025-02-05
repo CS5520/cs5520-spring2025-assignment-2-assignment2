@@ -14,6 +14,8 @@ export default function AddDiet({ onSave }: AddDietProps) {
   return (
     <View testID="add-diet-view">
       <Text testID="add-diet">Add Diet</Text>
+      <Button title="SAVE" onPress={onSave} />
+      <Button title="Cancel" onPress={onSave} />
     </View>
   );
 }
