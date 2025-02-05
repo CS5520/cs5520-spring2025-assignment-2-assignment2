@@ -3,7 +3,9 @@ import { View, Text, StyleSheet, Alert, Button, TextInput } from "react-native";
 import { Timestamp } from "firebase/firestore";
 import { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 
 export interface Activity {
   duration: string;
@@ -26,10 +28,17 @@ export default function AddActivity({ onSave }: AddActivityProps) {
     { label: "Cycling", value: "Cycling" },
     { label: "Hiking", value: "Hiking" },
   ]);
-  const [date, setDate] = useState(new Date(1598051));
-  const [mode, setMode] = useState("date");
+  const [date, setDate] = useState(new Date());
+  const [date_text, setDateText] = useState("");
   const [show, setShow] = useState(false);
-
+  const onChange = (e: DateTimePickerEvent, d: Date | undefined) => {
+    setShow(false);
+    if (d) {
+      setDate(d);
+      setDateText(d.toDateString());
+      console.log(d.toDateString());
+    }
+  };
   return (
     <View testID="add-activity-view">
       <Text testID="add-activity">Add Diet</Text>
@@ -48,8 +57,21 @@ export default function AddActivity({ onSave }: AddActivityProps) {
         <Text>Duration (min)</Text>
         <TextInput></TextInput>
         <Text>Date</Text>
-        <TextInput></TextInput>
-        <DateTimePicker value={date} />
+        <TextInput
+          value={date_text}
+          onPressIn={() => {
+            setShow(true);
+            setDate(new Date());
+          }}
+        />
+        {show && (
+          <DateTimePicker
+            testID=""
+            value={date}
+            onChange={onChange}
+            timeZoneName={"US/Pacific"}
+          />
+        )}
         <View>
           <Button title="SAVE" onPress={onSave} />
           <Button title="Cancel" onPress={onSave} />

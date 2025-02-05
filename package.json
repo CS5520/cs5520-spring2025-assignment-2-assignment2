@@ -13,7 +13,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@react-native-community/datetimepicker": "^8.3.0",
+    "@react-native-community/datetimepicker": "8.2.0",
     "expo": "~52.0.23",
     "expo-checkbox": "^4.0.1",
     "expo-status-bar": "~2.0.0",
