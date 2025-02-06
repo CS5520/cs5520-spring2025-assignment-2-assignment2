@@ -14,7 +14,7 @@ interface AddActivityProps {
 export default function AddActivity({ onSave }: AddActivityProps) {
   return (
     <View testID="add-activity-view">
-      <Text testID="add-activity">Add Diet</Text>
+      <Text testID="add-activity">Add Activity</Text>
     </View>
   );
 }

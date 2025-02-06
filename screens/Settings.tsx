@@ -1,13 +1,12 @@
 import { View, Text, StyleSheet, Button } from "react-native";
+import { styles } from "../constants/styles";
 
 const Settings = () => {
   return (
-    <View testID="settings-view">
+    <View testID="settings-view" style={styles.content}>
       <Text testID="settings">Settings</Text>
     </View>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default Settings;
