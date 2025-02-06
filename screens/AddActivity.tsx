@@ -6,6 +6,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
+import { writeToDB } from "@/firebase/firestore";
 
 export interface Activity {
   duration: string;
@@ -16,9 +17,10 @@ export interface Activity {
 interface AddActivityProps {
   onSave: () => void;
 }
+
 export default function AddActivity({ onSave }: AddActivityProps) {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
+  const [actValue, setActValue] = useState(null);
   const [items, setItems] = useState([
     { label: "Walking", value: "Walking" },
     { label: "Running", value: "Running" },
@@ -31,7 +33,8 @@ export default function AddActivity({ onSave }: AddActivityProps) {
   const [date, setDate] = useState(new Date());
   const [date_text, setDateText] = useState("");
   const [show, setShow] = useState(false);
-  const onChange = (e: DateTimePickerEvent, d: Date | undefined) => {
+  const [duration, setDuration] = useState("");
+  const onChangeDate = (e: DateTimePickerEvent, d: Date | undefined) => {
     setShow(false);
     if (d) {
       setDate(d);
@@ -39,6 +42,39 @@ export default function AddActivity({ onSave }: AddActivityProps) {
       console.log(d.toDateString());
     }
   };
+
+  function moreOnSave() {
+    if (!actValue || !duration || !date_text) {
+      Alert.alert(
+        "Invalid Input",
+        "Please check all inputs and ensure they are filled."
+      );
+      return;
+    }
+
+    const durationNumber = parseInt(duration, 10);
+    if (isNaN(durationNumber) || durationNumber <= 0) {
+      Alert.alert(
+        "Invalid Input",
+        "Please check the duration input and ensure it is a positive number."
+      );
+      return;
+    }
+
+    const important =
+      (actValue === "Running" || actValue === "Weights") && durationNumber > 60;
+
+    const activityData = {
+      activity: actValue,
+      duration: duration,
+      date: Timestamp.fromDate(date),
+      important: important,
+    };
+
+    writeToDB("activities", activityData);
+
+    onSave();
+  }
   return (
     <View testID="add-activity-view">
       <Text testID="add-activity">Add Diet</Text>
@@ -47,15 +83,19 @@ export default function AddActivity({ onSave }: AddActivityProps) {
         <DropDownPicker
           testID="dropdown-picker"
           open={open}
-          value={value}
+          value={actValue}
           items={items}
           setOpen={setOpen}
-          setValue={setValue}
+          setValue={setActValue}
           setItems={setItems}
         />
 
         <Text>Duration (min)</Text>
-        <TextInput></TextInput>
+        <TextInput
+          value={duration}
+          onChangeText={setDuration}
+          placeholder="Enter duration in minutes"
+        />
         <Text>Date</Text>
         <TextInput
           value={date_text}
@@ -66,14 +106,15 @@ export default function AddActivity({ onSave }: AddActivityProps) {
         />
         {show && (
           <DateTimePicker
-            testID=""
+            testID="datetime-picker"
             value={date}
-            onChange={onChange}
+            onChange={onChangeDate}
             timeZoneName={"US/Pacific"}
+            display="inline"
           />
         )}
         <View>
-          <Button title="SAVE" onPress={onSave} />
+          <Button title="SAVE" onPress={moreOnSave} />
           <Button title="Cancel" onPress={onSave} />
         </View>
       </View>
