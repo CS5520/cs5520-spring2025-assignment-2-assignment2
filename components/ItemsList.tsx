@@ -21,25 +21,32 @@ export default function ItemsList({type}: ItemsListProps) {
 
   // set the listener
   useEffect(()=> {
-    const unsubscribe = onSnapshot(collection(database, type), (querySnapshot) => {
-      if (querySnapshot.empty) {
-        setItems([]);
-      } else {
-        let newArrayOfItems: ItemFromDB[] = [];
-        querySnapshot.forEach((docSnapshot) => {
-          const data = docSnapshot.data();
-          newArrayOfItems.push({
-            id: docSnapshot.id,
-            value: data.duration || data.calories,
-            title: data.activity || data.description,
-            date: data.date,
-            isImportant: data.important
-          });
-        })
-        setItems(newArrayOfItems);
+    try {
+      const unsubscribe = onSnapshot(collection(database, type), (querySnapshot) => {
+        if (querySnapshot.empty) {
+          setItems([]);
+        } else {
+          let newArrayOfItems: ItemFromDB[] = [];
+          querySnapshot.forEach((docSnapshot) => {
+            const data = docSnapshot.data();
+            newArrayOfItems.push({
+              id: docSnapshot.id,
+              value: data.duration || data.calories,
+              title: data.activity || data.description,
+              date: data.date,
+              isImportant: data.important
+            });
+          })
+          setItems(newArrayOfItems);
+        }
+      });
+      console.log("Listener set", typeof unsubscribe);
+      if (typeof unsubscribe === 'function') {
+        return () => unsubscribe();
       }
-    });
-    return () => unsubscribe();
+    } catch (error) {
+      console.error("Error getting documents: ", error);
+    }
   }, [type])
 
   return (

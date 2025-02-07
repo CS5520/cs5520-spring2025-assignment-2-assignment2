@@ -36,15 +36,17 @@ export default function AddActivity({ onSave }: AddActivityProps) {
   ];
 
   function toggleDatePicker() {
+    console.log("pressed");
     if (Platform.OS === "ios") {
       setShowDatePicker((prev) => !prev);
     } else {
       console.log("showing date picker");
       setShowDatePicker(true);
     }
+    console.log("showDatePicker: ", showDatePicker);
   }
 
-  function handleSave() {
+  async function handleSave() {
     if (!activity || !duration || !date || 
         isNaN(Number(duration)) || Number(duration) <= 0) {
       Alert.alert(
@@ -61,12 +63,16 @@ export default function AddActivity({ onSave }: AddActivityProps) {
       date: Timestamp.fromDate(date),
       important: isImportant,
     };
-    writeToDB("activities", newActivity);
-    onSave();
+    try {
+      await writeToDB("activities", newActivity);
+      onSave();
+    } catch (error) {
+      console.error("Error writing document: ", error); 
+    }
   }
 
   return (
-    <View testID="add-activity-view" style={styles.container}>
+    <View testID="add-activity-view" style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <Text testID="add-activity" style={[styles.title, {color: theme.textColor}]}>Add Activity</Text>
 
       {/* Activity Dropdown */}
@@ -92,15 +98,25 @@ export default function AddActivity({ onSave }: AddActivityProps) {
 
       {/* Date Picker */}
       <Text style={[styles.label, {color: theme.textColor}]}>Date *</Text>
-      <TouchableOpacity onPress={toggleDatePicker}>
+      {/* {Platform.OS === "ios" ? ( */}
         <TextInput
           style={styles.textInput}
           placeholder="Select Date"
           value={date? date.toDateString() : ""}
-          // onPressIn={() => toggleDatePicker()}
+          onPressIn={toggleDatePicker}
           editable={false}
         />
-      </TouchableOpacity>
+      {/* ) : (
+        <TouchableOpacity onPress={toggleDatePicker}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Select Date"
+            value={date? date.toDateString() : ""}
+            editable={false}
+          />
+        </TouchableOpacity>
+      )} */}
+
       {showDatePicker && (
         <DateTimePicker
           testID="datetime-picker"
@@ -131,7 +147,7 @@ export default function AddActivity({ onSave }: AddActivityProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
+    padding: 20,
   },
   title: {
     fontSize: 24,

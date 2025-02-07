@@ -46,13 +46,13 @@ function AppContent() {
           <Button title="Settings" onPress={() => setScreen('settings')} />
         </View>
       </View>
-        <View style={[styles.bottomContainer, {backgroundColor: theme.backgroundColor}]}>
-          {screen === "activities" && <AllActivities onAdd={() => setScreen("addActivity")} />}
-          {screen === "addActivity" && <AddActivity onSave={() => handleOnSave("activities")} />}
-          {screen === "diets" && <AllDiets onAdd={() => setScreen("addDiet")} />}
-          {screen === "addDiet" && <AddDiet onSave={() => handleOnSave("diets")} />}
-          {screen === "settings" && <Settings />}
-        </View>
+      <View style={styles.bottomContainer}>
+        {screen === "activities" && <AllActivities onAdd={() => setScreen("addActivity")} />}
+        {screen === "addActivity" && <AddActivity onSave={() => handleOnSave("activities")} />}
+        {screen === "diets" && <AllDiets onAdd={() => setScreen("addDiet")} />}
+        {screen === "addDiet" && <AddDiet onSave={() => handleOnSave("diets")} />}
+        {screen === "settings" && <Settings />}
+      </View>
     </SafeAreaView>
   )
 }
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     flex: 8,
-    padding: 20,
+    // padding: 20,
     // backgroundColor: colours.lightBackground,
   },
 })

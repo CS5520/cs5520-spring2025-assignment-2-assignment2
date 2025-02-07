@@ -11,7 +11,7 @@ export default function AllDiets({ onAdd }: AllDietsProps) {
   const {theme} = useContext(ThemeContext);
   
   return (
-    <View testID="all-diets-view">
+    <View testID="all-diets-view" style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <Text testID="all-diets" style={[styles.title, {color: theme.textColor}]}>All Diets</Text>
       <View style={styles.button}>
         <Button title="Add" onPress={onAdd} />
@@ -21,6 +21,10 @@ export default function AllDiets({ onAdd }: AllDietsProps) {
   );
 }
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",

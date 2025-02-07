@@ -54,7 +54,7 @@ export default function AddDiet({ onSave }: AddDietProps) {
   
 
   return (
-    <View testID="add-diet-view" style={styles.container}>
+    <View testID="add-diet-view" style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <Text testID="add-diet" style={[styles.title, {color: theme.textColor}]}>Add Diet</Text>
 
       {/* Description Input */}
@@ -77,15 +77,24 @@ export default function AddDiet({ onSave }: AddDietProps) {
       
       {/* Date Picker */}
       <Text style={[styles.label, {color: theme.textColor}]}>Date *</Text>
-      <TouchableOpacity onPress={toggleDatePicker}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Select Date"
-          value={date? date.toDateString() : ""}
-          // onPressIn={() => toggleDatePicker()}
-          editable={false}
-        />
-      </TouchableOpacity>
+      {Platform.OS === "ios" ? (
+      <TextInput
+        style={styles.textInput}
+        placeholder="Select Date"
+        value={date? date.toDateString() : ""}
+        onPressIn={() => toggleDatePicker()}
+        editable={false}
+      />) : (
+        <TouchableOpacity onPress={toggleDatePicker}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Select Date"
+            value={date? date.toDateString() : ""}
+            editable={false}
+          />
+        </TouchableOpacity>
+      )}
+
       {showDatePicker && (
         <DateTimePicker
           testID="datetime-picker"
@@ -116,7 +125,7 @@ export default function AddDiet({ onSave }: AddDietProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
+    padding: 20,
   },
   title: {
     fontSize: 24,

@@ -8,10 +8,10 @@ interface AllActivitiesProps {
 }
 
 export default function AllActivities({ onAdd }: AllActivitiesProps) {
-  const {theme, toggleTheme} = useContext(ThemeContext);
+  const {theme} = useContext(ThemeContext);
   
   return (
-    <View testID="all-activities-view">
+    <View testID="all-activities-view" style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <Text testID="all-activities" style={[styles.title, {color: theme.textColor}]}>All Activities</Text>
       <View style={styles.button}>
         <Button title="Add" onPress={onAdd} />
@@ -21,6 +21,10 @@ export default function AllActivities({ onAdd }: AllActivitiesProps) {
   );
 }
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",

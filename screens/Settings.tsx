@@ -6,7 +6,7 @@ const Settings = () => {
   const {theme, toggleTheme} = useContext(ThemeContext);
 
   return (
-    <View testID="settings-view">
+    <View testID="settings-view" style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
       <Text testID="settings" style={[styles.title, {color: theme.textColor} ]}>
         Settings
       </Text>
@@ -18,6 +18,10 @@ const Settings = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1, 
+    width: "100%",
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
