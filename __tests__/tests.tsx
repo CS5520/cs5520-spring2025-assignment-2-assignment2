@@ -1,6 +1,6 @@
 import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
 import App from "@/App";
-import { Timestamp } from "firebase/firestore";
+import { Timestamp, onSnapshot } from "firebase/firestore";
 import { Alert, StyleSheet } from "react-native";
 import AddActivity from "@/screens/AddActivity";
 import { ThemeContext } from "@/ThemeContext";
