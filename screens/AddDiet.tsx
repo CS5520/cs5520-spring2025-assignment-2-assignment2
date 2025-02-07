@@ -18,7 +18,7 @@ interface AddDietProps {
 export default function AddDiet({ onSave }: AddDietProps) {
   const [description, setDescription] = useState("");
   const [calories, setCalories] = useState("");
-  const [date, setDate] = useState<Date | null>(null);
+  const [date, setDate] = useState<Date>(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const {theme} = useContext(ThemeContext);
   
@@ -77,23 +77,13 @@ export default function AddDiet({ onSave }: AddDietProps) {
       
       {/* Date Picker */}
       <Text style={[styles.label, {color: theme.textColor}]}>Date *</Text>
-      {Platform.OS === "ios" ? (
       <TextInput
         style={styles.textInput}
         placeholder="Select Date"
         value={date? date.toDateString() : ""}
         onPressIn={() => toggleDatePicker()}
-        editable={false}
-      />) : (
-        <TouchableOpacity onPress={toggleDatePicker}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Select Date"
-            value={date? date.toDateString() : ""}
-            editable={false}
-          />
-        </TouchableOpacity>
-      )}
+        // editable={false}
+      />
 
       {showDatePicker && (
         <DateTimePicker

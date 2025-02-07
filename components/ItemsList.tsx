@@ -40,10 +40,7 @@ export default function ItemsList({type}: ItemsListProps) {
           setItems(newArrayOfItems);
         }
       });
-      console.log("Listener set", typeof unsubscribe);
-      if (typeof unsubscribe === 'function') {
-        return () => unsubscribe();
-      }
+      return () => unsubscribe();
     } catch (error) {
       console.error("Error getting documents: ", error);
     }

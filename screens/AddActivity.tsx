@@ -19,7 +19,7 @@ interface AddActivityProps {
 export default function AddActivity({ onSave }: AddActivityProps) {
   const [activity, setActivity] = useState<string | null>(null);
   const [duration, setDuration] = useState("");
-  const [date, setDate] = useState<Date | null>(null);
+  const [date, setDate] = useState<Date>(new Date());
   const [open, setOpen] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const {theme} = useContext(ThemeContext);
@@ -98,25 +98,13 @@ export default function AddActivity({ onSave }: AddActivityProps) {
 
       {/* Date Picker */}
       <Text style={[styles.label, {color: theme.textColor}]}>Date *</Text>
-      {/* {Platform.OS === "ios" ? ( */}
-        <TextInput
-          style={styles.textInput}
-          placeholder="Select Date"
-          value={date? date.toDateString() : ""}
-          onPressIn={toggleDatePicker}
-          editable={false}
-        />
-      {/* ) : (
-        <TouchableOpacity onPress={toggleDatePicker}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Select Date"
-            value={date? date.toDateString() : ""}
-            editable={false}
-          />
-        </TouchableOpacity>
-      )} */}
-
+      <TextInput
+        style={styles.textInput}
+        placeholder="Select Date"
+        value={date? date.toDateString() : ""}
+        onPressIn={toggleDatePicker}
+        // editable={false}
+      />
       {showDatePicker && (
         <DateTimePicker
           testID="datetime-picker"
