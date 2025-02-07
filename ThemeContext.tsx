@@ -1,11 +1,39 @@
+import { createContext } from 'react';
+import { useState } from 'react';
+import colours from './constants/styles';
+
+interface ThemeProps {
+  children: React.ReactNode;
+}
 
 const themes = {
   light: {
-    backgroundColor:
-    textColor: 
+    backgroundColor: colours.lightBackground,
+    textColor: 'black'
   },
   dark: {
-    backgroundColor:  
-    textColor: 
+    backgroundColor: colours.darkBackground,
+    textColor: 'white'
   },
 };
+
+export const ThemeContext = createContext(
+  {
+    theme: themes.light,
+    toggleTheme: () => {}
+  }
+);
+
+export const ThemeProvider = ({ children }: ThemeProps) => {
+  const [theme, setTheme] = useState(themes.light);
+
+  function toggleTheme() {
+    setTheme(theme === themes.light ? themes.dark : themes.light);
+  }
+
+  return (
+    <ThemeContext.Provider value={{theme, toggleTheme}}>
+      {children}
+    </ThemeContext.Provider>
+  )
+}
