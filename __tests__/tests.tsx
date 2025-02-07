@@ -26,6 +26,10 @@ jest.mock("firebase/firestore", () => ({
     fromDate: jest.fn(),
   },
 }));
+const unsubscribeMock = jest.fn();
+
+// Update the mock to return our unsubscribe function
+(onSnapshot as jest.Mock).mockReturnValue(unsubscribeMock);
 
 describe("App Component", () => {
   test("renders Diet screen by default", () => {
