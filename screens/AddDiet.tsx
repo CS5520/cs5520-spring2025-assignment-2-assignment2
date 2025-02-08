@@ -24,7 +24,7 @@ export default function AddDiet({ onSave }: AddDietProps) {
   
   
   function toggleDatePicker() {
-    setDate(new Date());
+    setDate(date || new Date());
     if (Platform.OS === "ios") {
       setShowDatePicker((prev) => !prev);
     } else {

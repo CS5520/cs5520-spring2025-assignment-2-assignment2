@@ -36,7 +36,7 @@ export default function AddActivity({ onSave }: AddActivityProps) {
   ];
 
   function toggleDatePicker() {
-    setDate(new Date());
+    setDate(date || new Date());
     console.log("pressed");
     if (Platform.OS === "ios") {
       setShowDatePicker((prev) => !prev);
