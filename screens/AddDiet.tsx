@@ -18,12 +18,13 @@ interface AddDietProps {
 export default function AddDiet({ onSave }: AddDietProps) {
   const [description, setDescription] = useState("");
   const [calories, setCalories] = useState("");
-  const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const {theme} = useContext(ThemeContext);
   
   
   function toggleDatePicker() {
+    setDate(new Date());
     if (Platform.OS === "ios") {
       setShowDatePicker((prev) => !prev);
     } else {

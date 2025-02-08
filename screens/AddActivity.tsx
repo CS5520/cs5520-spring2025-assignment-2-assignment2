@@ -19,7 +19,7 @@ interface AddActivityProps {
 export default function AddActivity({ onSave }: AddActivityProps) {
   const [activity, setActivity] = useState<string | null>(null);
   const [duration, setDuration] = useState("");
-  const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date | null>(null);
   const [open, setOpen] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const {theme} = useContext(ThemeContext);
@@ -36,6 +36,7 @@ export default function AddActivity({ onSave }: AddActivityProps) {
   ];
 
   function toggleDatePicker() {
+    setDate(new Date());
     console.log("pressed");
     if (Platform.OS === "ios") {
       setShowDatePicker((prev) => !prev);
