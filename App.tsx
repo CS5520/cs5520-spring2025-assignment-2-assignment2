@@ -35,12 +35,14 @@ const App = () => {
         <View style={styles.navigationContainer}>
           <Button
             title="Activities"
+            color={screen === 0 ? "#007BFF" : "#CCC"}
             onPress={() => {
               setScreen(0);
             }}
           />
           <Button
             title="Diets"
+            color={screen === 1 ? "#007BFF" : "#CCC"}
             onPress={() => {
               setScreen(1);
             }}
