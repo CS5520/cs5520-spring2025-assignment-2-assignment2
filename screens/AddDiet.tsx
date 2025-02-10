@@ -100,7 +100,7 @@ export default function AddDiet({ onSave }: AddDietProps) {
             setShow(true);
             //setDate(new Date());
           }}
-          placeholder="Select Date"
+          placeholder="Date"
           style={styles_.input}
         />
         {show && (
