@@ -25,8 +25,8 @@ type Data = Activity | Diet;
 export async function writeToDB(collectionName: string, data: Data) {
   try {
     const docRef = await addDoc(collection(database, collectionName), data);
-    console.log("Document written with ID: ", docRef.id);
+    return docRef.id;
   } catch (e) {
-    console.error("Error adding document: ", e);
+    throw e;
   }
 }

@@ -46,7 +46,7 @@ export default function AddActivity({ onSave }: AddActivityProps) {
     }
   };
 
-  function handleSave() {
+  async function handleSave() {
     if (!actValue || !duration || !date_text) {
       Alert.alert(
         "Invalid Input",
@@ -73,8 +73,11 @@ export default function AddActivity({ onSave }: AddActivityProps) {
       date: Timestamp.fromDate(date),
       important: important,
     };
-
-    writeToDB("activities", activityData);
+    try {
+      const docID = await writeToDB("activities", activityData);
+    } catch (e) {
+      console.error("Error saving user data:", e);
+    }
 
     onSave();
   }
@@ -111,9 +114,9 @@ export default function AddActivity({ onSave }: AddActivityProps) {
         <TextInput
           value={date_text}
           onPressIn={() => {
-            setShow(true);
-            setDate(new Date());
             setDateText(new Date().toDateString());
+            setShow(true);
+            //setDate(new Date());
           }}
           placeholder="Select Date"
           style={styles_.input}
@@ -124,7 +127,6 @@ export default function AddActivity({ onSave }: AddActivityProps) {
             value={date}
             onChange={onChangeDate}
             timeZoneName={"US/Pacific"}
-            display="inline"
           />
         )}
         <View style={styles_.buttonContainer}>

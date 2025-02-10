@@ -33,7 +33,7 @@ export default function AddDiet({ onSave }: AddDietProps) {
     }
   };
 
-  function handleSave() {
+  async function handleSave() {
     if (!description || !calories || !date_text) {
       Alert.alert(
         "Invalid Input",
@@ -59,7 +59,11 @@ export default function AddDiet({ onSave }: AddDietProps) {
       date: Timestamp.fromDate(date),
       important: important,
     };
-    writeToDB("diet", dietData);
+    try {
+      const docID = await writeToDB("diet", dietData);
+    } catch (e) {
+      console.error("Error saving user data:", e);
+    }
 
     onSave();
   }
@@ -92,9 +96,9 @@ export default function AddDiet({ onSave }: AddDietProps) {
         <TextInput
           value={date_text}
           onPressIn={() => {
-            setShow(true);
-            setDate(new Date());
             setDateText(new Date().toDateString());
+            setShow(true);
+            //setDate(new Date());
           }}
           placeholder="Select Date"
           style={styles_.input}
