@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { ThemeProvider, useTheme } from "./constants/ThemeContext";
+import { ThemeProvider, useTheme } from "./components/ThemeContext";
 import AllActivities from "./screens/AllActivities";
 import AddActivity from "./screens/AddActivity";
 import AllDiets from "./screens/AllDiets";

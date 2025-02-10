@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
-import { useTheme } from "../constants/ThemeContext";
+import { useTheme } from "../components/ThemeContext";
 
 interface SettingsProps {
   onGoToActivities: () => void;

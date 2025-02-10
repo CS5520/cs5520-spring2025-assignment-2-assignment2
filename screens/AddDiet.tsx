@@ -3,7 +3,7 @@ import { Timestamp } from "firebase/firestore";
 import { useState } from "react";
 import { writeToDB } from "../firebase/firestore";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { useTheme } from "../constants/ThemeContext";
+import { useTheme } from "../components/ThemeContext";
 
 export interface Diet {
   calories: number;

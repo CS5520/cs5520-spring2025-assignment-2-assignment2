@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Button } from "react-native";
 import ItemList from "../components/ItemsList";
-import { useTheme } from "../constants/ThemeContext";
+import { useTheme } from "../components/ThemeContext";
 
 interface AllActivitiesProps {
   onAdd: () => void;

@@ -1,11 +1,11 @@
-import { View, Text, StyleSheet, Alert, Button, TextInput } from "react-native";
-import { Picker } from '@react-native-picker/picker';
+import { View, Text, StyleSheet, Alert, Button, TextInput, Platform } from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
 import { useState } from "react";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Timestamp } from "firebase/firestore";
 import { writeToDB } from "../firebase/firestore";
 import { ActivityType } from "../components/ItemTypes";
-import { useTheme } from "../constants/ThemeContext";
+import { useTheme } from "../components/ThemeContext";
 
 export interface Activity {
   duration: string;
@@ -30,6 +30,18 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const { styles } = useTheme(); 
 
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    { label: "Walking", value: "walking" },
+    { label: "Running", value: "running" },
+    { label: "Swimming", value: "swimming" },
+    { label: "Weights", value: "weights" },
+    { label: "Yoga", value: "yoga" },
+    { label: "Cycling", value: "cycling" },
+    { label: "Hiking", value: "hiking" },
+  ]);
+
   const activities = ["Running", "Cycling", "Swimming", "Walking", "Weightlifting"];
 
   const toggleDatePicker = () => {
@@ -37,6 +49,7 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
   };
 
   const handleDatePicker = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    setShow(Platform.OS === "ios"); 
     if (selectedDate) {
       setDate(selectedDate);
       setInputDateValue(selectedDate.toLocaleDateString());
@@ -87,21 +100,20 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
       <View style={styles.buttomContainer}>
       <Text style={styles.title} testID="add-activity">Add Activities</Text>
       <Text style={styles.text}>Activity *</Text>
-      <View style={styles.pickerContainer}>
-        <Picker
-        style={styles.picker}
-        selectedValue={activity}
-        onValueChange={(itemValue) => {
-          console.log("Picker Changed:", itemValue);
-          setActivity(itemValue);
-        }}
-      >
-        <Picker.Item label="Select an Activity" value="" />
-        {activities.map((activityItem, index) => (
-          <Picker.Item label={activityItem} value={activityItem} key={index} />
-        ))}
-        </Picker>
-      </View>
+      <DropDownPicker
+        testID="dropdown-picker"
+        open={open}
+        value={value}
+        items={items}
+        setOpen={setOpen}
+        setValue={setValue}
+        setItems={setItems}
+        placeholder="Select Activity"
+        style={styles.pickerContainer}
+        dropDownContainerStyle={styles.picker}
+        placeholderStyle={styles.placeholder}
+        textStyle={styles.placeholder}
+      />
 
       <Text style={styles.text}>Duration(min) *</Text>
       <TextInput
@@ -111,6 +123,7 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
         onChangeText={setDuration}
         placeholderTextColor={styles.placeholder.color}
       />
+
       <Text style={styles.text}>Date *</Text>
       <TextInput
         style={styles.input}
@@ -131,6 +144,7 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
           />
         </View>
       )}
+      
       <View style={styles.buttonContainer}>
       <Button title="Cancel" onPress={handleCancel} />
       <Button title="Save" onPress={handleSave} />
