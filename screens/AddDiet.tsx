@@ -60,7 +60,7 @@ export default function AddDiet({ onSave }: AddDietProps) {
       important: important,
     };
     try {
-      const docID = await writeToDB("diet", dietData);
+      const docID = await writeToDB("diets", dietData);
     } catch (e) {
       console.error("Error saving user data:", e);
     }
