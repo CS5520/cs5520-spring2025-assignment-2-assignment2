@@ -1,14 +1,33 @@
 import React, { useState } from "react";
-import { View, Button, StyleSheet } from "react-native";
+import { View } from "react-native";
+import { ThemeProvider, useTheme } from "./constants/ThemeContext";
 import AllActivities from "./screens/AllActivities";
 import AddActivity from "./screens/AddActivity";
 import AllDiets from "./screens/AllDiets";
 import AddDiet from "./screens/AddDiet";
 import Settings from "./screens/Settings";
-import { ThemeProvider } from "./constants/ThemeContext"; 
+
+// ✅ 定义 screen 类型
+type ScreenType = "allActivities" | "addActivity" | "allDiets" | "addDiet" | "settings";
 
 export default function App() {
-  const [screen, setScreen] = useState<"allActivities" | "addActivity" | "allDiets" | "addDiet" | "settings">("allActivities");
+  const [screen, setScreen] = useState<ScreenType>("allActivities");
+
+  return (
+    <ThemeProvider>
+      <AppContent screen={screen} setScreen={setScreen} />
+    </ThemeProvider>
+  );
+}
+
+// ✅ 添加 Props 类型定义
+interface AppContentProps {
+  screen: ScreenType;
+  setScreen: React.Dispatch<React.SetStateAction<ScreenType>>;
+}
+
+function AppContent({ screen, setScreen }: AppContentProps) {
+  const { styles } = useTheme();
 
   return (
     <View style={styles.container}>
@@ -22,9 +41,3 @@ export default function App() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

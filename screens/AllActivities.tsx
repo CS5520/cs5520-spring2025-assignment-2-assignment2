@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, Button } from "react-native";
 import ItemList from "../components/ItemsList";
+import { useTheme } from "../constants/ThemeContext";
 
 interface AllActivitiesProps {
   onAdd: () => void;
@@ -8,6 +9,8 @@ interface AllActivitiesProps {
 }
 
 export default function AllActivities({ onAdd, onGoToDiets, onGoToSettings }: AllActivitiesProps) {
+  const { styles } = useTheme(); 
+
   return (
     <View style={styles.container} testID="all-activities-view">
       <View style={styles.header}>

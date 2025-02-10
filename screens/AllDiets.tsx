@@ -1,6 +1,6 @@
 import ItemList from "../components/ItemsList";
 import { Button, StyleSheet, Text, View } from "react-native";
-
+import { useTheme } from "../constants/ThemeContext";
 interface AllActivitiesProps {
   onAdd: () => void;
   onGoToActivities: () => void;
@@ -8,6 +8,8 @@ interface AllActivitiesProps {
 }
 
 export default function AllActivities({ onAdd, onGoToActivities, onGoToSettings }: AllActivitiesProps) {
+  const { styles } = useTheme(); 
+
   return (
     <View style={styles.container} testID="all-diets-view">
       <View style={styles.header}>
@@ -24,33 +26,4 @@ export default function AllActivities({ onAdd, onGoToActivities, onGoToSettings 
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    backgroundColor: 'black',
-  },
-  header: {
-    flexDirection: 'column',
-    marginBottom: 10,
-    backgroundColor: 'grey',
-    paddingTop: 0,
-    width:'100%'
-  },
-  switchButton:{
-    marginTop:45,
-    flexDirection:'row',
-    justifyContent:'space-between'
-  },
-  title: {
-    color:'white',
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginVertical: 20,
-    textAlign: 'center',
-  },
-  addButton: {
-    marginVertical: 20,
-  }
-});
 

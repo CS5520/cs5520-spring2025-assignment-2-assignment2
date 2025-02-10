@@ -1,44 +1,34 @@
 import React, { createContext, useContext, useState } from "react";
-import { StyleSheet } from "react-native";
+import { lightStyles, darkStyles } from "./styles";
 
-interface Theme {
-  background: string;
-  text: string;
-  button: string;
+type Theme = "light" | "dark";
+
+interface ThemeContextType {
+  theme: Theme;
+  styles: typeof lightStyles;
+  toggleTheme: () => void;
 }
 
-const lightTheme: Theme = {
-  background: "white",
-  text: "black",
-  button: "blue",
-};
-
-const darkTheme: Theme = {
-  background: "black",
-  text: "white",
-  button: "gray",
-};
-
-const ThemeContext = createContext<{
-  theme: Theme;
-  toggleTheme: () => void;
-}>({
-  theme: lightTheme,
-  toggleTheme: () => {},
-});
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>(lightTheme);
+  const [theme, setTheme] = useState<Theme>("light");
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === lightTheme ? darkTheme : lightTheme));
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, styles: theme === "light" ? lightStyles : darkStyles, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
 };
 
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = (): ThemeContextType => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
+  return context;
+};
