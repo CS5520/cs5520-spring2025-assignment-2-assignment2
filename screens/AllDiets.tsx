@@ -2,6 +2,7 @@ import ItemsList from "@/components/ItemsList";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { ThemeContext } from "../ThemeContext";
 import { useContext } from "react";
+import styles from "../constants/styles";
 
 interface AllActivitiesProps {
   onAdd: () => void;
@@ -10,13 +11,19 @@ interface AllActivitiesProps {
 export default function AllActivities({ onAdd }: AllActivitiesProps) {
   const { BGColor, TXTColor } = useContext(ThemeContext);
   return (
-    <View testID="all-diets-view" style={{ backgroundColor: BGColor }}>
-      <Text testID="all-diets" style={{ color: TXTColor }}>
+    <View
+      testID="all-diets-view"
+      style={[styles.container, { backgroundColor: BGColor }]}
+    >
+      <Text testID="all-diets" style={[styles.title, { color: TXTColor }]}>
         All Diets
       </Text>
-      <ItemsList collectionName="diet" />
-      <Button title="Add" onPress={onAdd} />
+      <View style={styles.buttonContainer}>
+        <Button title="Add" onPress={onAdd} />
+      </View>
+      <View style={styles.listContainer}>
+        <ItemsList collectionName="diet" />
+      </View>
     </View>
   );
 }
-const styles = StyleSheet.create({});

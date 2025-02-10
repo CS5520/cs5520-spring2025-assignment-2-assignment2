@@ -36,10 +36,11 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
         ? themes.dark.backgroundColor
         : themes.light.backgroundColor
     );
+    console.log(BGColor);
     setTXTColor((x) =>
-      x === themes.light.backgroundColor
-        ? themes.dark.backgroundColor
-        : themes.light.backgroundColor
+      x === themes.light.textColor
+        ? themes.dark.textColor
+        : themes.light.textColor
     );
   };
   return (

@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, StyleSheet } from "react-native";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { database } from "../firebase/firestore";
 import { Diet } from "@/screens/AddDiet";
@@ -34,26 +34,83 @@ const ItemsList = (props: { collectionName: string }) => {
   }, [props.collectionName]);
 
   const renderItem = ({ item }: { item: Diet | Activity }) => (
-    <View>
+    <View style={styles.itemContainer}>
       {props.collectionName === "diet" ? (
-        <View>
-          <Text>Description: {(item as Diet).description}</Text>
-          <Text>Calories: {(item as Diet).calories}</Text>
-          <Text>Date: {item.date.toDate().toDateString()}</Text>
-          <Text>Important: {item.important ? "❗" : ""}</Text>
+        <View style={styles.contentContainer}>
+          <Text style={styles.mainText}>{(item as Diet).description}</Text>
+          <Text style={styles.importantText}>{item.important ? "❗" : ""}</Text>
+          <Text style={styles.dateText}>
+            {item.date.toDate().toDateString()}
+          </Text>
+          <Text style={styles.detailText}>{(item as Diet).calories} cal</Text>
         </View>
       ) : (
-        <View>
-          <Text>Activity: {(item as Activity).activity}</Text>
-          <Text>Duration: {(item as Activity).duration} minutes</Text>
-          <Text>Date: {item.date.toDate().toLocaleDateString()}</Text>
-          <Text>Important: {item.important ? "❗" : ""}</Text>
+        <View style={styles.contentContainer}>
+          <Text style={styles.mainText}>{(item as Activity).activity}</Text>
+          <Text style={styles.importantText}>{item.important ? "❗" : ""}</Text>
+          <Text style={styles.dateText}>
+            {item.date.toDate().toDateString()}
+          </Text>
+          <Text style={styles.detailText}>
+            {(item as Activity).duration} min
+          </Text>
         </View>
       )}
     </View>
   );
 
-  return <FlatList data={items} renderItem={renderItem} />;
+  return (
+    <FlatList
+      data={items}
+      renderItem={renderItem}
+      contentContainerStyle={styles.listContainer}
+    />
+  );
 };
+
+const styles = StyleSheet.create({
+  listContainer: {
+    padding: 10,
+  },
+  itemContainer: {
+    backgroundColor: "white", //#e6f3ff",
+    marginVertical: 8,
+    padding: 16,
+    borderRadius: 8,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  contentContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  mainText: {
+    flex: 1.6,
+    fontSize: 16,
+    color: "#2c3e50", // Dark blue-gray text
+    fontWeight: "500",
+  },
+  importantText: {
+    flex: 0.3,
+    fontSize: 16,
+    textAlign: "center",
+  },
+  dateText: {
+    flex: 2.4,
+    fontSize: 16,
+    color: "#34495e", // Slightly lighter blue-gray
+    textAlign: "right",
+  },
+  detailText: {
+    flex: 1.2,
+    fontSize: 16,
+    color: "#2c3e50",
+    textAlign: "right",
+  },
+});
 
 export default ItemsList;

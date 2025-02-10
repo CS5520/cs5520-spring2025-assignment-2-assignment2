@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet, Alert, Button, TextInput } from "react-native";
-
 import { Timestamp } from "firebase/firestore";
 import { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -9,6 +8,7 @@ import DateTimePicker, {
 import { writeToDB } from "@/firebase/firestore";
 import { ThemeContext } from "../ThemeContext";
 import { useContext } from "react";
+import { styles_ } from "../constants/styles";
 
 export interface Activity {
   duration: string;
@@ -79,12 +79,15 @@ export default function AddActivity({ onSave }: AddActivityProps) {
     onSave();
   }
   return (
-    <View testID="add-activity-view" style={{ backgroundColor: BGColor }}>
-      <Text testID="add-activity" style={{ color: TXTColor }}>
-        Add Diet
+    <View
+      testID="add-activity-view"
+      style={[styles_.container, { backgroundColor: BGColor }]}
+    >
+      <Text testID="add-activity" style={[styles_.title, { color: TXTColor }]}>
+        Add Activity
       </Text>
-      <View style={{ zIndex: 1000 }}>
-        <Text>Activity</Text>
+      <View style={styles_.content}>
+        <Text style={[styles_.label, { color: TXTColor }]}>Activity</Text>
         <DropDownPicker
           testID="dropdown-picker"
           open={open}
@@ -93,17 +96,18 @@ export default function AddActivity({ onSave }: AddActivityProps) {
           setOpen={setOpen}
           setValue={setActValue}
           setItems={setItems}
-          placeholder="Select Activity"
+          style={styles_.input}
+          dropDownContainerStyle={styles_.dropdown}
         />
-
-        <Text>Duration (min)</Text>
+        <Text style={[styles_.label, { color: TXTColor }]}>Duration (min)</Text>
         <TextInput
           value={duration}
           onChangeText={setDuration}
           placeholder="Enter duration"
-          style={{ backgroundColor: "white" }}
+          keyboardType="numeric"
+          style={styles_.input}
         />
-        <Text>Date</Text>
+        <Text style={[styles_.label, { color: TXTColor }]}>Date</Text>
         <TextInput
           value={date_text}
           onPressIn={() => {
@@ -111,6 +115,7 @@ export default function AddActivity({ onSave }: AddActivityProps) {
             setDate(new Date());
           }}
           placeholder="Select Date"
+          style={styles_.input}
         />
         {show && (
           <DateTimePicker
@@ -121,7 +126,7 @@ export default function AddActivity({ onSave }: AddActivityProps) {
             display="inline"
           />
         )}
-        <View>
+        <View style={styles_.buttonContainer}>
           <Button title="SAVE" onPress={handleSave} />
           <Button title="Cancel" onPress={onSave} />
         </View>
@@ -129,5 +134,3 @@ export default function AddActivity({ onSave }: AddActivityProps) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({});

@@ -1,15 +1,15 @@
-import { View, Text, SafeAreaView, Button } from "react-native";
-import { useState } from "react";
+import { View, SafeAreaView, Button, StyleSheet } from "react-native";
+import { useContext, useState } from "react";
 import AllActivities from "./screens/AllActivities";
 import AllDiet from "./screens/AllDiets";
 import AddDiet from "./screens/AddDiet";
 import AddActivity from "./screens/AddActivity";
 import Settings from "./screens/Settings";
-import { ThemeProvider } from "./ThemeContext";
+import { ThemeContext, ThemeProvider } from "./ThemeContext";
 
 const App = () => {
   const [screen, setScreen] = useState(1);
-
+  const { BGColor } = useContext(ThemeContext);
   function addActivity() {
     console.log("add activity");
     setScreen(2);
@@ -30,21 +30,23 @@ const App = () => {
     setScreen(1);
   }
   return (
-    <SafeAreaView>
-      <View style={{ marginTop: 30 }}>
-        <Button
-          title="Activities"
-          onPress={() => {
-            setScreen(0);
-          }}
-        />
-        <Button
-          title="Diets"
-          onPress={() => {
-            setScreen(1);
-          }}
-        />
-        <View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <View style={styles.navigationContainer}>
+          <Button
+            title="Activities"
+            onPress={() => {
+              setScreen(0);
+            }}
+          />
+          <Button
+            title="Diets"
+            onPress={() => {
+              setScreen(1);
+            }}
+          />
+        </View>
+        <View style={styles.settingsContainer}>
           <Button
             title="Settings"
             onPress={() => {
@@ -53,7 +55,7 @@ const App = () => {
           />
         </View>
       </View>
-      <View>
+      <View style={styles.content}>
         <ThemeProvider>
           {screen === 1 ? <AllDiet onAdd={addDiet} /> : null}
           {screen === 0 ? <AllActivities onAdd={addActivity} /> : null}
@@ -65,5 +67,32 @@ const App = () => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    //padding: 16,
+  },
+  header: {
+    marginTop: 30,
+    backgroundColor: "#404040",
+    gap: 20,
+    padding: 16,
+  },
+  navigationContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+  },
+  settingsContainer: {
+    alignItems: "center",
+    //paddingVertical: 10,
+  },
+  content: {
+    flex: 1,
+    //marginTop: 20,
+    //paddingHorizontal: 16,
+  },
+});
 
 export default App;

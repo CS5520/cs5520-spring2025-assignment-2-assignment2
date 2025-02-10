@@ -1,12 +1,12 @@
 import { View, Text, StyleSheet, Alert, Button, TextInput } from "react-native";
 import { Timestamp } from "firebase/firestore";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { writeToDB } from "@/firebase/firestore";
 import { ThemeContext } from "../ThemeContext";
-import { useContext } from "react";
+import { styles_ } from "../constants/styles";
 
 export interface Diet {
   calories: string;
@@ -65,44 +65,53 @@ export default function AddDiet({ onSave }: AddDietProps) {
   }
 
   return (
-    <View testID="add-diet-view" style={{ backgroundColor: BGColor }}>
-      <Text testID="add-diet" style={{ color: TXTColor }}>
+    <View
+      testID="add-diet-view"
+      style={[styles_.container, { backgroundColor: BGColor }]}
+    >
+      <Text testID="add-diet" style={[styles_.title, { color: TXTColor }]}>
         Add Diet
       </Text>
-      <Text>Description</Text>
-      <TextInput
-        placeholder="Enter description"
-        onChangeText={setDescription}
-        value={description}
-      />
-      <Text>Calories</Text>
-      <TextInput
-        value={calories}
-        onChangeText={setCalories}
-        placeholder="Enter calories"
-      />
-      <Text>Date</Text>
-      <TextInput
-        value={date_text}
-        onPressIn={() => {
-          setShow(true);
-          setDate(new Date());
-        }}
-        placeholder="Select Date"
-      />
-      {show && (
-        <DateTimePicker
-          testID="datetime-picker"
-          value={date}
-          onChange={onChangeDate}
-          timeZoneName={"US/Pacific"}
-          display="inline"
+      <View style={styles_.content}>
+        <Text style={[styles_.label, { color: TXTColor }]}>Description</Text>
+        <TextInput
+          placeholder="Enter description"
+          onChangeText={setDescription}
+          value={description}
+          style={[styles_.input, { textAlignVertical: "top", height: 100 }]}
         />
-      )}
-      <Button title="SAVE" onPress={handleSave} />
-      <Button title="Cancel" onPress={onSave} />
+        <Text style={[styles_.label, { color: TXTColor }]}>Calories</Text>
+        <TextInput
+          value={calories}
+          onChangeText={setCalories}
+          placeholder="Enter calories"
+          keyboardType="numeric"
+          style={styles_.input}
+        />
+        <Text style={[styles_.label, { color: TXTColor }]}>Date</Text>
+        <TextInput
+          value={date_text}
+          onPressIn={() => {
+            setShow(true);
+            setDate(new Date());
+          }}
+          placeholder="Select Date"
+          style={styles_.input}
+        />
+        {show && (
+          <DateTimePicker
+            testID="datetime-picker"
+            value={date}
+            onChange={onChangeDate}
+            timeZoneName={"US/Pacific"}
+            display="inline"
+          />
+        )}
+        <View style={styles_.buttonContainer}>
+          <Button title="SAVE" onPress={handleSave} />
+          <Button title="Cancel" onPress={onSave} />
+        </View>
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({});
