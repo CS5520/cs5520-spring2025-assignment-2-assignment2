@@ -109,7 +109,6 @@ export default function AddDiet({ onSave }: AddDietProps) {
             value={date}
             onChange={onChangeDate}
             timeZoneName={"US/Pacific"}
-            display="inline"
           />
         )}
         <View style={styles_.buttonContainer}>
