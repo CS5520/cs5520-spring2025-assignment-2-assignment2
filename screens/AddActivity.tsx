@@ -113,6 +113,7 @@ export default function AddActivity({ onSave }: AddActivityProps) {
           onPressIn={() => {
             setShow(true);
             setDate(new Date());
+            setDateText(new Date().toDateString());
           }}
           placeholder="Select Date"
           style={styles_.input}
@@ -127,7 +128,7 @@ export default function AddActivity({ onSave }: AddActivityProps) {
           />
         )}
         <View style={styles_.buttonContainer}>
-          <Button title="SAVE" onPress={handleSave} />
+          <Button title="Save" onPress={handleSave} />
           <Button title="Cancel" onPress={onSave} />
         </View>
       </View>
