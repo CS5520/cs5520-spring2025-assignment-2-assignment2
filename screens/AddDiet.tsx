@@ -97,7 +97,7 @@ export default function AddDiet({ onSave }: AddDietProps) {
           value={date_text}
           onPressIn={() => {
             setDateText(new Date().toDateString());
-            setShow(true);
+            setShow((prev) => !prev);
             //setDate(new Date());
           }}
           placeholder="Date"
@@ -109,6 +109,7 @@ export default function AddDiet({ onSave }: AddDietProps) {
             value={date}
             onChange={onChangeDate}
             timeZoneName={"US/Pacific"}
+            display="inline"
           />
         )}
         <View style={styles_.buttonContainer}>

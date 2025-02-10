@@ -127,6 +127,7 @@ export default function AddActivity({ onSave }: AddActivityProps) {
             value={date}
             onChange={onChangeDate}
             timeZoneName={"US/Pacific"}
+            display="inline"
           />
         )}
         <View style={styles_.buttonContainer}>
