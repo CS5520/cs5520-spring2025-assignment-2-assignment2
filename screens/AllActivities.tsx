@@ -7,7 +7,10 @@ import styles from "../constants/styles";
 interface AllActivitiesProps {
   onAdd: () => void;
 }
-
+/**
+ * AllActivities Component
+ * Displays a list of activity entries and provides a button to add new entries
+ */
 export default function AllActivities({ onAdd }: AllActivitiesProps) {
   const { theme } = useContext(ThemeContext);
   return (

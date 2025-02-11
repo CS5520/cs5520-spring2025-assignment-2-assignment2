@@ -17,6 +17,10 @@ export interface Diet {
 interface AddDietProps {
   onSave: () => void;
 }
+/**
+ * AddDiet Component
+ * Provides a form to add a new diet entry
+ */
 export default function AddDiet({ onSave }: AddDietProps) {
   const { theme } = useContext(ThemeContext);
   const [description, setDescription] = useState("");
@@ -29,7 +33,6 @@ export default function AddDiet({ onSave }: AddDietProps) {
     if (d) {
       setDate(d);
       setDateText(d.toDateString());
-      console.log(d.toDateString());
     }
   };
 

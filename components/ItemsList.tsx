@@ -5,6 +5,13 @@ import { Diet } from "@/screens/AddDiet";
 import { Activity } from "@/screens/AddActivity";
 import { useEffect, useState } from "react";
 
+/**
+ * ItemsList Component
+ * Displays a list of items (either diet or activities) from Firestore
+ * and listens for real-time updates.
+ *
+ * param  collectionName - The name of the Firestore collection to listen to.
+ */
 const ItemsList = (props: { collectionName: string }) => {
   const [items, setItems] = useState<Diet[] | Activity[]>([]);
 
@@ -12,6 +19,7 @@ const ItemsList = (props: { collectionName: string }) => {
     const q = query(collection(database, props.collectionName));
     let unsubscribe: () => void;
 
+    // Listen for real-time updates from Firestore
     if (props.collectionName === "diet") {
       unsubscribe = onSnapshot(q, (querySnapshot) => {
         const dietItems: Diet[] = [];
@@ -32,7 +40,9 @@ const ItemsList = (props: { collectionName: string }) => {
 
     return () => unsubscribe && unsubscribe();
   }, [props.collectionName]);
-
+  /**
+   * Renders an individual item in the list.
+   */
   const renderItem = ({ item }: { item: Diet | Activity }) => (
     <View style={styles.itemContainer}>
       {props.collectionName === "diet" ? (

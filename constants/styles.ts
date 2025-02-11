@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 export const styles_ = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 20,
   },
   content: {
     flex: 1,
@@ -35,10 +35,10 @@ export const styles_ = StyleSheet.create({
     zIndex: 1000,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 20,
+    marginVertical: 10,
   },
   label: {
     fontSize: 16,

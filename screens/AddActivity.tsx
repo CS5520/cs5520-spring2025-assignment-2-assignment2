@@ -19,7 +19,10 @@ export interface Activity {
 interface AddActivityProps {
   onSave: () => void;
 }
-
+/**
+ * AddActivity Component
+ * Provides a form to add a new activity entry
+ */
 export default function AddActivity({ onSave }: AddActivityProps) {
   const { theme } = useContext(ThemeContext);
   const [open, setOpen] = useState(false);
@@ -37,15 +40,21 @@ export default function AddActivity({ onSave }: AddActivityProps) {
   const [date_text, setDateText] = useState("");
   const [show, setShow] = useState(false);
   const [duration, setDuration] = useState("");
+
+  /**
+   * Handles date change from DateTimePicker
+   */
   const onChangeDate = (e: DateTimePickerEvent, d: Date | undefined) => {
     setShow(false);
     if (d) {
       setDate(d);
       setDateText(d.toDateString());
-      console.log(d.toDateString());
     }
   };
-
+  /**
+   * Handles save action
+   * Validates inputs and saves the activity data to Firestore
+   */
   async function handleSave() {
     if (!actValue || !duration || !date_text) {
       Alert.alert(

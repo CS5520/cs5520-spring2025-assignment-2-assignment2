@@ -6,27 +6,26 @@ import AddDiet from "./screens/AddDiet";
 import AddActivity from "./screens/AddActivity";
 import Settings from "./screens/Settings";
 import { ThemeContext, ThemeProvider } from "./ThemeContext";
-
+/**
+ * Main App component
+ * Manages navigation between different screens and provides theme context
+ */
 const App = () => {
   const [screen, setScreen] = useState(1);
-  const { BGColor } = useContext(ThemeContext);
+
   function addActivity() {
-    console.log("add activity");
     setScreen(2);
   }
 
   function addDiet() {
-    console.log("add diet");
     setScreen(3);
   }
 
   function back2Activity() {
-    console.log("back to activity");
     setScreen(0);
   }
 
   function back2Diet() {
-    console.log("back to diet");
     setScreen(1);
   }
   return (
