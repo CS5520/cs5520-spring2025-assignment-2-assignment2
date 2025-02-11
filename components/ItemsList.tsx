@@ -1,5 +1,5 @@
 import { View, Text, FlatList, StyleSheet } from "react-native";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { collection, query, onSnapshot } from "firebase/firestore";
 import { database } from "../firebase/firestore";
 import { Diet } from "@/screens/AddDiet";
 import { Activity } from "@/screens/AddActivity";

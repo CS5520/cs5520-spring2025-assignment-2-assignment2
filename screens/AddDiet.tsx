@@ -18,7 +18,7 @@ interface AddDietProps {
   onSave: () => void;
 }
 export default function AddDiet({ onSave }: AddDietProps) {
-  const { BGColor, TXTColor } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const [description, setDescription] = useState("");
   const [calories, setCalories] = useState("");
   const [date, setDate] = useState(new Date());
@@ -71,20 +71,27 @@ export default function AddDiet({ onSave }: AddDietProps) {
   return (
     <View
       testID="add-diet-view"
-      style={[styles_.container, { backgroundColor: BGColor }]}
+      style={[styles_.container, { backgroundColor: theme.backgroundColor }]}
     >
-      <Text testID="add-diet" style={[styles_.title, { color: TXTColor }]}>
+      <Text
+        testID="add-diet"
+        style={[styles_.title, { color: theme.textColor }]}
+      >
         Add Diet
       </Text>
       <View style={styles_.content}>
-        <Text style={[styles_.label, { color: TXTColor }]}>Description</Text>
+        <Text style={[styles_.label, { color: theme.textColor }]}>
+          Description
+        </Text>
         <TextInput
           placeholder="Enter description"
           onChangeText={setDescription}
           value={description}
           style={[styles_.input, { textAlignVertical: "top", height: 100 }]}
         />
-        <Text style={[styles_.label, { color: TXTColor }]}>Calories</Text>
+        <Text style={[styles_.label, { color: theme.textColor }]}>
+          Calories
+        </Text>
         <TextInput
           value={calories}
           onChangeText={setCalories}
@@ -92,7 +99,7 @@ export default function AddDiet({ onSave }: AddDietProps) {
           keyboardType="numeric"
           style={styles_.input}
         />
-        <Text style={[styles_.label, { color: TXTColor }]}>Date</Text>
+        <Text style={[styles_.label, { color: theme.textColor }]}>Date</Text>
         <TextInput
           value={date_text}
           onPressIn={() => {

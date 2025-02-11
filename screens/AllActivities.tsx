@@ -1,5 +1,5 @@
 import ItemsList from "@/components/ItemsList";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, Text, View } from "react-native";
 import { ThemeContext } from "../ThemeContext";
 import { useContext } from "react";
 import styles from "../constants/styles";
@@ -9,13 +9,16 @@ interface AllActivitiesProps {
 }
 
 export default function AllActivities({ onAdd }: AllActivitiesProps) {
-  const { BGColor, TXTColor } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   return (
     <View
       testID="all-activities-view"
-      style={[styles.container, { backgroundColor: BGColor }]}
+      style={[styles.container, { backgroundColor: theme.backgroundColor }]}
     >
-      <Text testID="all-activities" style={[styles.title, { color: TXTColor }]}>
+      <Text
+        testID="all-activities"
+        style={[styles.title, { color: theme.textColor }]}
+      >
         All Activities
       </Text>
       <View style={styles.buttonContainer}>

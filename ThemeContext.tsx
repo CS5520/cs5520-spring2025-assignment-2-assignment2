@@ -15,36 +15,30 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
+interface Theme {
+  backgroundColor: string;
+  textColor: string;
+}
+
 interface ThemeContextType {
-  BGColor: string;
-  TXTColor: string;
+  theme: Theme;
   toggleTheme: () => void;
 }
 
 export const ThemeContext = createContext<ThemeContextType>({
-  BGColor: themes.light.backgroundColor,
-  TXTColor: themes.light.textColor,
+  theme: themes.light,
   toggleTheme: () => {},
 });
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const [BGColor, setBGColor] = useState(themes.light.backgroundColor);
-  const [TXTColor, setTXTColor] = useState(themes.light.textColor);
+  const [theme, setTheme] = useState<Theme>(themes.light);
   const toggleTheme = () => {
-    setBGColor((x) =>
-      x === themes.light.backgroundColor
-        ? themes.dark.backgroundColor
-        : themes.light.backgroundColor
-    );
-    console.log(BGColor);
-    setTXTColor((x) =>
-      x === themes.light.textColor
-        ? themes.dark.textColor
-        : themes.light.textColor
+    setTheme((currentTheme) =>
+      currentTheme === themes.light ? themes.dark : themes.light
     );
   };
   return (
-    <ThemeContext.Provider value={{ BGColor, TXTColor, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

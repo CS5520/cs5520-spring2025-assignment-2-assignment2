@@ -4,13 +4,16 @@ import { useContext } from "react";
 import styles from "../constants/styles";
 
 const Settings = () => {
-  const { BGColor, TXTColor, toggleTheme } = useContext(ThemeContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
   return (
     <View
       testID="settings-view"
-      style={[styles.container, { backgroundColor: BGColor }]}
+      style={[styles.container, { backgroundColor: theme.backgroundColor }]}
     >
-      <Text testID="settings" style={[styles.title, { color: TXTColor }]}>
+      <Text
+        testID="settings"
+        style={[styles.title, { color: theme.textColor }]}
+      >
         Settings
       </Text>
       <View style={styles.buttonContainer}>

@@ -9,13 +9,16 @@ interface AllActivitiesProps {
 }
 
 export default function AllActivities({ onAdd }: AllActivitiesProps) {
-  const { BGColor, TXTColor } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   return (
     <View
       testID="all-diets-view"
-      style={[styles.container, { backgroundColor: BGColor }]}
+      style={[styles.container, { backgroundColor: theme.backgroundColor }]}
     >
-      <Text testID="all-diets" style={[styles.title, { color: TXTColor }]}>
+      <Text
+        testID="all-diets"
+        style={[styles.title, { color: theme.textColor }]}
+      >
         All Diets
       </Text>
       <View style={styles.buttonContainer}>

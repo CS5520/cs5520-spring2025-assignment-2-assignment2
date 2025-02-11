@@ -21,7 +21,7 @@ interface AddActivityProps {
 }
 
 export default function AddActivity({ onSave }: AddActivityProps) {
-  const { BGColor, TXTColor } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const [open, setOpen] = useState(false);
   const [actValue, setActValue] = useState(null);
   const [items, setItems] = useState([
@@ -84,13 +84,18 @@ export default function AddActivity({ onSave }: AddActivityProps) {
   return (
     <View
       testID="add-activity-view"
-      style={[styles_.container, { backgroundColor: BGColor }]}
+      style={[styles_.container, { backgroundColor: theme.backgroundColor }]}
     >
-      <Text testID="add-activity" style={[styles_.title, { color: TXTColor }]}>
+      <Text
+        testID="add-activity"
+        style={[styles_.title, { color: theme.textColor }]}
+      >
         Add Activity
       </Text>
       <View style={styles_.content}>
-        <Text style={[styles_.label, { color: TXTColor }]}>Activity</Text>
+        <Text style={[styles_.label, { color: theme.textColor }]}>
+          Activity
+        </Text>
         <DropDownPicker
           testID="dropdown-picker"
           open={open}
@@ -102,7 +107,9 @@ export default function AddActivity({ onSave }: AddActivityProps) {
           style={styles_.input}
           dropDownContainerStyle={styles_.dropdown}
         />
-        <Text style={[styles_.label, { color: TXTColor }]}>Duration (min)</Text>
+        <Text style={[styles_.label, { color: theme.textColor }]}>
+          Duration (min)
+        </Text>
         <TextInput
           value={duration}
           onChangeText={setDuration}
@@ -110,7 +117,7 @@ export default function AddActivity({ onSave }: AddActivityProps) {
           keyboardType="numeric"
           style={styles_.input}
         />
-        <Text style={[styles_.label, { color: TXTColor }]}>Date</Text>
+        <Text style={[styles_.label, { color: theme.textColor }]}>Date</Text>
         <TextInput
           value={date_text}
           onPressIn={() => {
