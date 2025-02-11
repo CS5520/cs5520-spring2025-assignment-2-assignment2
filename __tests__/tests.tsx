@@ -1,6 +1,6 @@
 import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
 import App from "@/App";
-import { Timestamp, onSnapshot } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 import { Alert, StyleSheet } from "react-native";
 import AddActivity from "@/screens/AddActivity";
 import { ThemeContext } from "@/ThemeContext";
@@ -227,7 +227,11 @@ describe("AddActivity Screen", () => {
   jest.spyOn(Alert, "alert");
 
   test("shows error when submitting with empty inputs", async () => {
-    const { getByText } = render(<AddActivity onSave={mockOnSave} />);
+    const { getByText } = render(
+      <ThemeContext.Provider value={mockTheme}>
+        <AddActivity onSave={mockOnSave} />
+      </ThemeContext.Provider>
+    );
 
     await waitFor(() => {
       fireEvent.press(getByText(/Save/i));
@@ -239,8 +243,10 @@ describe("AddActivity Screen", () => {
   });
 
   test("shows error when submitting with invalid duration value (negative number or alphabetic)", async () => {
-    const { queryByTestId, getByPlaceholderText, getByText } = render(
-      <AddActivity onSave={mockOnSave} />
+    const { getByText, queryByTestId, getByPlaceholderText } = render(
+      <ThemeContext.Provider value={mockTheme}>
+        <AddActivity onSave={mockOnSave} />
+      </ThemeContext.Provider>
     );
 
     let datepicker = queryByTestId("datetime-picker");
@@ -343,7 +349,9 @@ describe("AddActivity Screen", () => {
     jest.spyOn(require("@/firebase/firestore"), "writeToDB");
 
     const { getByText, getByPlaceholderText, getByTestId } = render(
-      <AddActivity onSave={mockOnSave} />
+      <ThemeContext.Provider value={mockTheme}>
+        <AddActivity onSave={mockOnSave} />
+      </ThemeContext.Provider>
     );
 
     const dropdown = getByTestId("dropdown-picker");
@@ -376,7 +384,9 @@ describe("AddActivity Screen", () => {
     jest.spyOn(require("@/firebase/firestore"), "writeToDB");
 
     const { getByText, getByPlaceholderText, getByTestId } = render(
-      <AddActivity onSave={mockOnSave} />
+      <ThemeContext.Provider value={mockTheme}>
+        <AddActivity onSave={mockOnSave} />
+      </ThemeContext.Provider>
     );
 
     const dropdown = getByTestId("dropdown-picker");
@@ -410,7 +420,9 @@ describe("AddActivity Screen", () => {
     jest.spyOn(require("@/firebase/firestore"), "writeToDB");
 
     const { getByText, getByPlaceholderText, getByTestId } = render(
-      <AddActivity onSave={mockOnSave} />
+      <ThemeContext.Provider value={mockTheme}>
+        <AddActivity onSave={mockOnSave} />
+      </ThemeContext.Provider>
     );
 
     const dropdown = getByTestId("dropdown-picker");
@@ -499,7 +511,11 @@ describe("AddDiet Screen", () => {
   jest.spyOn(Alert, "alert");
 
   test("shows error when submitting with empty inputs", async () => {
-    const { getByText } = render(<AddDiet onSave={mockOnSave} />);
+    const { getByText } = render(
+      <ThemeContext.Provider value={mockTheme}>
+        <AddDiet onSave={mockOnSave} />
+      </ThemeContext.Provider>
+    );
 
     await waitFor(() => {
       fireEvent.press(getByText(/Save/i));
@@ -512,7 +528,9 @@ describe("AddDiet Screen", () => {
 
   test("shows error when submitting with invalid calories value (negative number or alphabetic)", async () => {
     const { queryByTestId, getByPlaceholderText, getByText } = render(
-      <AddDiet onSave={mockOnSave} />
+      <ThemeContext.Provider value={mockTheme}>
+        <AddDiet onSave={mockOnSave} />
+      </ThemeContext.Provider>
     );
     const descriptionInput = getByPlaceholderText(/description/i);
     expect(descriptionInput).toBeTruthy();
