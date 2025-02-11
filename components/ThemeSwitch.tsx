@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState } from "react";
-import { lightStyles, darkStyles } from "../constants/styles";
+import { lightStyles, darkStyles } from "../ThemeContext";
 
 type Theme = "light" | "dark";
 
 interface ThemeContextType {
   theme: Theme;
-  styles: typeof lightStyles;
+  styles: typeof lightStyles | typeof darkStyles;
   toggleTheme: () => void;
 }
 

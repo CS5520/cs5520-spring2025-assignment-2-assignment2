@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet, Alert, Button, TextInput } from "react-native";
+import { View, Text, Alert, Button, TextInput,Platform} from "react-native";
 import { Timestamp } from "firebase/firestore";
 import { useState } from "react";
 import { writeToDB } from "../firebase/firestore";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { useTheme } from "../components/ThemeContext";
-
+import { useTheme } from "../components/ThemeSwitch";
+import { buttonColors } from "@/constants/colors";
 export interface Diet {
   calories: number;
   description: string;
@@ -32,6 +32,7 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
   }
 
   const handleDatePicker = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    setShow(Platform.OS === "ios"); 
     if (selectedDate) {
       setDate(selectedDate);
       setInputDateValue(selectedDate.toLocaleDateString());
@@ -61,8 +62,7 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
         date: Timestamp.fromDate(date), 
         important: isImportant
       };
-
-      await writeToDB('diets', dietData);
+      await writeToDB('diet', dietData);
       onSave();
     } catch (error) {
       Alert.alert("Error", "Failed to save diet");
@@ -73,10 +73,10 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
     <View testID="add-diet-view" style={styles.container}>
       <View style={styles.header}>
       <View style={styles.switchButton}>
-      <Button title="Diets" disabled={true} />
-          <Button title="Activities" disabled={true} />
+      <Button title="Diets" disabled={true} color={buttonColors.disabled}/>
+          <Button title="Activities" disabled={true} color={buttonColors.disabled} />
         </View>
-        <Button title="Settings" onPress={onGoToSettings} />
+        <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary}/>
       </View>
 
     <View style={styles.buttomContainer}>
@@ -86,7 +86,7 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
         placeholder="Enter description"
         value={description}
         onChangeText={setDescription}
-        style={styles.input}
+        style={styles.dietInput}
       />
       <Text style={styles.text}>Calories *</Text>
       <TextInput
@@ -115,8 +115,8 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
         </View>
       )}
       <View style={styles.buttonContainer}>
-      <Button title="Cancle" onPress={handleCancel} />
-      <Button title="Save" onPress={handleSave} />
+      <Button title="Cancel" onPress={handleCancel} color={buttonColors.primary}/>
+      <Button title="Save" onPress={handleSave} color={buttonColors.primary}/>
       </View>
       </View>
     </View>

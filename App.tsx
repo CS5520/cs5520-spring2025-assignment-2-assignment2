@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { ThemeProvider, useTheme } from "./components/ThemeContext";
+import { ThemeProvider, useTheme } from "./components/ThemeSwitch";
 import AllActivities from "./screens/AllActivities";
 import AddActivity from "./screens/AddActivity";
 import AllDiets from "./screens/AllDiets";
 import AddDiet from "./screens/AddDiet";
 import Settings from "./screens/Settings";
 
-// ✅ 定义 screen 类型
 type ScreenType = "allActivities" | "addActivity" | "allDiets" | "addDiet" | "settings";
 
 export default function App() {
-  const [screen, setScreen] = useState<ScreenType>("allActivities");
+  const [screen, setScreen] = useState<ScreenType>("allDiets");
 
   return (
     <ThemeProvider>
@@ -20,7 +19,6 @@ export default function App() {
   );
 }
 
-// ✅ 添加 Props 类型定义
 interface AppContentProps {
   screen: ScreenType;
   setScreen: React.Dispatch<React.SetStateAction<ScreenType>>;

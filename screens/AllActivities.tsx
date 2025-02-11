@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, Button } from "react-native";
+import {Text, View, Button } from "react-native";
 import ItemList from "../components/ItemsList";
-import { useTheme } from "../components/ThemeContext";
+import { useTheme } from "../components/ThemeSwitch";
+import { buttonColors } from "@/constants/colors";
 
 interface AllActivitiesProps {
   onAdd: () => void;
@@ -15,44 +16,14 @@ export default function AllActivities({ onAdd, onGoToDiets, onGoToSettings }: Al
     <View style={styles.container} testID="all-activities-view">
       <View style={styles.header}>
         <View style={styles.switchButton}>
-        <Button title="Activities"  disabled={true}/>
-        <Button title="Diets" onPress={onGoToDiets} />
+        <Button title="Activities"  disabled={true} color={buttonColors.disabled}/>
+        <Button title="Diets" onPress={onGoToDiets} color={buttonColors.primary} />
         </View>
-        <Button title="Settings" onPress={onGoToSettings} />
+        <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary}/>
       </View>
       <Text style={styles.title} testID="all-activities">All Activities</Text>
-      <Button title="Add" onPress={onAdd}/>
-      <ItemList type="activity" />
+      <Button title="Add" onPress={onAdd} color={buttonColors.primary}/>
+      <ItemList type="activity" screenType="activities"/>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    backgroundColor: 'black',
-  },
-  header: {
-    flexDirection: 'column',
-    marginBottom: 10,
-    backgroundColor: 'grey',
-    paddingTop: 0,
-    width:'100%'
-  },
-  switchButton:{
-    marginTop:45,
-    flexDirection:'row',
-    justifyContent:'space-between'
-  },
-  title: {
-    color:'white',
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginVertical: 20,
-    textAlign: 'center',
-  },
-  addButton: {
-    marginVertical: 20,
-  }
-});

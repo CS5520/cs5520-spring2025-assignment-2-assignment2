@@ -1,3 +1,8 @@
+export const buttonColors = {
+  primary: "#007BFF", 
+  disabled: "#CCC",  
+};
+
 export const lightColors = {
     background: "#ffb6c1",
     text: "#000000",

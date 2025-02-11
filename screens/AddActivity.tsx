@@ -5,8 +5,8 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 import { Timestamp } from "firebase/firestore";
 import { writeToDB } from "../firebase/firestore";
 import { ActivityType } from "../components/ItemTypes";
-import { useTheme } from "../components/ThemeContext";
-
+import { useTheme } from "../components/ThemeSwitch";
+import { buttonColors } from "@/constants/colors";
 export interface Activity {
   duration: string;
   activity: ActivityType;
@@ -31,7 +31,7 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
   const { styles } = useTheme(); 
 
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState<string | null>(null);
   const [items, setItems] = useState([
     { label: "Walking", value: "walking" },
     { label: "Running", value: "running" },
@@ -42,7 +42,6 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
     { label: "Hiking", value: "hiking" },
   ]);
 
-  const activities = ["Running", "Cycling", "Swimming", "Walking", "Weightlifting"];
 
   const toggleDatePicker = () => {
     setShow(!show);
@@ -65,12 +64,16 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
   };
 
   const handleSave = async () => {
+    console.log("Duration:", duration);
+    console.log("Activity:", value);
+    console.log("Date:", date);
+
     if (!duration || !activity || !date || isNaN(Number(duration)) || Number(duration) <= 0) {
       Alert.alert("Invalid Input", "Please enter valid values for all fields");
       return;
     }
 
-    const isImportant = Number(duration) > 60 && (activity === "Running" || activity === "Weightlifting");
+    const isImportant = Number(duration) > 60 && (activity === "running" || activity === "weights");
 
     try {
       const activityData: Activity = {
@@ -80,8 +83,8 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
         important: isImportant,
       };
 
-      await writeToDB("activities", activityData);
-
+      await writeToDB("activity", activityData);
+      onSave();
     } catch (error) {
       Alert.alert("Error", "Failed to save activity");
     }
@@ -91,10 +94,10 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
     <View style={styles.container} testID="add-activity-view">
       <View style={styles.header}>
         <View style={styles.switchButton}>
-          <Button title="Diets" disabled={true} />
-          <Button title="Activities" disabled={true} />
+          <Button title="Diets" disabled={true} color={buttonColors.disabled}/>
+          <Button title="Activities" disabled={true} color={buttonColors.disabled} />
         </View>
-        <Button title="Settings" onPress={onGoToSettings} />
+        <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary}/>
       </View>
 
       <View style={styles.buttomContainer}>
@@ -103,10 +106,10 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
       <DropDownPicker
         testID="dropdown-picker"
         open={open}
-        value={value}
+        value={activity}
         items={items}
         setOpen={setOpen}
-        setValue={setValue}
+        setValue={setActivity}
         setItems={setItems}
         placeholder="Select Activity"
         style={styles.pickerContainer}
@@ -146,8 +149,8 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
       )}
       
       <View style={styles.buttonContainer}>
-      <Button title="Cancel" onPress={handleCancel} />
-      <Button title="Save" onPress={handleSave} />
+      <Button title="Cancel" onPress={handleCancel} color={buttonColors.primary}/>
+      <Button title="Save" onPress={handleSave} color={buttonColors.primary}/>
       </View>
       </View>
     </View>
