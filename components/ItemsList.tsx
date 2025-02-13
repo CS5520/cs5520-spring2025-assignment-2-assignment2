@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import { database } from "../firebase/firebaseSetup";
 import { Item, Activity, Diet } from "./ItemTypes";
-import { useTheme } from "./ThemeSwitch";
+import { useTheme } from "../ThemeContext";
 
 interface ItemListProps {
-  type: "activity" | "diet";
+  type: "activities" | "diets";
   screenType: "activities" | "diets"
 }
 
@@ -25,7 +25,7 @@ const ItemList = ({ type,screenType }: ItemListProps) => {
           const data = doc.data();
           const formattedDate = data.date?.toDate ? data.date.toDate() : data.date;
           console.log("Fetched data:", data); 
-          if (type === "activity") {
+          if (type === "activities") {
             return {
               id: doc.id,
               date: formattedDate,

@@ -1,6 +1,6 @@
 import ItemList from "../components/ItemsList";
-import { Button, StyleSheet, Text, View } from "react-native";
-import { useTheme } from "../components/ThemeSwitch";
+import { Button, Text, View } from "react-native";
+import { lightStyles, useTheme } from "../ThemeContext";
 import { buttonColors } from '../constants/colors';
 
 interface AllActivitiesProps {
@@ -10,28 +10,30 @@ interface AllActivitiesProps {
 }
 
 export default function AllActivities({ onAdd, onGoToActivities, onGoToSettings }: AllActivitiesProps) {
-  const { styles } = useTheme(); 
+  const { styles = lightStyles } = useTheme(); 
+  console.log('AllDiets styles:', styles);
+
 
   return (
     <View style={styles.container} testID="all-diets-view">
       <View style={styles.header}>
-          <View style={styles.switchButton}>
-        <Button 
-          title="Diets" 
-          disabled={true}
-          color={buttonColors.disabled}
-        />
-        <Button 
-          title="Activities" 
-          onPress={onGoToActivities}
-          color={buttonColors.primary} 
-        />
-      </View>
-      <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary}/>
+        <View style={styles.switchButton}>
+          <Button 
+            title="Diets" 
+ //           onPress={set}
+            color={buttonColors.primary}
+          />
+          <Button 
+            title="Activities" 
+            onPress={onGoToActivities}
+            color={buttonColors.disabled} 
+          />
+        </View>
+        <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary}/>
       </View>
       <Text style={styles.title} testID="all-diets">All Diets</Text>
       <Button title="Add" onPress={onAdd} color={buttonColors.primary}/>
-      <ItemList type="diet" screenType="diets" />
+      <ItemList type="diets" screenType="diets" />
     </View>
   );
 }

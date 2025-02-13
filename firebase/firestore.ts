@@ -9,14 +9,14 @@ export interface ItemData{
 }
 
 export async function writeToDB(collectionName: string, data: ItemData) {
-    try{
-        const docRef = await addDoc(collection(database, collectionName),{
-         ...data,
-         date: data.date,  
+    try {
+        const docRef = await addDoc(collection(database, collectionName), {
+            ...data,
+            date: data.date,
         });
-        return docRef.id
+        return docRef.id;
     }
-    catch(err){
+    catch(err) {
         console.error(err);
         throw err;
     }

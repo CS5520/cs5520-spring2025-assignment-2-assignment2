@@ -1,12 +1,12 @@
-import { View, Text, StyleSheet, Alert, Button, TextInput, Platform } from "react-native";
+import { View, Text, StyleSheet, Alert, Button, TextInput, Pressable } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useState } from "react";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Timestamp } from "firebase/firestore";
 import { writeToDB } from "../firebase/firestore";
 import { ActivityType } from "../components/ItemTypes";
-import { useTheme } from "../components/ThemeSwitch";
-import { buttonColors } from "@/constants/colors";
+import { darkStyles, lightStyles, useTheme } from "../ThemeContext";
+
 export interface Activity {
   duration: string;
   activity: ActivityType;
@@ -26,12 +26,10 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
   const [date, setDate] = useState<Date>(new Date());
   const [important, setImportant] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
-  const [inputDateValue, setInputDateValue] = useState<string>("");
-  const [isPickerVisible, setIsPickerVisible] = useState(false);
-  const { styles } = useTheme(); 
+  const [inputDateValue, setInputDateValue] = useState<string>(new Date().toLocaleDateString());
+  const { styles = darkStyles } = useTheme();
 
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState<string | null>(null);
   const [items, setItems] = useState([
     { label: "Walking", value: "walking" },
     { label: "Running", value: "running" },
@@ -42,17 +40,15 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
     { label: "Hiking", value: "hiking" },
   ]);
 
-
   const toggleDatePicker = () => {
-    setShow(!show);
+    setShow((prev) => !prev);
   };
 
   const handleDatePicker = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    setShow(Platform.OS === "ios"); 
     if (selectedDate) {
       setDate(selectedDate);
-      setInputDateValue(selectedDate.toLocaleDateString());
     }
+    setShow(false)
   };
 
   const handleCancel = () => {
@@ -65,11 +61,11 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
 
   const handleSave = async () => {
     console.log("Duration:", duration);
-    console.log("Activity:", value);
+    console.log("Activity:", activity);
     console.log("Date:", date);
 
     if (!duration || !activity || !date || isNaN(Number(duration)) || Number(duration) <= 0) {
-      Alert.alert("Invalid Input", "Please enter valid values for all fields");
+      Alert.alert("Invalid", "Please check your inputs");
       return;
     }
 
@@ -83,7 +79,7 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
         important: isImportant,
       };
 
-      await writeToDB("activity", activityData);
+      await writeToDB("activities", activityData);
       onSave();
     } catch (error) {
       Alert.alert("Error", "Failed to save activity");
@@ -94,10 +90,10 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
     <View style={styles.container} testID="add-activity-view">
       <View style={styles.header}>
         <View style={styles.switchButton}>
-          <Button title="Diets" disabled={true} color={buttonColors.disabled}/>
-          <Button title="Activities" disabled={true} color={buttonColors.disabled} />
+          <Button title="Diets" disabled={true} />
+          <Button title="Activities" disabled={true} />
         </View>
-        <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary}/>
+        <Button title="Settings" onPress={onGoToSettings} />
       </View>
 
       <View style={styles.buttomContainer}>
@@ -127,30 +123,33 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
         placeholderTextColor={styles.placeholder.color}
       />
 
-      <Text style={styles.text}>Date *</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Select Date"
-        value={inputDateValue}
-        onFocus={toggleDatePicker}
-        testID="datetime-picker"
-        placeholderTextColor={styles.placeholder.color}
-      />
-      {show && (
-        <View style={styles.pickerContainer}>
-          <DateTimePicker
-            testID="datetime-picker"
-            value={date}
-            mode="date"
-            display="inline"
-            onChange={handleDatePicker}
-          />
-        </View>
-      )}
+        <Text style={styles.text}>Date *</Text>
+        <TextInput
+          testID="datepicker-text-input"
+          style={styles.input}
+          placeholder="Select Date"
+          value={new Date(date).toDateString()} 
+          onPressIn={toggleDatePicker} 
+          editable={false}
+          placeholderTextColor={styles.placeholder.color}
+        />
+
+        {show && (
+          <View style={styles.pickerContainer}>
+            <DateTimePicker
+              testID="datetime-picker"
+              value={date}
+              mode="date"
+              display="inline"
+              onChange={handleDatePicker}
+            />
+          </View>
+        )}
+
       
       <View style={styles.buttonContainer}>
-      <Button title="Cancel" onPress={handleCancel} color={buttonColors.primary}/>
-      <Button title="Save" onPress={handleSave} color={buttonColors.primary}/>
+      <Button title="Cancel" onPress={handleCancel} />
+      <Button title="Save" onPress={handleSave} />
       </View>
       </View>
     </View>

@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import React, { createContext, useContext, useState } from "react";
 import { lightColors, darkColors, buttonColors } from "./constants/colors";
 
 export const lightStyles = StyleSheet.create({
@@ -15,8 +16,9 @@ export const lightStyles = StyleSheet.create({
     width: "100%",
   },
   switchButton: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    marginTop: 45,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   buttomContainer: {
     marginHorizontal: 20,
@@ -99,10 +101,10 @@ export const lightStyles = StyleSheet.create({
     borderRadius:16
   },
   activeButton: {
-    backgroundColor: buttonColors.primary,
+    color: buttonColors.primary,
   },
   inactiveButton: {
-    backgroundColor: buttonColors.disabled,
+    color: buttonColors.disabled,
   },
 });
 
@@ -120,8 +122,9 @@ export const darkStyles = StyleSheet.create({
     width: "100%",
   },
   switchButton: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    marginTop: 45,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   buttomContainer: {
     marginHorizontal: 20,
@@ -154,6 +157,12 @@ export const darkStyles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 16,
     backgroundColor: darkColors.inputBackground,
+  },
+  text: {
+    color: darkColors.text,
+    fontWeight: "bold",
+    fontSize: 16,
+    margin: 6,
   },
   textDescription: {
     padding:5,
@@ -199,5 +208,54 @@ export const darkStyles = StyleSheet.create({
     backgroundColor:darkColors.topContainer,
     borderRadius:16
   },
-
 });
+
+// Then define types
+type Theme = { backgroundColor: string; textColor: string };
+
+interface ThemeContextType {
+  theme: Theme;
+  styles: typeof lightStyles | typeof darkStyles;
+  toggleTheme: () => void;
+}
+
+// Create and export context
+export const ThemeContext = createContext<ThemeContextType>({
+  theme: { backgroundColor: "white", textColor: "black" },
+  styles: lightStyles,
+  toggleTheme: () => {},
+});
+
+// Provider component
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [theme, setTheme] = useState<Theme>({ backgroundColor: "white", textColor: "black" });
+
+  const toggleTheme = () => {
+    setTheme((prevTheme: Theme) => 
+      prevTheme.backgroundColor === "white" 
+        ? { backgroundColor: "black", textColor: "white" }
+        : { backgroundColor: "white", textColor: "black" }
+    );
+  };
+
+  const currentStyles = theme.backgroundColor === "white" ? lightStyles : darkStyles;
+
+  return (
+    <ThemeContext.Provider value={{ 
+      theme, 
+      styles: currentStyles,
+      toggleTheme 
+    }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+// Hook for using theme
+export const useTheme = (): ThemeContextType => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
+  return context;
+};
