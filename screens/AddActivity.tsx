@@ -8,11 +8,13 @@ import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
+import { useTheme } from "../ThemeContext";
 
 interface AddActivityProps {
   onSave: () => void;
 }
 export default function AddActivity({ onSave }: AddActivityProps) {
+  const { themeStyles } = useTheme();
   const [duration, setDuration] = useState<string>("");
 
   const [activityValue, setActivityValue] = useState<ActivityType | null>(null);
@@ -74,7 +76,10 @@ export default function AddActivity({ onSave }: AddActivityProps) {
 
   return (
     <View testID="add-activity-view" style={styles.content}>
-      <Text testID="add-activity" style={styles.title}>
+      <Text
+        testID="add-activity"
+        style={[styles.title, { color: themeStyles.textColor }]}
+      >
         Add Activity
       </Text>
       <View style={styles.inputContainer}>

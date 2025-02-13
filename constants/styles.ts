@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-import { themes } from "../ThemeContext";
 
 export const styles = StyleSheet.create({
   container: {
@@ -26,7 +25,6 @@ export const styles = StyleSheet.create({
     flex: 5,
     alignItems: "center",
     width: "100%",
-    backgroundColor: themes.light.backgroundColor,
   },
   title: {
     fontSize: 24,

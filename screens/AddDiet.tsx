@@ -5,11 +5,14 @@ import { useState } from "react";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { writeToDB } from "../firebase/firestore";
 import { Diet } from "../constants/types";
+import { useTheme } from "../ThemeContext";
 
 interface AddDietProps {
   onSave: () => void;
 }
 export default function AddDiet({ onSave }: AddDietProps) {
+  const { themeStyles } = useTheme();
+  
   const [calories, setCalories] = useState<string>("");
   const [description, setDescription] = useState<string>("");
 
@@ -57,7 +60,10 @@ export default function AddDiet({ onSave }: AddDietProps) {
 
   return (
     <View testID="add-diet-view" style={styles.content}>
-      <Text testID="add-diet" style={styles.title}>
+      <Text
+        testID="add-diet"
+        style={[styles.title, { color: themeStyles.textColor }]}
+      >
         Add Diet
       </Text>
       <View style={styles.inputContainer}>
@@ -71,7 +77,12 @@ export default function AddDiet({ onSave }: AddDietProps) {
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.inputText}>Calories *</Text>
-        <TextInput style={styles.input} placeholder="Enter calories" value={calories} onChangeText={setCalories} />
+        <TextInput
+          style={styles.input}
+          placeholder="Enter calories"
+          value={calories}
+          onChangeText={setCalories}
+        />
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.inputText}>Date *</Text>
