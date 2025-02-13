@@ -1,5 +1,5 @@
 import { View, Text, Button } from "react-native";
-import { lightStyles, useTheme } from "../ThemeContext";
+import { darkStyles, useTheme } from "../ThemeContext";
 import { buttonColors } from "@/constants/colors";
 
 interface SettingsProps {
@@ -8,7 +8,7 @@ interface SettingsProps {
   onGoToSettings: () => void;
 }
 export default function Settings ({onGoToActivities, onGoToDiets, onGoToSettings}:SettingsProps ) {
-  const { toggleTheme, styles = lightStyles} = useTheme();
+  const { toggleTheme, styles = darkStyles} = useTheme();
 
 
   return (

@@ -30,7 +30,11 @@ function AppContent({ screen, setScreen }: AppContentProps) {
   return (
     <View style={styles.container}>
       {screen === "allActivities" && (
-        <AllActivities onAdd={() => setScreen("addActivity")} onGoToDiets={() => setScreen("allDiets")} onGoToSettings={() => setScreen("settings")} />
+        <AllActivities 
+        screen = {screen}
+        onAdd={() => setScreen("addActivity")} 
+        onGoToDiets={() => setScreen("allDiets")} 
+        onGoToSettings={() => setScreen("settings")} />
       )}
       {screen === "addActivity" && <AddActivity onBack={() => setScreen("allActivities")} onSave={() => setScreen("allActivities")} onGoToSettings={() => setScreen("settings")} />}
       {screen === "allDiets" && <AllDiets onAdd={() => setScreen("addDiet")} onGoToActivities={() => setScreen("allActivities")} onGoToSettings={() => setScreen("settings")} />}

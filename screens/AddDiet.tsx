@@ -3,7 +3,7 @@ import { Timestamp } from "firebase/firestore";
 import { useState } from "react";
 import { writeToDB } from "../firebase/firestore";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import { lightStyles, useTheme } from "../ThemeContext";
+import { darkStyles, useTheme } from "../ThemeContext";
 import { buttonColors } from "@/constants/colors";
 
 export interface Diet {
@@ -23,18 +23,22 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
   const [calories, setCalories] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [date, setDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [isTouched, setIsTouched] = useState(false);
   const [show, setShow] = useState<boolean>(false);
-  const { toggleTheme, styles = lightStyles } = useTheme();
+  const { styles=darkStyles } = useTheme();
 
   const toggleDatePicker = () => {
-    setShow((prev) => !prev);
+    setIsTouched(true); // Mark as touched when user clicks on the input
+    setShow(!show);
   };
 
-  const handleDatePicker = (event: DateTimePickerEvent, selectedDate?: Date) => {
+  const handleDatePicker = (event: any, selectedDate: Date | undefined) => {
     if (selectedDate) {
       setDate(selectedDate);
+      setSelectedDate(selectedDate.toDateString()); // Set selected date as string
     }
-    setShow(false)
+    setShow(false); // Close date picker after selection
   };
 
   const handleCancel = () => {
@@ -68,8 +72,8 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
     <View testID="add-diet-view" style={styles.container}>
       <View style={styles.header}>
         <View style={styles.switchButton}>
+        <Button title="Activities" disabled={true} color={buttonColors.disabled} />
           <Button title="Diets" disabled={true} color={buttonColors.disabled} />
-          <Button title="Activities" disabled={true} color={buttonColors.disabled} />
         </View>
         <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary} />
       </View>
@@ -95,28 +99,28 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
           style={styles.input}
         />
 
-        <Text style={styles.text}>Date *</Text>
-          <TextInput
-            testID="datepicker-text-input"
-            style={styles.input}
-            placeholder="Select Date"
-            value={new Date(date).toDateString()} 
-            onPressIn={toggleDatePicker}
-            editable={false}
-            placeholderTextColor={styles.placeholder.color}
-          />
+    <Text style={styles.text}>Date *</Text>
+      <TextInput
+        testID="datepicker-text-input"
+        style={styles.input}
+        placeholder="Select Date"
+        value={isTouched ? (selectedDate || new Date().toDateString()) : "Select Date"}
+        onPressIn={toggleDatePicker}
+        editable={false}
+        placeholderTextColor={styles.placeholder.color}
+      />
 
-          {show && (
-            <View style={styles.pickerContainer}>
-              <DateTimePicker
-                testID="datetime-picker"
-                value={date}
-                mode="date"
-                display="inline"
-                onChange={handleDatePicker}
-              />
-            </View>
-          )}
+      {show && (
+        <View style={styles.pickerContainer}>
+          <DateTimePicker
+            testID="datetime-picker"
+            value={date}
+            mode="date"
+            display="inline"
+            onChange={handleDatePicker}
+          />
+        </View>
+      )}
 
         <View style={styles.buttonContainer}>
           <Button title="Cancel" onPress={handleCancel} color={buttonColors.primary} />

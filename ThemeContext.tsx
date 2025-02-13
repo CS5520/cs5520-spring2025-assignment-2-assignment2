@@ -210,7 +210,8 @@ export const darkStyles = StyleSheet.create({
   },
 });
 
-// Then define types
+
+// Define theme types
 type Theme = { backgroundColor: string; textColor: string };
 
 interface ThemeContextType {
@@ -219,39 +220,36 @@ interface ThemeContextType {
   toggleTheme: () => void;
 }
 
-// Create and export context
-export const ThemeContext = createContext<ThemeContextType>({
-  theme: { backgroundColor: "white", textColor: "black" },
-  styles: lightStyles,
-  toggleTheme: () => {},
-});
+// Create and export ThemeContext
+export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-// Provider component
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+// Provider component with an optional mock toggle function for testing
+export const ThemeProvider: React.FC<{ children: React.ReactNode; mockToggleTheme?: () => void }> = ({
+  children,
+  mockToggleTheme,
+}) => {
   const [theme, setTheme] = useState<Theme>({ backgroundColor: "white", textColor: "black" });
 
-  const toggleTheme = () => {
-    setTheme((prevTheme: Theme) => 
-      prevTheme.backgroundColor === "white" 
-        ? { backgroundColor: "black", textColor: "white" }
-        : { backgroundColor: "white", textColor: "black" }
-    );
-  };
+  const toggleTheme = mockToggleTheme
+    ? mockToggleTheme // Use mock function in tests
+    : () => {
+        setTheme((prevTheme) =>
+          prevTheme.backgroundColor === "white"
+            ? { backgroundColor: "black", textColor: "white" }
+            : { backgroundColor: "white", textColor: "black" }
+        );
+      };
 
   const currentStyles = theme.backgroundColor === "white" ? lightStyles : darkStyles;
 
   return (
-    <ThemeContext.Provider value={{ 
-      theme, 
-      styles: currentStyles,
-      toggleTheme 
-    }}>
+    <ThemeContext.Provider value={{ theme, styles: currentStyles, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
 };
 
-// Hook for using theme
+// Custom hook to use ThemeContext
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (!context) {

@@ -5,7 +5,7 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 import { Timestamp } from "firebase/firestore";
 import { writeToDB } from "../firebase/firestore";
 import { ActivityType } from "../components/ItemTypes";
-import { darkStyles, lightStyles, useTheme } from "../ThemeContext";
+import { darkStyles, useTheme } from "../ThemeContext";
 
 export interface Activity {
   duration: string;
@@ -26,7 +26,9 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
   const [date, setDate] = useState<Date>(new Date());
   const [important, setImportant] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
-  const [inputDateValue, setInputDateValue] = useState<string>(new Date().toLocaleDateString());
+  const [showPicker, setShowPicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [isTouched, setIsTouched] = useState(false);
   const { styles = darkStyles } = useTheme();
 
   const [open, setOpen] = useState(false);
@@ -40,15 +42,23 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
     { label: "Hiking", value: "hiking" },
   ]);
 
-  const toggleDatePicker = () => {
-    setShow((prev) => !prev);
+  const onChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    const currentDate = selectedDate || date;
+    setShowPicker(false);
+    setDate(currentDate);
   };
 
-  const handleDatePicker = (event: DateTimePickerEvent, selectedDate?: Date) => {
+  const toggleDatePicker = () => {
+    setIsTouched(true); // Mark as touched when user clicks on the input
+    setShow(!show);
+  };
+
+  const handleDatePicker = (event: any, selectedDate: Date | undefined) => {
     if (selectedDate) {
       setDate(selectedDate);
+      setSelectedDate(selectedDate.toDateString()); // Set selected date as string
     }
-    setShow(false)
+    setShow(false); // Close date picker after selection
   };
 
   const handleCancel = () => {
@@ -90,8 +100,8 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
     <View style={styles.container} testID="add-activity-view">
       <View style={styles.header}>
         <View style={styles.switchButton}>
+        <Button title="Activities" disabled={true} />
           <Button title="Diets" disabled={true} />
-          <Button title="Activities" disabled={true} />
         </View>
         <Button title="Settings" onPress={onGoToSettings} />
       </View>
@@ -123,28 +133,28 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
         placeholderTextColor={styles.placeholder.color}
       />
 
-        <Text style={styles.text}>Date *</Text>
-        <TextInput
-          testID="datepicker-text-input"
-          style={styles.input}
-          placeholder="Select Date"
-          value={new Date(date).toDateString()} 
-          onPressIn={toggleDatePicker} 
-          editable={false}
-          placeholderTextColor={styles.placeholder.color}
-        />
+      <Text style={styles.text}>Date *</Text>
+      <TextInput
+        testID="datepicker-text-input"
+        style={styles.input}
+        placeholder="Select Date"
+        value={isTouched ? (selectedDate || new Date().toDateString()) : "Select Date"}
+        onPressIn={toggleDatePicker}
+        editable={false}
+        placeholderTextColor={styles.placeholder.color}
+      />
 
-        {show && (
-          <View style={styles.pickerContainer}>
-            <DateTimePicker
-              testID="datetime-picker"
-              value={date}
-              mode="date"
-              display="inline"
-              onChange={handleDatePicker}
-            />
-          </View>
-        )}
+      {show && (
+        <View style={styles.pickerContainer}>
+          <DateTimePicker
+            testID="datetime-picker"
+            value={date}
+            mode="date"
+            display="inline"
+            onChange={handleDatePicker}
+          />
+        </View>
+      )}
 
       
       <View style={styles.buttonContainer}>

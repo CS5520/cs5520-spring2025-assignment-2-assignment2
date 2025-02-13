@@ -1,16 +1,21 @@
 import {Text, View, Button } from "react-native";
 import ItemList from "../components/ItemsList";
-import { lightStyles, useTheme } from "../ThemeContext";
+import { darkStyles, useTheme } from "../ThemeContext";
 import { buttonColors } from "@/constants/colors";
 
 interface AllActivitiesProps {
   onAdd: () => void;
   onGoToDiets: () => void;
   onGoToSettings: () => void;
+  screen: string; 
 }
 
-export default function AllActivities({ onAdd, onGoToDiets, onGoToSettings }: AllActivitiesProps) {
-  const { toggleTheme, styles = lightStyles } = useTheme();
+export default function AllActivities({ onAdd, onGoToDiets, onGoToSettings, screen }: AllActivitiesProps) {
+  const { styles=darkStyles } = useTheme();
+
+  const getButtonColor = (targetScreen: string) => {
+    return screen === targetScreen ? buttonColors.primary : buttonColors.disabled;
+  };
 
   return (
     <View style={styles.container} testID="all-activities-view">
@@ -18,10 +23,12 @@ export default function AllActivities({ onAdd, onGoToDiets, onGoToSettings }: Al
         <View style={styles.switchButton}>
         <Button 
         title="Activities" 
-        color={buttonColors.primary}/>
+        color={getButtonColor("allActivities")} 
+        />
         <Button title="Diets" 
         onPress={onGoToDiets} 
-        color={buttonColors.disabled} />
+        color={getButtonColor("allDiets")}
+        />
         </View>
         <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary}/>
       </View>

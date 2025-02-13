@@ -4,26 +4,26 @@ export const buttonColors = {
 };
 
 export const lightColors = {
-    background: "white",
+    background: "pink",
     text: "black",
     title: "black",
     border: "black",
-    inputBackground: "white",
+    inputBackground: "pink",
     placeholder: "black",
-    pickerBackground: "white",
+    pickerBackground: "pink",
     pickerText: "black",
-    topContainer:"#a9a9a9"
+    topContainer:"grey"
   };
   
   export const darkColors = {
-    background: "#fa8072",
+    background: "red",
     text: "white",
     title: "white",
     border: "white",
-    inputBackground: "#fa8072",
+    inputBackground: "red",
     placeholder: "white",
-    pickerBackground: "#fa8072",
+    pickerBackground: "red",
     pickerText: "white",
-    topContainer:"#a9a9a9"
+    topContainer:"grey"
   };
   

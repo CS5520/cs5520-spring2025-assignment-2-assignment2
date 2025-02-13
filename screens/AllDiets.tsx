@@ -1,6 +1,6 @@
 import ItemList from "../components/ItemsList";
 import { Button, Text, View } from "react-native";
-import { lightStyles, useTheme } from "../ThemeContext";
+import { darkStyles, useTheme } from "../ThemeContext";
 import { buttonColors } from '../constants/colors';
 
 interface AllActivitiesProps {
@@ -10,7 +10,7 @@ interface AllActivitiesProps {
 }
 
 export default function AllActivities({ onAdd, onGoToActivities, onGoToSettings }: AllActivitiesProps) {
-  const { styles = lightStyles } = useTheme(); 
+  const { styles=darkStyles} = useTheme(); 
   console.log('AllDiets styles:', styles);
 
 
@@ -18,15 +18,14 @@ export default function AllActivities({ onAdd, onGoToActivities, onGoToSettings 
     <View style={styles.container} testID="all-diets-view">
       <View style={styles.header}>
         <View style={styles.switchButton}>
-          <Button 
-            title="Diets" 
- //           onPress={set}
-            color={buttonColors.primary}
-          />
-          <Button 
+        <Button 
             title="Activities" 
             onPress={onGoToActivities}
             color={buttonColors.disabled} 
+          />
+          <Button 
+            title="Diets" 
+            color={buttonColors.primary}
           />
         </View>
         <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary}/>
