@@ -7,7 +7,7 @@ import { darkStyles, useTheme } from "../ThemeContext";
 import { buttonColors } from "@/constants/colors";
 
 export interface Diet {
-  calories: number;
+  calories: string;
   description: string;
   date: Timestamp;
   important: boolean;
@@ -26,19 +26,19 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [isTouched, setIsTouched] = useState(false);
   const [show, setShow] = useState<boolean>(false);
-  const { styles=darkStyles } = useTheme();
+  const { theme, styles=darkStyles } = useTheme();
 
   const toggleDatePicker = () => {
-    setIsTouched(true); // Mark as touched when user clicks on the input
+    setIsTouched(true); 
     setShow(!show);
   };
 
   const handleDatePicker = (event: any, selectedDate: Date | undefined) => {
     if (selectedDate) {
       setDate(selectedDate);
-      setSelectedDate(selectedDate.toDateString()); // Set selected date as string
+      setSelectedDate(selectedDate.toDateString()); 
     }
-    setShow(false); // Close date picker after selection
+    setShow(false); 
   };
 
   const handleCancel = () => {
@@ -56,7 +56,7 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
 
     try {
       const dietData: Diet = {
-        calories: Number(calories),
+        calories: calories,
         description: description,
         date: Timestamp.fromDate(date),
         important: Number(calories) > 800,
@@ -69,7 +69,7 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
   };
 
   return (
-    <View testID="add-diet-view" style={styles.container}>
+    <View testID="add-diet-view" style={[styles.container,{backgroundColor:theme.backgroundColor}]}>
       <View style={styles.header}>
         <View style={styles.switchButton}>
         <Button title="Activities" disabled={true} color={buttonColors.disabled} />
@@ -79,7 +79,7 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
       </View>
 
       <View style={styles.buttomContainer}>
-        <Text testID="add-diet" style={styles.title}>
+        <Text testID="add-diet" style={[styles.title,{color:theme.textColor}]}>
           Add Diet
         </Text>
 
@@ -99,12 +99,12 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
           style={styles.input}
         />
 
-    <Text style={styles.text}>Date *</Text>
+  <Text style={styles.text}>Date *</Text>
       <TextInput
         testID="datepicker-text-input"
         style={styles.input}
         placeholder="Select Date"
-        value={isTouched ? (selectedDate || new Date().toDateString()) : "Select Date"}
+        value={isTouched ? (selectedDate || new Date().toDateString()) : "Select Date"}// Show "Select Date" when no date is selected
         onPressIn={toggleDatePicker}
         editable={false}
         placeholderTextColor={styles.placeholder.color}

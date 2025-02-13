@@ -8,11 +8,11 @@ interface SettingsProps {
   onGoToSettings: () => void;
 }
 export default function Settings ({onGoToActivities, onGoToDiets, onGoToSettings}:SettingsProps ) {
-  const { toggleTheme, styles = darkStyles} = useTheme();
+  const { toggleTheme, styles = darkStyles, theme} = useTheme();
 
 
   return (
-    <View style={styles.container} testID="settings-view">
+    <View style={[styles.container,{backgroundColor:theme.backgroundColor}]} testID="settings-view">
       <View style={styles.header}>
           <View style={styles.switchButton}>
       <Button title="Diets"  onPress={onGoToDiets} color={buttonColors.disabled}/>
@@ -20,7 +20,7 @@ export default function Settings ({onGoToActivities, onGoToDiets, onGoToSettings
       </View>
       <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary}/>
       </View>
-      <Text style={styles.title} testID="settings">Settings</Text>
+      <Text style={[styles.title,{color:theme.textColor}]} testID="settings">Settings</Text>
       <Button title="Toggle Theme" onPress={toggleTheme} color={buttonColors.primary}/>
     </View>
   );

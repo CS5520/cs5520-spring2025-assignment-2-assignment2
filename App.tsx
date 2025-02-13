@@ -36,10 +36,31 @@ function AppContent({ screen, setScreen }: AppContentProps) {
         onGoToDiets={() => setScreen("allDiets")} 
         onGoToSettings={() => setScreen("settings")} />
       )}
-      {screen === "addActivity" && <AddActivity onBack={() => setScreen("allActivities")} onSave={() => setScreen("allActivities")} onGoToSettings={() => setScreen("settings")} />}
-      {screen === "allDiets" && <AllDiets onAdd={() => setScreen("addDiet")} onGoToActivities={() => setScreen("allActivities")} onGoToSettings={() => setScreen("settings")} />}
-      {screen === "addDiet" && <AddDiet onBack={() => setScreen("allDiets")} onSave={() => setScreen("allDiets")} onGoToSettings={() => setScreen("settings")} />}
-      {screen === "settings" && <Settings onGoToDiets={() => setScreen("allDiets")} onGoToActivities={() => setScreen("allActivities")} onGoToSettings={() => setScreen("settings")} />}
+      {screen === "addActivity" && 
+      <AddActivity 
+      onBack={() => setScreen("allActivities")} 
+      onSave={() => setScreen("allActivities")} 
+      onGoToSettings={() => setScreen("settings")} />
+      }
+      {screen === "allDiets" && 
+      <AllDiets  
+      screen = {screen} 
+      onAdd={() => setScreen("addDiet")} 
+      onGoToActivities={() => setScreen("allActivities")} 
+      onGoToSettings={() => setScreen("settings")} />
+      }
+      {screen === "addDiet" && 
+      <AddDiet 
+      onBack={() => setScreen("allDiets")} 
+      onSave={() => setScreen("allDiets")} 
+      onGoToSettings={() => setScreen("settings")} />
+      }
+      {screen === "settings" &&
+      <Settings 
+      onGoToDiets={() => setScreen("allDiets")} 
+      onGoToActivities={() => setScreen("allActivities")} 
+      onGoToSettings={() => setScreen("settings")} />
+      }
     </View>
   );
 }

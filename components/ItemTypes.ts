@@ -18,12 +18,12 @@ export interface BasicItem{
 
 export interface Activity extends BasicItem{
     activity: ActivityType;
-    duration: number;
+    duration: string;
 }
 
 export interface Diet extends BasicItem{
     description: string;
-    calories: number;
+    calories: string;
 }
 
 export type Item = Activity | Diet;

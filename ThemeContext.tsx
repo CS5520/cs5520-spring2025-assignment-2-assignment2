@@ -210,8 +210,6 @@ export const darkStyles = StyleSheet.create({
   },
 });
 
-
-// Define theme types
 type Theme = { backgroundColor: string; textColor: string };
 
 interface ThemeContextType {
@@ -220,19 +218,15 @@ interface ThemeContextType {
   toggleTheme: () => void;
 }
 
-// Create and export ThemeContext
 export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Provider component with an optional mock toggle function for testing
 export const ThemeProvider: React.FC<{ children: React.ReactNode; mockToggleTheme?: () => void }> = ({
   children,
-  mockToggleTheme,
 }) => {
   const [theme, setTheme] = useState<Theme>({ backgroundColor: "white", textColor: "black" });
 
-  const toggleTheme = mockToggleTheme
-    ? mockToggleTheme // Use mock function in tests
-    : () => {
+  const toggleTheme = () => {
         setTheme((prevTheme) =>
           prevTheme.backgroundColor === "white"
             ? { backgroundColor: "black", textColor: "white" }

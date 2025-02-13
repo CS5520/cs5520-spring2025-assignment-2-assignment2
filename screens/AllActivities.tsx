@@ -11,14 +11,14 @@ interface AllActivitiesProps {
 }
 
 export default function AllActivities({ onAdd, onGoToDiets, onGoToSettings, screen }: AllActivitiesProps) {
-  const { styles=darkStyles } = useTheme();
+  const { theme, styles=darkStyles} = useTheme();
 
   const getButtonColor = (targetScreen: string) => {
     return screen === targetScreen ? buttonColors.primary : buttonColors.disabled;
   };
 
   return (
-    <View style={styles.container} testID="all-activities-view">
+    <View style={[styles.container,{backgroundColor:theme.backgroundColor}]} testID="all-activities-view">
       <View style={styles.header}>
         <View style={styles.switchButton}>
         <Button 
@@ -32,7 +32,7 @@ export default function AllActivities({ onAdd, onGoToDiets, onGoToSettings, scre
         </View>
         <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary}/>
       </View>
-      <Text style={styles.title} testID="all-activities">All Activities</Text>
+      <Text style={[styles.title,{color:theme.textColor}]} testID="all-activities">All Activities</Text>
       <Button title="Add" onPress={onAdd} color={buttonColors.primary}/>
       <ItemList type="activities" screenType="activities"/>
     </View>

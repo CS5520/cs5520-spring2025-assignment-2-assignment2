@@ -29,17 +29,17 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
   const [showPicker, setShowPicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [isTouched, setIsTouched] = useState(false);
-  const { styles = darkStyles } = useTheme();
+  const { theme, styles = darkStyles } = useTheme();
 
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([
-    { label: "Walking", value: "walking" },
-    { label: "Running", value: "running" },
-    { label: "Swimming", value: "swimming" },
-    { label: "Weights", value: "weights" },
-    { label: "Yoga", value: "yoga" },
-    { label: "Cycling", value: "cycling" },
-    { label: "Hiking", value: "hiking" },
+    { label: "Walking", value: "Walking" },
+    { label: "Running", value: "Running" },
+    { label: "Swimming", value: "Swimming" },
+    { label: "Weights", value: "Weights" },
+    { label: "Yoga", value: "Yoga" },
+    { label: "Cycling", value: "Cycling" },
+    { label: "Hiking", value: "Hiking" },
   ]);
 
   const onChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
@@ -79,14 +79,12 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
       return;
     }
 
-    const isImportant = Number(duration) > 60 && (activity === "running" || activity === "weights");
-
     try {
       const activityData: Activity = {
         duration: duration,
         activity: activity as ActivityType,
         date: Timestamp.fromDate(date),
-        important: isImportant,
+        important: Number(duration) > 60 && (activity === "Running" || activity === "Weights"),
       };
 
       await writeToDB("activities", activityData);
@@ -97,7 +95,7 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
   };
 
   return (
-    <View style={styles.container} testID="add-activity-view">
+    <View style={[styles.container,{backgroundColor:theme.backgroundColor}]} testID="add-activity-view">
       <View style={styles.header}>
         <View style={styles.switchButton}>
         <Button title="Activities" disabled={true} />
@@ -107,7 +105,7 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
       </View>
 
       <View style={styles.buttomContainer}>
-      <Text style={styles.title} testID="add-activity">Add Activities</Text>
+      <Text style={[styles.title,{color:theme.textColor}]}testID="add-activity">Add Activities</Text>
       <Text style={styles.text}>Activity *</Text>
       <DropDownPicker
         testID="dropdown-picker"
