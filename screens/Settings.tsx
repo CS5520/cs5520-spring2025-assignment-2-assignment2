@@ -7,6 +7,7 @@ const Settings = () => {
       <Text testID="settings" style={styles.title}>
         Settings
       </Text>
+      <Button title="Toggle Theme" />
     </View>
   );
 };

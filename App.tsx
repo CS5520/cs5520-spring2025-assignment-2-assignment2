@@ -5,34 +5,61 @@ import AllDiets from './screens/AllDiets'
 import Settings from './screens/Settings'
 import { styles } from './constants/styles'
 import { writeToDB } from './firebase/firestore'
+import AddActivity from './screens/AddActivity'
+import AddDiet from './screens/AddDiet'
 
 const App = () => {
 
-  const [currentScreen, setCurrentScreen] = useState('diets')
+  enum Screen {
+    DIETS = 'diets',
+    ACTIVITIES = 'activities',
+    SETTINGS = 'settings',
+    ADD_ACTIVITY = 'addActivity',
+    ADD_DIET = 'addDiet'
+  }
+
+  const [currentScreen, setCurrentScreen] = useState<Screen>(Screen.DIETS)
+
+  const handleAddActivity = () => {
+    setCurrentScreen(Screen.ADD_ACTIVITY)
+  }
+
+  const handleAddDiet = () => {
+    setCurrentScreen(Screen.ADD_DIET)
+  }
+
+  const handleFinishAddActivity = () => {
+    setCurrentScreen(Screen.ACTIVITIES)
+  }
+
+  const handleFinishAddDiet = () => {
+    setCurrentScreen(Screen.DIETS)
+  }
+
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.navBar}>
         <View style={styles.toggleButtons}>
           <Button
             title="Activities"
             color={
-              currentScreen === "activities"
+              currentScreen === Screen.ACTIVITIES
                 ? styles.activeButton.color
                 : styles.inactiveButton.color
             }
             onPress={() => {
-              setCurrentScreen("activities");
+              setCurrentScreen(Screen.ACTIVITIES);
             }}
           />
           <Button
             title="Diets"
             color={
-              currentScreen === "diets"
+              currentScreen === Screen.DIETS
                 ? styles.activeButton.color
                 : styles.inactiveButton.color
             }
             onPress={() => {
-              setCurrentScreen("diets");
+              setCurrentScreen(Screen.DIETS);
             }}
           />
         </View>
@@ -40,16 +67,18 @@ const App = () => {
           <Button
             title="Settings"
             onPress={() => {
-              setCurrentScreen("settings");
+              setCurrentScreen(Screen.SETTINGS);
             }}
           />
         </View>
       </View>
 
-      {currentScreen === "diets" && <AllDiets onAdd={() => {}} />}
-      {currentScreen === "activities" && <AllActivities onAdd={() => {}} />}
-      {currentScreen === "settings" && <Settings />}
-    </SafeAreaView>
+      {currentScreen === Screen.DIETS && <AllDiets onAdd={handleAddDiet} />}
+      {currentScreen === Screen.ACTIVITIES && <AllActivities onAdd={handleAddActivity} />}
+      {currentScreen === Screen.SETTINGS && <Settings />}
+      {currentScreen === Screen.ADD_ACTIVITY && <AddActivity onSave={handleFinishAddActivity} />}
+      {currentScreen === Screen.ADD_DIET && <AddDiet onSave={handleFinishAddDiet} />}
+    </View>
   );
 }
 

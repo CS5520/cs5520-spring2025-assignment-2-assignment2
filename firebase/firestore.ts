@@ -17,13 +17,18 @@ export async function writeToDB(collectionName: string, data: Diet | Activity) {
   }
 }
 
-export async function getFromDB(
+export async function readFromDB(
   collectionName: string
 ): Promise<(Diet | Activity)[]> {
-  const snapshot = await getDocs(collection(db, collectionName));
-  const items: (Diet | Activity)[] = snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as (Diet | Activity)[];
-  return items;
+  try {
+    const snapshot = await getDocs(collection(db, collectionName));
+    const items: (Diet | Activity)[] = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as (Diet | Activity)[];
+    return items;
+  } catch (error) {
+    console.error("Error fetching items: ", error);
+    throw error;
+  }
 }
