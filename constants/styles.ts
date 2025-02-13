@@ -91,12 +91,13 @@ export const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 5,
     padding: 5,
+    marginLeft: 5,
   },
   itemInfoText: {
     fontWeight: "bold",
   },
   dateContainer: {
-    width: "45%",
+    width: "43%",
     marginRight: 5,
     alignItems: "center",
   },

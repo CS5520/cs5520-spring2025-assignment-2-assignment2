@@ -2,9 +2,10 @@ import { Timestamp } from "firebase/firestore";
 
 export interface Diet {
   id?: string;
-  calories: string;
+  calories: number;
   description: string;
   date: Timestamp;
+  important: boolean;
 }
 
 export enum ActivityType {
