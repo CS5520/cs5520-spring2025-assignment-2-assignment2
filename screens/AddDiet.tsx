@@ -104,14 +104,6 @@ export default function AddDiet({ onSave }: AddDietProps) {
           />
         </View>
 
-
-
-
-
-
-
-
-
         <View style={styles.fieldContainer}>
           <Text style={[styles.label, { color: theme.textColor }]}>
             Calories <Text style={styles.required}>*</Text>
@@ -164,18 +156,10 @@ export default function AddDiet({ onSave }: AddDietProps) {
         )}
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={onSave}
-          >
-            <Text style={styles.buttonTextCancel}>Cancel</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleSave}
-          >
-            <Text style={styles.buttonTextSave}>Save</Text>
-          </TouchableOpacity>
+
+          <Button title="Cancel" onPress={() => onSave()} />
+          <Button title="Save" onPress={() => handleSave()} />
+
         </View>
       </View>
     </View>
@@ -219,7 +203,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: LAYOUT.MARGIN * 4,
-    paddingHorizontal: LAYOUT.PADDING,
+    paddingHorizontal: LAYOUT.PADDING * 3,
   },
   button: {
     flex: 1,
