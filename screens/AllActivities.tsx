@@ -1,5 +1,5 @@
 // AllActivities.tsx
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "../ThemeContext";
 import { TYPOGRAPHY, LAYOUT, COLORS } from "../constants/styles";
@@ -26,12 +26,11 @@ export default function AllActivities({ onAdd }: AllActivitiesProps) {
       >
         All Activities
       </Text>
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={onAdd}
-      >
-        <Text style={styles.addButtonText}>Add</Text>
-      </TouchableOpacity>
+
+      <View style={styles.buttonContainer}>
+        <Button title="Add" onPress={onAdd} color={COLORS.PRIMARY} />
+      </View>
+
       <ItemsList type="activities" />
     </View>
   );
@@ -58,4 +57,9 @@ const styles = StyleSheet.create({
     color: COLORS.PRIMARY,
     fontSize: 24,
   },
+
+  buttonContainer: {
+    alignSelf: 'center',
+  },
+
 });
