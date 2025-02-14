@@ -4,11 +4,10 @@ import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { db } from '../firebase/firestore';
 import { ThemeContext } from '../ThemeContext';
 import { COLORS, LAYOUT, TYPOGRAPHY } from '../constants/styles';
-import { Timestamp } from 'firebase/firestore';
 
 interface Item {
     id: string;
-    date: Timestamp;
+    date: any;
     important: boolean;
     [key: string]: any;
 }
@@ -46,14 +45,29 @@ export default function ItemsList({ type }: ItemsListProps) {
 
     const renderItem = ({ item }: { item: Item }) => {
         const date = item.date.toDate().toDateString();
-        const isActivity = type === 'activities';
-
         return (
-            <View style={[styles.item, { borderColor: item.important ? COLORS.PRIMARY : COLORS.INACTIVE }]}>
-                <Text style={[styles.itemText, { color: theme.textColor }]}>
-                    {isActivity ? `${item.activity} - ${item.duration} minutes` : `${item.description} - ${item.calories} calories`}
-                </Text>
-                <Text style={[styles.dateText, { color: theme.textColor }]}>{date}</Text>
+            <View style={styles.itemContainer}>
+                <View style={styles.itemContent}>
+                    <Text style={styles.itemName}>
+                        {type === 'activities' ? item.activity : item.description}
+                    </Text>
+
+                    <View style={styles.rightContent}>
+                        {item.important && (
+                            <Text style={styles.warningIcon}>⚠️</Text>
+                        )}
+                        <View style={styles.pillContainer}>
+                            <View style={styles.datePill}>
+                                <Text style={styles.pillText}>{date}</Text>
+                            </View>
+                            <View style={styles.valuePill}>
+                                <Text style={styles.pillText}>
+                                    {type === 'activities' ? `${item.duration}` : `${item.calories}`}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
             </View>
         );
     };
@@ -63,7 +77,7 @@ export default function ItemsList({ type }: ItemsListProps) {
             data={items}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
-            style={[styles.list, { backgroundColor: theme.backgroundColor }]}
+            style={styles.list}
         />
     );
 }
@@ -72,19 +86,53 @@ const styles = StyleSheet.create({
     list: {
         flex: 1,
     },
-    item: {
-        padding: LAYOUT.PADDING,
-        marginVertical: LAYOUT.MARGIN / 2,
+    itemContainer: {
+        backgroundColor: '#333333',
+        marginVertical: 6,
         marginHorizontal: LAYOUT.MARGIN,
-        borderRadius: 5,
-        borderWidth: 2,
+        borderRadius: 12,
+        padding: LAYOUT.PADDING,
     },
-    itemText: {
-        ...TYPOGRAPHY.BODY,
-        marginBottom: 5,
+    itemContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
-    dateText: {
+    itemName: {
         ...TYPOGRAPHY.BODY,
-        opacity: 0.7,
+        color: 'white',
+        fontSize: 18,
+        flex: 1,
+    },
+    rightContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+    warningIcon: {
+        fontSize: 16,
+        marginRight: 4,
+    },
+    pillContainer: {
+        flexDirection: 'row',
+        gap: 8,
+    },
+    datePill: {
+        backgroundColor: 'white',
+        borderRadius: 8,
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+    },
+    valuePill: {
+        backgroundColor: 'white',
+        borderRadius: 8,
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        minWidth: 60,
+        alignItems: 'center',
+    },
+    pillText: {
+        color: 'black',
+        fontSize: 16,
     },
 });
