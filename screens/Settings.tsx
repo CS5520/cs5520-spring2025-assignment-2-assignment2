@@ -22,10 +22,14 @@ export default function Settings ({onGoToActivities, onGoToDiets, onGoToSettings
             <Button title="Activities" onPress={onGoToActivities} color={buttonColors.disabled} />
             <Button title="Diets" onPress={onGoToDiets} color={buttonColors.disabled}/>
           </View>
+          <View style={styles.button}>
           <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary}/>
+          </View>
       </View>
       <Text style={[styles.title,{color:theme.textColor}]} testID="settings">Settings</Text>
+      <View style={styles.button}>
       <Button title="Toggle Theme" onPress={toggleTheme} color={buttonColors.primary}/>
+      </View>
     </View>
   );
 };

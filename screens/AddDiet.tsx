@@ -86,8 +86,9 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
           <Button title="Activities" disabled={true} color={buttonColors.disabled} />
           <Button title="Diets" disabled={true} color={buttonColors.disabled} />
         </View>
-
+        <View style={styles.button}>
         <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary} />
+        </View>
       </View>
 
 

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Alert, Button, TextInput, Pressable } from "react-native";
+import { View, Text, Alert, Button, TextInput } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useState } from "react";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
@@ -113,7 +113,9 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
           <Button title="Activities" disabled={true} />
           <Button title="Diets" disabled={true} />
         </View>
+        <View style={styles.button}>
         <Button title="Settings" onPress={onGoToSettings} />
+        </View>
       </View>
 
       <View style={styles.buttomContainer}>

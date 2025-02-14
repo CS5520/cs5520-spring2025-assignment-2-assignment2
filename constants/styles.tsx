@@ -23,6 +23,10 @@ export const lightStyles = StyleSheet.create({
     buttomContainer: {
       marginHorizontal: 20,
     },
+    button:{
+      padding:10,
+      alignSelf: 'center',
+    },
     title: {
       color: lightColors.title,
       fontSize: 24,
@@ -114,7 +118,7 @@ export const lightStyles = StyleSheet.create({
     },
   });
 
-  //dark theme styles
+  //dark theme style
   export const darkStyles = StyleSheet.create({
     container: {
       flex: 1,
@@ -125,7 +129,7 @@ export const lightStyles = StyleSheet.create({
       flexDirection: "column",
       marginBottom: 10,
       backgroundColor: darkColors.topContainer,
-      paddingTop: 0,
+      paddingTop: 10,
       width: "100%",
     },
     switchButton: {
@@ -135,6 +139,10 @@ export const lightStyles = StyleSheet.create({
     },
     buttomContainer: {
       marginHorizontal: 20,
+    },
+    button:{
+      padding:10,
+      alignSelf: 'center',
     },
     title: {
       color: darkColors.title,

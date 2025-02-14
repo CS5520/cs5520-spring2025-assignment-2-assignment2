@@ -37,10 +37,14 @@ export default function AllActivities({ onAdd, onGoToActivities, onGoToSettings,
             color={getButtonColor("allDiets")} // Set the color based on screen
           />
         </View>
+        <View style={styles.button}>
         <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary} />
+        </View>
       </View>
       <Text style={[styles.title, { color: theme.textColor }]} testID="all-diets">All Diets</Text>
+      <View style={styles.button}>
       <Button title="Add" onPress={onAdd} color={buttonColors.primary} />
+      </View>
       <ItemList type="diets" screenType="diets" /> 
     </View>
   );
