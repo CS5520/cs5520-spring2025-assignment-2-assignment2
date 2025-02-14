@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import { useState } from 'react';
 import { ThemeProvider } from './ThemeContext';
 import { COLORS, LAYOUT, TYPOGRAPHY } from './constants/styles';
@@ -48,43 +48,24 @@ export default function App() {
                 <View style={styles.header}>
                     <View style={styles.topTabs}>
                         {/* Left tab - Activities */}
-                        <TouchableOpacity
+                        <Button
+                            title="Activities"
                             onPress={() => handleScreenChange('activities')}
-                            style={styles.tab}
-                        >
-                            <Text
-                                style={[
-                                    styles.tabText,
-                                    { color: currentScreen === 'activities' ? COLORS.PRIMARY : COLORS.INACTIVE }
-                                ]}
-                            >
-                                Activities
-                            </Text>
-                        </TouchableOpacity>
+                            color={currentScreen === 'activities' ? COLORS.PRIMARY : COLORS.INACTIVE}
+                        />
 
                         {/* Right tab - Diets */}
-                        <TouchableOpacity
+                        <Button
+                            title="Diets"
                             onPress={() => handleScreenChange('diets')}
-                            style={styles.tab}
-                        >
-                            <Text
-                                style={[
-                                    styles.tabText,
-                                    { color: currentScreen === 'diets' ? COLORS.PRIMARY : COLORS.INACTIVE }
-                                ]}
-                            >
-                                Diets
-                            </Text>
-                        </TouchableOpacity>
+                            color={currentScreen === 'diets' ? COLORS.PRIMARY : COLORS.INACTIVE}
+                        />
                     </View>
 
                     {/* Settings button below */}
-                    <TouchableOpacity
-                        onPress={() => handleScreenChange('settings')}
-                        style={styles.settingsButton}
-                    >
-                        <Text style={styles.settingsText}>Settings</Text>
-                    </TouchableOpacity>
+                    <View style={styles.settingsButtonContainer}>
+                        <Button title="Settings" onPress={() => handleScreenChange('settings')} color={COLORS.PRIMARY} />
+                    </View>
                 </View>
                 {renderScreen()}
             </View>
@@ -99,7 +80,7 @@ const styles = StyleSheet.create({
     header: {
         paddingTop: 50,
         paddingHorizontal: LAYOUT.PADDING,
-        backgroundColor: COLORS.WHITE,
+        backgroundColor: COLORS.HEADER,
         borderBottomWidth: 1,
         borderBottomColor: COLORS.INACTIVE,
     },
@@ -109,18 +90,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: LAYOUT.MARGIN,
     },
-    tab: {
-        paddingVertical: LAYOUT.PADDING / 2,
+    buttonContainer: {
+        // flex: 1, // Allows buttons to have equal space
+        // marginHorizontal: 5, // Adds spacing between buttons
     },
-    tabText: {
-        ...TYPOGRAPHY.SUBTITLE,
-    },
-    settingsButton: {
+    settingsButtonContainer: {
         alignSelf: 'center',
-        paddingBottom: LAYOUT.PADDING / 2,
-    },
-    settingsText: {
-        ...TYPOGRAPHY.BODY,
-        color: COLORS.PRIMARY,
+        marginTop: 10, // Spacing below tabs
     },
 });
+
