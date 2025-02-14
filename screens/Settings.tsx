@@ -1,24 +1,27 @@
 import { View, Text, Button } from "react-native";
-import { darkStyles, useTheme } from "../ThemeContext";
-import { buttonColors } from "@/constants/colors";
+import { darkStyles, useTheme } from "../ThemeContext"; // Import theme context and styles
+import { buttonColors } from "@/constants/colors"; // Import color constants
 
+// Define the props for the Settings component
 interface SettingsProps {
-  onGoToActivities: () => void;
-  onGoToDiets: () => void;
-  onGoToSettings: () => void;
+  onGoToActivities: () => void; // Function to navigate to activities
+  onGoToDiets: () => void; // Function to navigate to diets
+  onGoToSettings: () => void; // Function to navigate to settings
 }
-export default function Settings ({onGoToActivities, onGoToDiets, onGoToSettings}:SettingsProps ) {
-  const { toggleTheme, styles = darkStyles, theme} = useTheme();
 
+// Define the Settings component
+export default function Settings ({onGoToActivities, onGoToDiets, onGoToSettings}:SettingsProps ) {
+  // Get theme context values (toggleTheme, styles, theme)
+  const { toggleTheme, styles = darkStyles, theme} = useTheme();
 
   return (
     <View style={[styles.container,{backgroundColor:theme.backgroundColor}]} testID="settings-view">
       <View style={styles.header}>
           <View style={styles.switchButton}>
-      <Button title="Diets"  onPress={onGoToDiets} color={buttonColors.disabled}/>
-      <Button title="Activities" onPress={onGoToActivities} color={buttonColors.disabled} />
-      </View>
-      <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary}/>
+            <Button title="Activities" onPress={onGoToActivities} color={buttonColors.disabled} />
+            <Button title="Diets" onPress={onGoToDiets} color={buttonColors.disabled}/>
+          </View>
+          <Button title="Settings" onPress={onGoToSettings} color={buttonColors.primary}/>
       </View>
       <Text style={[styles.title,{color:theme.textColor}]} testID="settings">Settings</Text>
       <Button title="Toggle Theme" onPress={toggleTheme} color={buttonColors.primary}/>
