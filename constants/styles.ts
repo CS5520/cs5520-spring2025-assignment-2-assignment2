@@ -1,11 +1,12 @@
 import { TextStyle, ViewStyle } from 'react-native';
 
 export const COLORS = {
-  PRIMARY: '#007BFF',
+  PRIMARY: '#007BFF', //007BFF
   INACTIVE: '#CCC',
   WHITE: 'white',
   BLACK: 'black',
   DANGER: '#FF0000',
+  HEADER: '#212020',
 };
 
 export const LAYOUT = {
