@@ -1,4 +1,4 @@
-import { View, Text, Alert, Button, TextInput, Platform, Pressable } from "react-native"; // Import necessary components from React Native
+import { View, Text, Alert, Button, TextInput, TouchableWithoutFeedback} from "react-native"; // Import necessary components from React Native
 import { Timestamp } from "firebase/firestore"; // Import Timestamp from Firebase to handle date format
 import { useState } from "react"; // Import useState hook to manage state in the component
 import { writeToDB } from "../firebase/firestore"; // Import function to write data to Firestore
@@ -114,15 +114,18 @@ export default function AddDiet({ onSave, onBack, onGoToSettings }: AddDietProps
         />
 
         <Text style={styles.text}>Date *</Text>
-        <TextInput
-          testID="datepicker-text-input"
-          style={styles.input}
-          placeholder="Select Date"
-          value={isTouched ? (selectedDate || new Date().toDateString()) : "Select Date"} // Display selected date or placeholder
-          onPressIn={toggleDatePicker} // Show date picker on press
-          editable={false} // Make the input non-editable, only the picker is used
-          placeholderTextColor={styles.placeholder.color}
-        />
+        <TouchableWithoutFeedback onPress={toggleDatePicker}>
+        <View>
+          <TextInput
+            testID="datepicker-text-input"
+            style={styles.input}
+            placeholder="Select Date"
+            value={isTouched ? (selectedDate || new Date().toDateString()) : "Select Date"}
+            editable={false} // Keep it non-editable
+            placeholderTextColor={styles.placeholder.color}
+          />
+        </View>
+      </TouchableWithoutFeedback>
 
         {show && (
           <View style={styles.datePickerContainer}>

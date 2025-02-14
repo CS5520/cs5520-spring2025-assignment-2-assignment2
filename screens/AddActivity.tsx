@@ -1,4 +1,4 @@
-import { View, Text, Alert, Button, TextInput } from "react-native";
+import { View, Text, Alert, Button, TextInput,TouchableWithoutFeedback } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useState } from "react";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
@@ -45,16 +45,11 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
     { label: "Hiking", value: "Hiking" },
   ]);
 
-  // Handle changes in the date picker
-  const onChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    const currentDate = selectedDate || date; // Fallback to the current date if none is selected
-    setShowPicker(false);
-    setDate(currentDate);
-  };
-
   // Toggle visibility of the date picker
   const toggleDatePicker = () => {
     setIsTouched(true); // Mark as touched when user clicks on the input
+    console.log("button?")
+    console.log(isTouched)
     setShow(!show);
   };
 
@@ -147,16 +142,18 @@ export default function AddActivity({ onSave, onBack, onGoToSettings }: AddActiv
         />
 
         <Text style={styles.text}>Date *</Text>
-        <TextInput
-          testID="datepicker-text-input"
-          style={styles.input}
-          placeholder="Select Date"
-          value={isTouched ? (selectedDate || new Date().toDateString()) : "Select Date"}
-          onPressIn={toggleDatePicker}
-          editable={false}
-          placeholderTextColor={styles.placeholder.color}
-        />
-
+        <TouchableWithoutFeedback onPress={toggleDatePicker}>
+        <View>
+          <TextInput
+            testID="datepicker-text-input"
+            style={styles.input}
+            placeholder="Select Date"
+            value={isTouched ? (selectedDate || new Date().toDateString()) : "Select Date"}
+            editable={false} // Keep it non-editable
+            placeholderTextColor={styles.placeholder.color}
+          />
+        </View>
+      </TouchableWithoutFeedback>
         {show && (
           <View style={styles.datePickerContainer}>
             <DateTimePicker
