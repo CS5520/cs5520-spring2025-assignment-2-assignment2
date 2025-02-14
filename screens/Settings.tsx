@@ -17,10 +17,15 @@ const Settings = () => {
       >
         Settings
       </Text>
-      <Button
-        title="Toggle Theme"
-        onPress={toggleTheme}
-      />
+
+      <View style={styles.buttonContainer}>
+
+        <Button
+          title="Toggle Theme"
+          onPress={toggleTheme}
+        />
+      </View>
+
     </View>
   );
 };
@@ -35,6 +40,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: LAYOUT.MARGIN,
   },
+  buttonContainer: {
+    alignSelf: 'center',
+  }
 });
 
 export default Settings;
