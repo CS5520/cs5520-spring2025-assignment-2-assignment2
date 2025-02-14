@@ -62,7 +62,7 @@ export default function ItemsList({ type }: ItemsListProps) {
                             </View>
                             <View style={styles.valuePill}>
                                 <Text style={styles.pillText}>
-                                    {type === 'activities' ? `${item.duration}` : `${item.calories}`}
+                                    {type === 'activities' ? `${item.duration} min` : `${item.calories}`}
                                 </Text>
                             </View>
                         </View>
