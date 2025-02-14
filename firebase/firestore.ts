@@ -1,11 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  Timestamp,
-} from 'firebase/firestore';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
 // web app's Firebase configuration
 const firebaseConfig = {
@@ -27,7 +21,7 @@ export const db = getFirestore(app);
 export async function writeToDB(collectionName: string, data: any) {
   try {
     const docRef = await addDoc(collection(db, collectionName), data);
-    return docRef.id;
+    return docRef?.id;
   } catch (e) {
     console.error('Error adding document: ', e);
     throw e;
