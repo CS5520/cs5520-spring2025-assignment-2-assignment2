@@ -1,4 +1,3 @@
-// AllDiets.tsx
 import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "@/ThemeContext";
