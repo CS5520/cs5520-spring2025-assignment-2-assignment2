@@ -5,6 +5,7 @@ export const COLORS = {
   INACTIVE: '#CCC',
   WHITE: 'white',
   BLACK: 'black',
+  DANGER: '#FF0000',
 };
 
 export const LAYOUT = {
