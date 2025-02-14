@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Alert, Button, TextInput, Platform } from "react-native";
+import { View, Text, StyleSheet, Alert, Button, TextInput, Platform, TouchableOpacity } from "react-native";
 import { useState, useContext } from "react";
 import { Timestamp } from "firebase/firestore";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -56,6 +56,9 @@ export default function AddDiet({ onSave }: AddDietProps) {
     } catch (error) {
       Alert.alert('Error', 'Failed to save diet entry');
     }
+
+
+
   };
 
   const handleDatePress = () => {
@@ -82,82 +85,98 @@ export default function AddDiet({ onSave }: AddDietProps) {
         Add Diet
       </Text>
 
-      <Text style={[styles.label, { color: theme.textColor }]}>Description</Text>
-      <TextInput
-        style={[styles.input, { borderColor: COLORS.INACTIVE, color: theme.textColor }]}
-        placeholder="Description"
-        placeholderTextColor={COLORS.INACTIVE}
-        value={description}
-        onChangeText={setDescription}
-      />
-
-      <Text style={[styles.label, { color: theme.textColor }]}>Calories</Text>
-      <TextInput
-        style={[styles.input, { borderColor: COLORS.INACTIVE, color: theme.textColor }]}
-        placeholder="Calories"
-        placeholderTextColor={COLORS.INACTIVE}
-        value={calories}
-        onChangeText={setCalories}
-        keyboardType="numeric"
-      />
-
-      <Text style={[styles.label, { color: theme.textColor }]}>Date</Text>
-
-
-      {/* <TextInput
-        style={[styles.input, { borderColor: COLORS.INACTIVE, color: theme.textColor }]}
-        placeholder="Date"
-        placeholderTextColor={COLORS.INACTIVE}
-        value={date.toDateString()}
-        onPressIn={handleDatePress}
-        editable={true}
-      />
-
-      {showDatePicker && (
-        <DateTimePicker
-          testID="datetime-picker"
-          value={date}
-          mode="date"
-          display={Platform.OS === 'ios' ? 'inline' : 'default'}
-          onChange={handleDateChange}
-        />
-      )} */}
-
-
-      <TextInput
-        style={[styles.input, { borderColor: COLORS.INACTIVE, color: theme.textColor }]}
-        placeholder="Date"
-        placeholderTextColor={COLORS.INACTIVE}
-        value={date.toDateString()}
-        onPressIn={() => {
-          setShowDatePicker(!showDatePicker); // Toggle the picker visibility
-        }}
-        editable={true}
-      />
-
-      {showDatePicker && (
-        <DateTimePicker
-          testID="datetime-picker"
-          value={date}
-          mode="date"
-          display={Platform.OS === 'ios' ? 'inline' : 'default'}
-          onChange={(event, selectedDate) => {
-            if (Platform.OS === 'android') {
-              setShowDatePicker(false);
-            }
-            if (selectedDate) {
-              setDate(selectedDate);
-            }
-          }}
-        />
-      )}
+      <View style={styles.formContainer}>
+        <View style={styles.fieldContainer}>
+          <Text style={[styles.label, { color: theme.textColor }]}>
+            Description <Text style={styles.required}>*</Text>
+          </Text>
+          <TextInput
+            style={[styles.input, styles.descriptionInput, {
+              borderColor: COLORS.INACTIVE,
+              color: theme.textColor,
+              backgroundColor: 'rgba(200, 200, 200, 0.1)'
+            }]}
+            placeholder="Enter description"
+            placeholderTextColor="rgba(150, 150, 150, 0.8)"
+            value={description}
+            onChangeText={setDescription}
+            multiline={true} // Add this to enable multiple lines
+          />
+        </View>
 
 
 
 
-      <View style={styles.buttonContainer}>
-        <Button title="Cancel" onPress={onSave} />
-        <Button title="Save" onPress={handleSave} />
+
+
+
+
+
+        <View style={styles.fieldContainer}>
+          <Text style={[styles.label, { color: theme.textColor }]}>
+            Calories <Text style={styles.required}>*</Text>
+          </Text>
+          <TextInput
+            style={[styles.input, {
+              borderColor: COLORS.INACTIVE,
+              color: theme.textColor,
+              backgroundColor: 'rgba(200, 200, 200, 0.1)'
+            }]}
+            placeholder="Enter calories"
+            placeholderTextColor="rgba(150, 150, 150, 0.8)"
+            value={calories}
+            onChangeText={setCalories}
+            keyboardType="numeric"
+          />
+        </View>
+
+        <View style={styles.fieldContainer}>
+          <Text style={[styles.label, { color: theme.textColor }]}>
+            Date <Text style={styles.required}>*</Text>
+          </Text>
+          <TextInput
+            style={[styles.input, {
+              borderColor: COLORS.INACTIVE,
+              color: theme.textColor,
+              backgroundColor: 'rgba(200, 200, 200, 0.1)'
+            }]}
+            placeholder="Select Date"
+            placeholderTextColor="rgba(150, 150, 150, 0.8)"
+            value={date.toDateString()}
+            onPressIn={() => setShowDatePicker(!showDatePicker)}
+            editable={true}
+          />
+        </View>
+
+        {showDatePicker && (
+          <DateTimePicker
+            testID="datetime-picker"
+            value={date}
+            mode="date"
+            display={Platform.OS === 'ios' ? 'inline' : 'default'}
+            onChange={(event, selectedDate) => {
+              setShowDatePicker(Platform.OS === 'ios');
+              if (selectedDate) {
+                setDate(selectedDate);
+              }
+            }}
+          />
+        )}
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={onSave}
+          >
+            <Text style={styles.buttonTextCancel}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleSave}
+          >
+            <Text style={styles.buttonTextSave}>Save</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -166,23 +185,63 @@ export default function AddDiet({ onSave }: AddDietProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: LAYOUT.PADDING,
   },
   title: {
     ...TYPOGRAPHY.TITLE,
+    fontSize: 32,
     textAlign: 'center',
+    marginVertical: LAYOUT.MARGIN * 2,
+  },
+  formContainer: {
+    paddingHorizontal: LAYOUT.PADDING * 1.5,
+  },
+  fieldContainer: {
     marginBottom: LAYOUT.MARGIN * 2,
   },
   label: {
     ...TYPOGRAPHY.SUBTITLE,
-    marginVertical: LAYOUT.MARGIN / 2,
+    fontSize: 20,
+    marginBottom: LAYOUT.MARGIN,
+  },
+  required: {
+    color: COLORS.PRIMARY,
+    fontSize: 18,
   },
   input: {
     ...INPUT,
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 8,
+    fontSize: 18,
+    paddingHorizontal: 15,
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: LAYOUT.MARGIN * 2,
+    justifyContent: 'space-between',
+    marginTop: LAYOUT.MARGIN * 4,
+    paddingHorizontal: LAYOUT.PADDING,
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: LAYOUT.MARGIN,
+  },
+  buttonTextCancel: {
+    ...TYPOGRAPHY.SUBTITLE,
+    color: COLORS.PRIMARY,
+    textAlign: 'center',
+    fontSize: 18,
+  },
+  buttonTextSave: {
+    ...TYPOGRAPHY.SUBTITLE,
+    color: COLORS.PRIMARY,
+    textAlign: 'center',
+    fontSize: 18,
+  },
+
+
+  descriptionInput: {
+    height: 100,
+    textAlignVertical: 'top',
+    paddingTop: 10,
   },
 });
