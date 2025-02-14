@@ -1,6 +1,7 @@
 import { Text, View, Button } from "react-native"; // Import core components from React Native
 import ItemList from "../components/ItemsList"; // Import ItemList component for displaying activity items
-import { darkStyles, useTheme } from "../ThemeContext"; // Import theme context and styles (default to dark theme)
+import { useTheme } from "../ThemeContext"; // Import theme context and styles (default to dark theme)
+import { darkStyles } from "@/constants/styles";
 import { buttonColors } from "@/constants/colors"; // Import button color constants
 
 // Define the props for the AllActivities component

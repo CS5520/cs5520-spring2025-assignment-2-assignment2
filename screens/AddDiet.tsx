@@ -3,7 +3,8 @@ import { Timestamp } from "firebase/firestore"; // Import Timestamp from Firebas
 import { useState } from "react"; // Import useState hook to manage state in the component
 import { writeToDB } from "../firebase/firestore"; // Import function to write data to Firestore
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker"; // Import DateTimePicker for date selection
-import { darkStyles, useTheme } from "../ThemeContext"; // Import theme context and styles
+import { useTheme } from "../ThemeContext"; // Import theme context and styles
+import { darkStyles } from "@/constants/styles";
 import { buttonColors } from "@/constants/colors"; // Import button color constants
 
 // Interface for the Diet object to define its structure

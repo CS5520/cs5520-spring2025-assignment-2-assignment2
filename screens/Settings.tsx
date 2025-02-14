@@ -1,5 +1,6 @@
 import { View, Text, Button } from "react-native";
-import { darkStyles, useTheme } from "../ThemeContext"; // Import theme context and styles
+import { useTheme } from "../ThemeContext"; // Import theme context and styles
+import { darkStyles } from "@/constants/styles";
 import { buttonColors } from "@/constants/colors"; // Import color constants
 
 // Define the props for the Settings component

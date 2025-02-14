@@ -5,7 +5,8 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 import { Timestamp } from "firebase/firestore";
 import { writeToDB } from "../firebase/firestore";
 import { ActivityType } from "../components/ItemTypes";
-import { darkStyles, useTheme } from "../ThemeContext";
+import { useTheme } from "../ThemeContext";
+import { darkStyles } from "@/constants/styles";
 
 export interface Activity {
   duration: string;
