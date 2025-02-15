@@ -1,4 +1,3 @@
-// firebase/firestore.ts
 import { db } from "./firebaseSetup";
 import {
   collection,
@@ -39,5 +38,9 @@ export function listenToCollection(
  * @returns A Promise resolving to the newly created doc reference
  */
 export async function writeToDB(collectionName: string, data: any) {
-  return addDoc(collection(db, collectionName), data);
+  try {
+    await addDoc(collection(db, collectionName), data);
+  } catch (err) {
+    console.error("Error writing document: ", err);
+  }
 }

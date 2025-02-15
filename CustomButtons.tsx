@@ -7,7 +7,8 @@ interface CustomButtonProps {
   onPress: (event: GestureResponderEvent) => void;
   backgroundColor?: string;
   textColor?: string;
-  style?: ViewStyle; // optional extra style
+  style?: ViewStyle;
+  testID?: string;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -15,12 +16,14 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   onPress,
   backgroundColor = "#007BFF",
   textColor = "#FFFFFF",
-  style
+  style,
+  testID
 }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[styles.button, { backgroundColor }, style]}
+      testID={testID}
     >
       <Text style={[styles.buttonText, { color: textColor }]}>{label}</Text>
     </TouchableOpacity>

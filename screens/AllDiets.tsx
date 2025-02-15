@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import ItemsList from "../components/ItemsList";
 import { ThemeContext } from "../ThemeContext";
-import { Spacing } from "../constants/styles";
+import { Spacing, Colors } from "../constants/styles";
 
 interface AllDietsProps {
   onAdd: () => void;
@@ -12,16 +12,15 @@ const AllDiets: React.FC<AllDietsProps> = ({ onAdd }) => {
   const { theme } = useContext(ThemeContext);
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* Title */}
-      <Text style={[styles.title, { color: theme.text }]}>All Diets</Text>
+    <View testID="all-diets-view" style={[styles.container, { backgroundColor: theme.background }]}>
+      <Text testID="all-diets" style={{ ...styles.title, color: theme.text }} >
+        All Diets
+      </Text>
 
-      {/* “Add” link in blue */}
       <TouchableOpacity onPress={onAdd} style={styles.addWrapper}>
         <Text style={[styles.addText, { color: "#007BFF" }]}>Add</Text>
       </TouchableOpacity>
 
-      {/* The list */}
       <ItemsList type="diet" />
     </View>
   );

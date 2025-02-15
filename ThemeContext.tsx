@@ -14,31 +14,27 @@ export interface Theme {
 }
 
 const darkTheme: Theme = {
-  background: "#121212",      
-  text: "#FFFFFF",
-
+  background: "#121212",
+  text: "white",
   cardBackground: "#2F2F2F",
-  cardText: "#FFFFFF",
-
+  cardText: "white",
   dateBackground: "#3A3A3C",
-  dateText: "#FFFFFF",
-  
-  numericBackground: "#FFFFFF",
-  numericText: "#000000",
-  
+  dateText: "white",
+  numericBackground: "white",
+  numericText: "black",
   navBarBackground: "#1F1F1F",
-  navBarText: "#FFFFFF",
+  navBarText: "white",
 };
 
 const lightTheme: Theme = {
   background: "#F0F0F0",
-  text: "#000000",
-  cardBackground: "#FFFFFF",
-  cardText: "#000000",
+  text: "black",
+  cardBackground: "white",
+  cardText: "black",
   dateBackground: "#E5E5E5",
-  dateText: "#000000",
-  numericBackground: "#FFFFFF",
-  numericText: "#000000",
+  dateText: "black",
+  numericBackground: "white",
+  numericText: "black",
   navBarBackground: "#ECECEC",
   navBarText: "#007BFF",
 };

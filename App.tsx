@@ -1,4 +1,3 @@
-// App.tsx
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -6,6 +5,8 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  TextStyle,
+  ActivityIndicator,
 } from "react-native";
 
 import AllActivities from "./screens/AllActivities";
@@ -14,6 +15,7 @@ import AddActivity from "./screens/AddActivity";
 import AddDiet from "./screens/AddDiet";
 import Settings from "./screens/Settings";
 import { ThemeProvider, useTheme } from "./ThemeContext";
+import { Colors, Spacing } from "./constants/styles";
 
 type Screen = "activities" | "settings" | "diets" | "addActivity" | "addDiet";
 
@@ -29,7 +31,6 @@ function AppInner() {
     }
   };
 
-  // Decide which content to show based on current screen
   let content;
   switch (screen) {
     case "activities":
@@ -51,15 +52,14 @@ function AppInner() {
       content = <AllDiets onAdd={onAdd} />;
   }
 
-  const getNavStyle = (target: Screen) => ({
-    color: screen === target ? theme.navBarText : "#A8A8A8",
+  const getNavStyle = (target: Screen): TextStyle => ({
+    color: screen === target ? theme.navBarText : Colors.secondary,
     fontWeight: "600" as "600",
     fontSize: 16,
   });
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.navBarBackground }]}>
-    
       <View style={[styles.topRow, { backgroundColor: theme.navBarBackground }]}>
         <TouchableOpacity onPress={() => setScreen("activities")}>
           <Text style={getNavStyle("activities")}>Activities</Text>
@@ -105,13 +105,5 @@ const styles = StyleSheet.create({
   settingsRow: {
     alignItems: "center",
     paddingVertical: 8,
-  },
-
-  settingsButton: {
-    borderWidth: 2,
-    borderColor: "#007BFF",
-    borderRadius: 6,
-    paddingHorizontal: 16,
-    paddingVertical: 6,
   },
 });

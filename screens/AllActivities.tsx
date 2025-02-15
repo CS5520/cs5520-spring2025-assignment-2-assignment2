@@ -12,8 +12,8 @@ const AllActivities: React.FC<AllActivitiesProps> = ({ onAdd }) => {
   const { theme } = useContext(ThemeContext);
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <Text style={[styles.title, { color: theme.text }]}>All Activities</Text>
+    <View style={[styles.container, { backgroundColor: theme.background }]} testID="all-activities-view">
+      <Text style={{ ...styles.title, color: theme.text }}  testID="all-activities">All Activities</Text>
       <View style={styles.addButtonWrapper}>
         <Button
           title="Add"

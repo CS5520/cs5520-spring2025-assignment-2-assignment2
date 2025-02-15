@@ -1,14 +1,5 @@
 import React, { useState, useContext } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  Alert,
-  TouchableOpacity,
-  StyleSheet,
-  Pressable,
-} from "react-native";
+import { View, Text, TextInput, Alert, TouchableOpacity, StyleSheet, Pressable, Modal } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Timestamp } from "firebase/firestore";
@@ -24,7 +15,7 @@ interface AddActivityProps {
 const AddActivity: React.FC<AddActivityProps> = ({ onSave }) => {
   const [activityType, setActivityType] = useState<string | null>(null);
   const [duration, setDuration] = useState<string>("");
-  const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date | null>(new Date());
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([
@@ -38,9 +29,10 @@ const AddActivity: React.FC<AddActivityProps> = ({ onSave }) => {
   ]);
 
   const { theme } = useContext(ThemeContext);
+  const isDarkMode = theme.background === "#121212";
 
   const toggleDatePicker = () => {
-    setShowDatePicker((prev) => !prev);
+    setShowDatePicker(prev => !prev);
   };
 
   const onDateChange = (event: any, selectedDate?: Date) => {
@@ -51,13 +43,21 @@ const AddActivity: React.FC<AddActivityProps> = ({ onSave }) => {
   };
 
   const handleSave = async () => {
-    if (
-      !activityType ||
-      duration.trim() === "" ||
-      isNaN(Number(duration)) ||
-      Number(duration) <= 0
-    ) {
-      Alert.alert("invalid input", "Please check your entries.");
+    // Validate activity type
+    if (!activityType) {
+      Alert.alert("Invalid input", "Please check your activity type.");
+      return;
+    }
+
+    // Validate duration
+    if (duration.trim() === "" || isNaN(Number(duration)) || Number(duration) <= 0) {
+      Alert.alert("Invalid input", "Please check your duration. It must be a positive number.");
+      return;
+    }
+
+    // Validate date
+    if (!date) {
+      Alert.alert("Invalid input", "Please check your date.");
       return;
     }
 
@@ -90,10 +90,16 @@ const AddActivity: React.FC<AddActivityProps> = ({ onSave }) => {
         if (open) setOpen(false);
       }}
     >
-      <View style={[styles.container, { backgroundColor: theme.background }]} testID="add-activity-view">
-        <Text style={[styles.header, { color: theme.text }]}>Add An Activity</Text>
-        <Text style={[styles.label, { color: theme.text }]}>Select Activity Type:</Text>
-        <View style={{ zIndex: 999 }}>
+      <View
+        style={[styles.container, { backgroundColor: theme.background }]}
+        testID="add-activity-view"
+      >
+        <Text style={[styles.header, { color: theme.text }]} testID="add-activity">
+          Add Activity
+        </Text>
+
+        <Text style={[styles.label, { color: theme.text }]}>Activity *</Text>
+        <View style={{ zIndex: 1000 }}>
           <DropDownPicker
             testID="dropdown-picker"
             open={open}
@@ -102,59 +108,104 @@ const AddActivity: React.FC<AddActivityProps> = ({ onSave }) => {
             setOpen={setOpen}
             setValue={setActivityType}
             setItems={setItems}
+            placeholder="Select Activity"
+            placeholderStyle={{ color: "#888" }}
+            style={[styles.dropdown, { backgroundColor: "#FFFFFF", borderColor: Colors.border }]}
+            textStyle={{ color: "#000000" }}
+            dropDownContainerStyle={[
+              styles.dropdownContainer,
+              { backgroundColor: "#FFFFFF", borderColor: Colors.border },
+            ]}
+            listItemLabelStyle={{ color: "#000000" }}
             containerStyle={{ marginBottom: Spacing.medium }}
             listMode="SCROLLVIEW"
-            dropDownContainerStyle={{
-              maxHeight: 150,
-            }}
           />
         </View>
 
-        <Text style={[styles.label, { color: theme.text }]}>Duration (minutes):</Text>
+        <Text style={[styles.label, { color: theme.text }]}>Duration (min) *</Text>
         <TextInput
-          style={[styles.input, { color: theme.text }]}
+          style={[
+            styles.input,
+            {
+              backgroundColor: theme.numericBackground,
+              color: theme.numericText,
+              borderColor: Colors.border,
+            },
+          ]}
           placeholder="Enter duration"
           placeholderTextColor="#888"
           keyboardType="numeric"
           value={duration}
           onChangeText={setDuration}
+          testID="duration-input"
         />
 
-        <Text style={[styles.label, { color: theme.text }]}>Select Date:</Text>
-        <TouchableOpacity onPress={toggleDatePicker}>
-          <TextInput
-            style={[styles.input, { color: theme.text }]}
-            value={date.toDateString()}
-            onFocus={toggleDatePicker}
-            placeholderTextColor="#888"
-          />
-        </TouchableOpacity>
-        {showDatePicker && (
-          <DateTimePicker
-            testID="datetime-picker"
-            value={date}
-            mode="date"
-            display="inline"
-            onChange={onDateChange}
-          />
-        )}
-
+        <Text style={[styles.label, { color: theme.text }]}>Date *</Text>
+        <TextInput
+          placeholder="Select Date"
+          placeholderTextColor="#888"
+          value={date ? date.toDateString() : ""}
+          onPressIn={toggleDatePicker}
+          editable={false}
+          style={[
+            styles.input,
+            {
+              backgroundColor: theme.dateBackground,
+              color: theme.dateText,
+              borderColor: Colors.border,
+            },
+          ]}
+          testID="date-input"
+        />
         <View style={styles.buttonContainer}>
-          {/* <Button title="Save" onPress={handleSave} color={Colors.primary} />
-          <Button title="Cancel" onPress={handleCancel} color={Colors.secondary} /> */}
+          <CustomButton
+            label="Cancel"
+            onPress={handleCancel}
+            backgroundColor={Colors.secondary}
+            textColor="#000000"
+            testID="cancel-button"
+          />
           <CustomButton
             label="Save"
             onPress={handleSave}
             backgroundColor={Colors.primary}
             textColor="#FFFFFF"
-         />
-         <CustomButton
-           label="Cancel"
-           onPress={handleCancel}
-           backgroundColor={Colors.secondary}
-           textColor="#000000"
-         />
+            testID="save-button"
+          />
         </View>
+
+        <Modal
+          testID="date-picker-modal" 
+          visible={showDatePicker}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowDatePicker(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View
+              style={[
+                styles.modalContent,
+                { backgroundColor: theme.dateBackground },
+              ]}
+            >
+              <DateTimePicker
+                testID="datetime-picker"
+                value={date || new Date()}
+                mode="date"
+                display="inline"
+                themeVariant={isDarkMode ? "dark" : "light"}
+                textColor={theme.text}
+                onChange={onDateChange}
+              />
+              <TouchableOpacity
+                style={styles.modalCloseButton}
+                onPress={() => setShowDatePicker(false)}
+              >
+                <Text style={{ color: theme.text }}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </Pressable>
   );
@@ -175,18 +226,54 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    marginTop: Spacing.small,
+    fontWeight: "600",
     marginBottom: Spacing.small,
   },
   input: {
     borderWidth: 1,
-    borderColor: Colors.border,
-    padding: Spacing.small,
+    borderRadius: 8,
+    padding: 12,
     marginBottom: Spacing.medium,
+    fontSize: 16,
+  },
+  dropdown: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+  },
+  dropdownContainer: {
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: "90%",
+    borderRadius: 8,
+    padding: 20,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  modalCloseButton: {
+    marginTop: 10,
+    alignSelf: "flex-end",
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
     marginTop: Spacing.large,
+  },
+  dateText: {
+    fontSize: 16,
+    textAlign: "left",
+    paddingVertical: 12,
   },
 });

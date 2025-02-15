@@ -7,11 +7,9 @@ const Settings: React.FC = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.background }]}
-      testID="settings-view"
-    >
-      <Text style={[styles.header, { color: theme.text }]} testID="settings">
+    <View style={[styles.container, { backgroundColor: theme.background }]} testID="settings-view">
+      {/* Modified line below */}
+      <Text style={{ ...styles.header, color: theme.text }} testID="settings">
         Settings
       </Text>
       <Button title="Toggle Theme" onPress={toggleTheme} color="#007BFF" />
