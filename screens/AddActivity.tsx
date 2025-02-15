@@ -1,22 +1,168 @@
-import { View, Text, StyleSheet, Alert, Button } from "react-native";
-
+import { View, Text, StyleSheet, Alert, Button, TextInput,} from "react-native";
+import { useState } from "react";
 import { Timestamp } from "firebase/firestore";
+import { writeToDB } from "../firebase/firestore";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import DropDownPicker from "react-native-dropdown-picker";
 
-export interface Activity {
-  duration: string;
-  activity: string;
-  date: Timestamp;
-  important: boolean;
-}
+
 interface AddActivityProps {
-  onSave: () => void;
+  closedActivity: () => void;
 }
-export default function AddActivity({ onSave }: AddActivityProps) {
+
+export default function AddActivity({ closedActivity }: AddActivityProps) {
+  const [name, setName] = useState("");
+  const [duration, setDuration] = useState("");
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const [open, setOpen] = useState(false);
+  const [items, setItems] = useState([
+      { label: "Walking", value: "Walking" },
+      { label: "Running", value: "Running" },
+      { label: "Swimming", value: "Swimming" },
+      { label: "Weights", value: "Weights" },
+      { label: "Yoga", value: "Yoga" },
+      { label: "Cycling", value: "Cycling" },
+      { label: "Hiking", value: "Hiking" }
+  ]);
+
+
+  const handleSave = async () => {
+      if (!name || !duration || !date) {
+        alert("Please fill in all fields.");
+        return;
+      }
+      
+      const parsedDuration = parseInt(duration, 10);
+        if (isNaN(parsedDuration) || parsedDuration <= 0) {
+          Alert.alert("Invalid Input", "Duration must be a positive number.");
+          return;
+      }
+
+      const important = (name === "Running" || name === "Weights") && parsedDuration > 60;
+
+      const newActivity = {
+        id: "", // Firestore will auto-generate an ID
+        name,
+        duration,
+        date: Timestamp.fromDate(date),
+        important,
+      };
+  
+      try {
+        await writeToDB(newActivity, "activity");
+        setName("");
+        setDuration("");
+        setDate(new Date());
+        closedActivity();
+  
+      } catch (error) {
+        console.error("Failed to add activity entry:", error);
+        Alert.alert("Error", "Failed to add activity entry. Please try again.");
+      }
+    };
+
+    const handleDateChange = (event: any, selectedDate?: Date) => {
+      if (selectedDate) {
+        setDate(selectedDate);
+      }
+      setShowDatePicker(false); // 关闭 DateTimePicker
+    };  
+
+  // return (
+  //   <View testID="add-activity-view">
+  //     <Text testID="add-activity">Add Diet</Text>
+  //   </View>
+  // );
+
+
   return (
-    <View testID="add-activity-view">
-      <Text testID="add-activity">Add Diet</Text>
+    <View style={styles.absolutePage}>
+      <Text style={styles.title}>Add Activity</Text>
+      <Text style={styles.label}>Activity *</Text>
+      <DropDownPicker
+                testID="dropdown-picker"
+                open={open}
+                value={name}
+                items={items}
+                setOpen={setOpen}
+                setValue={setName}
+                setItems={setItems}
+                style={styles.dropdown}
+                placeholder="Select Activity"
+                containerStyle={{ marginBottom: 10 }}
+            />
+
+      <Text style={styles.label}>Duration *</Text>
+      <TextInput
+        style={styles.input}
+        value={duration}
+        onChangeText={setDuration}
+        placeholder="Enter Duration"
+        keyboardType="numeric"
+      />
+      <Text style={styles.label}>Date *</Text>
+      <TextInput
+        style={styles.input}
+        value={date.toDateString()}
+        onFocus={() => setShowDatePicker(true)}
+        showSoftInputOnFocus={false}
+      />
+      {showDatePicker && (
+        <DateTimePicker
+          value={date}
+          mode="date"
+          display="inline" 
+          onChange={handleDateChange}
+        />
+      )}
+      <Button title="Save" onPress={handleSave} />
+      <Button title="Back" onPress= {closedActivity} />
     </View>
   );
 }
 
-const styles = StyleSheet.create({});
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#fff",
+  },
+  absolutePage: {
+    position: "absolute",
+    top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: "white",
+},
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginTop: 10,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 5,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.3)", // 半透明背景
+  },
+  dropdown: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    backgroundColor: "#fff",
+},
+});
