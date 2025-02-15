@@ -78,7 +78,7 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
 
 
   return (
-    <View style={styles.absolutePage}>
+    <View testID="add-activity" style={styles.absolutePage}>
       <Text style={styles.title}>Add Activity</Text>
       <Text style={styles.label}>Activity *</Text>
       <DropDownPicker
