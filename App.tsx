@@ -5,7 +5,7 @@ import AddDiet from "./screens/AddDiet";
 import AllActivities from "./screens/AllActivities";
 import AddActivity from "./screens/AddActivity";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ThemeProvider } from "./ThemeContext"; // 引入 ThemeProvider
+import { Provider } from "./ThemeContext"; // 引入 ThemeProvider
 import Settings from "./screens/Settings";
 
 
@@ -37,7 +37,7 @@ export default function App() {
 
 
     return (
-    <ThemeProvider>
+    <Provider>
     <SafeAreaView style={styles.safeContainer}> 
         <View style={styles.container}>
             {/* 顶部导航栏 */}
@@ -66,7 +66,7 @@ export default function App() {
 
         </View>
     </SafeAreaView>
-    </ThemeProvider>
+    </Provider>
     );
 }
 
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     },
     navText: {
         fontSize: 16,
-        color: "#aaa",
+        color: "#CCC",
     },
     activeTab: {
         color: "#007BFF", // 选中的 tab 颜色

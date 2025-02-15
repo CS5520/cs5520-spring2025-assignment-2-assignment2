@@ -19,7 +19,7 @@ const ThemeContext = createContext({
 });
 
 // 创建 ThemeProvider 组件
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+export const Provider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState(themes.light);
 
   // 切换主题

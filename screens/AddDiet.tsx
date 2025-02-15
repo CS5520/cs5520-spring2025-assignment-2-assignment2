@@ -90,7 +90,7 @@ export default function AddDiet({closeddDiet}: AddDietProps) {
         />
       )}
       <Button title="Save" onPress={handleSave} />
-      <Button title="Back" onPress= {closeddDiet} />
+      <Button title="Cancel" onPress= {closeddDiet} />
     </View>
   );
 }

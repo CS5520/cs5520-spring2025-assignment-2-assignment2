@@ -118,7 +118,7 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
         />
       )}
       <Button title="Save" onPress={handleSave} />
-      <Button title="Back" onPress= {closedActivity} />
+      <Button title="Cancel" onPress= {closedActivity} />
     </View>
   );
 }
