@@ -55,20 +55,20 @@ export default function AddDiet({closeddDiet}: AddDietProps) {
     if (selectedDate) {
       setDate(selectedDate);
     }
-    setShowDatePicker(false); // 关闭 DateTimePicker
+    setShowDatePicker(false); 
   };
 
   return (
     <View testID="add-diet-view" style={[styles.absolutePage, { backgroundColor: theme.backgroundColor }]}>
-      <Text testID="add-diet" style={styles.title}>Add Diet</Text>
-      <Text style={styles.label}>Description *</Text>
+      <Text testID="add-diet" style={[styles.title, { color: theme.textColor }]}>Add Diet</Text>
+      <Text style={[styles.label, { color: theme.textColor }]}>Description *</Text>
       <TextInput
         style={styles.descriptionInput}
         value={description}
         onChangeText={setDescription}
         placeholder="Enter description"
       />
-      <Text style={styles.label}>Calories *</Text>
+      <Text style={[styles.label, { color: theme.textColor }]}>Calories *</Text>
       <TextInput
         style={styles.input}
         value={calories}
@@ -76,7 +76,7 @@ export default function AddDiet({closeddDiet}: AddDietProps) {
         placeholder="Enter calories"
         keyboardType="numeric"
       />
-      <Text style={styles.label}>Date *</Text>
+      <Text style={[styles.label, { color: theme.textColor }]}>Date *</Text>
       <TextInput
         style={styles.input}
         value={date.toDateString()}
@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
   absolutePage: {
     position: "absolute",
     top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: "white",
 },
   title: {
     fontSize: 24,
@@ -127,24 +126,25 @@ const styles = StyleSheet.create({
     marginTop: 5,
     alignSelf: "center",
     width: "90%",
+    backgroundColor: "#fff"
   },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.3)", // 半透明背景
+    backgroundColor: "rgba(0, 0, 0, 0.3)", 
   },
   descriptionInput: {
     borderWidth: 1,
     borderColor: "#ccc",
-    backgroundColor: "#fff", // 确保输入框背景是白色
-    paddingVertical: 12, // 调整内边距，让输入框高度更合适
-    paddingHorizontal: 10, // 左右填充
-    borderRadius: 8, // 使输入框边角更圆润
+    backgroundColor: "#fff", 
+    paddingVertical: 12, 
+    paddingHorizontal: 10, 
+    borderRadius: 8, 
     marginTop: 5,
-    fontSize: 16, // 文字大小
-    width: "90%", // 让输入框宽度填充
-    shadowColor: "#000", // iOS 阴影
+    fontSize: 16,
+    width: "90%", 
+    shadowColor: "#000", 
     shadowOpacity: 0.1,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 }, 

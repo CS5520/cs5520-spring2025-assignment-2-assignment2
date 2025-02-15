@@ -23,7 +23,7 @@ export default function AllActivities() {
 
   return (
     <View testID="all-diets-view" style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
-      <Text testID="all-diets" style = {styles.header}>All Diets</Text>
+      <Text testID="all-diets" style = {[styles.header, { color: theme.textColor }]}>All Diets</Text>
 
       <TouchableOpacity style={styles.button} onPress={openAddDiet}>
           <Text style={styles.buttonText}>Add Diets</Text>
@@ -48,7 +48,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: "center",  
     alignSelf: "center",
-    color: "#ccc"
 },
 button: {
   backgroundColor: "#007BFF",

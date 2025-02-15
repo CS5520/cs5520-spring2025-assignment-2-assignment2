@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
-import { useTheme } from "../ThemeContext"; // 引入 ThemeContext
+import { useTheme } from "../ThemeContext"; 
 
 const Settings = () => {
   const { theme, toggleTheme } = useTheme(); 

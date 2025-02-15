@@ -22,7 +22,7 @@ const closeAddActivity = () => {
 
   return (
     <View testID="all-activities-view" style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
-      <Text testID="all-activities" style = {styles.header}>All Activities</Text>
+      <Text testID="all-activities" style = {[styles.header, { color: theme.textColor }]}>All Activities</Text>
       <TouchableOpacity style={styles.button} onPress={openAddActivity}>
                 <Text style={styles.buttonText}>Add Diets</Text>
       </TouchableOpacity>
@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: "center",  
     alignSelf: "center",
-    color: "#ccc"
 },
 button: {
   backgroundColor: "#007BFF",

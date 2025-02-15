@@ -69,7 +69,7 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
       if (selectedDate) {
         setDate(selectedDate);
       }
-      setShowDatePicker(false); // 关闭 DateTimePicker
+      setShowDatePicker(false); 
     };  
 
   // return (
@@ -81,7 +81,7 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
 
   return (
     <View testID="add-activity-view" style={[styles.absolutePage,{ backgroundColor: theme.backgroundColor }]} >
-      <Text testID="add-activity" style={styles.title}>Add Activity</Text>
+      <Text testID="add-activity" style={[styles.title, { color: theme.textColor }]}>Add Activity</Text>
       <Text style={styles.label}>Activity *</Text>
       <DropDownPicker
                 testID="dropdown-picker"
@@ -96,7 +96,7 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
                 containerStyle={{ marginBottom: 10 }}
             />
 
-      <Text style={styles.label}>Duration *</Text>
+      <Text style={[styles.label, { color: theme.textColor }]}>Duration *</Text>
       <TextInput
         style={styles.input}
         value={duration}
@@ -104,7 +104,7 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
         placeholder="Enter Duration"
         keyboardType="numeric"
       />
-      <Text style={styles.label}>Date *</Text>
+      <Text style={[styles.label, { color: theme.textColor }]}>Date *</Text>
       <TextInput
         style={styles.input}
         value={date.toDateString()}
@@ -135,7 +135,6 @@ const styles = StyleSheet.create({
   absolutePage: {
     position: "absolute",
     top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: "white",
 },
   title: {
     fontSize: 24,
@@ -154,12 +153,13 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginTop: 5,
+    backgroundColor: "#fff",
   },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.3)", // 半透明背景
+    backgroundColor: "rgba(0, 0, 0, 0.3)", 
   },
   dropdown: {
     borderWidth: 1,

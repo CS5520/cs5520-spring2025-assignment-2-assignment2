@@ -38,7 +38,7 @@ export default function App() {
     <Provider>
         <SafeAreaView style={styles.safeContainer}> 
             <View style={styles.container}>
-                {/* 顶部导航栏 */}
+
                 <View style={styles.navbar}>
                     <TouchableOpacity onPress={showActivities}>
                         <Text style={[styles.navText, showActivity && styles.activeTab]}>Activities</Text>
@@ -53,13 +53,12 @@ export default function App() {
                     </TouchableOpacity>
                 </View>
 
-                {/* 显示 Settings 页面 */}
                 {showSetting && <Settings/>}
 
-                {/* 显示 Diet 页面 */}
+
                 {showDiets && <Diets/>}
 
-                {/* 显示 Activity 页面 */}
+
                 {showActivity && <AllActivities/>}
 
             </View>
@@ -80,14 +79,14 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 20,
     backgroundColor: "#333", 
-    paddingTop: 70 , // 顶部导航背景色
+    paddingTop: 70 , 
     },
     navText: {
         fontSize: 16,
         color: "#CCC",
     },
     activeTab: {
-        color: "#007BFF", // 选中的 tab 颜色
+        color: "#007BFF", 
         fontWeight: "bold",
     },
     title: {
@@ -97,6 +96,6 @@ const styles = StyleSheet.create({
     },
     safeContainer: {
         flex: 1,
-        backgroundColor: "#333", // 避免和手机的时间栏混到一起
+        backgroundColor: "#333", 
     },
 });
