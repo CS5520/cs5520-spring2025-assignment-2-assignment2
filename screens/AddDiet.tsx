@@ -57,8 +57,8 @@ export default function AddDiet({closeddDiet}: AddDietProps) {
   };
 
   return (
-    <View style={styles.absolutePage}>
-      <Text style={styles.title}>Add Diet</Text>
+    <View testID="add-diet-view" style={styles.absolutePage}>
+      <Text testID="add-diet" style={styles.title}>Add Diet</Text>
       <Text style={styles.label}>Description *</Text>
       <TextInput
         style={styles.descriptionInput}

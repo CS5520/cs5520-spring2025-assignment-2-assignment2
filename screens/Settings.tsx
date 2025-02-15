@@ -6,8 +6,8 @@ const Settings = () => {
   const { theme, toggleTheme } = useTheme(); 
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
-      <Text style={[styles.text, { color: theme.textColor }]}>Settings</Text>
+    <View testID="settings-view" style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
+      <Text testID="settings" style={[styles.text, { color: theme.textColor }]}>Settings</Text>
       <Button title="Toggle Theme" onPress={toggleTheme} />
     </View>
   );
