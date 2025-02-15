@@ -126,6 +126,7 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
 }
 
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

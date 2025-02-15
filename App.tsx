@@ -3,7 +3,7 @@ import { StyleSheet, View, Button, TouchableOpacity, Text  } from "react-native"
 import Diets from "./screens/AllDiets";
 import AllActivities from "./screens/AllActivities";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Provider } from "./ThemeContext"; 
+import { ThemeProvider } from "./ThemeContext"; 
 import Settings from "./screens/Settings";
 
 
@@ -35,7 +35,7 @@ export default function App() {
 
 
     return (
-    <Provider>
+    <ThemeProvider>
         <SafeAreaView style={styles.safeContainer}> 
             <View style={styles.container}>
 
@@ -63,7 +63,7 @@ export default function App() {
 
             </View>
         </SafeAreaView>
-    </Provider>
+    </ThemeProvider>
     );
 }
 
