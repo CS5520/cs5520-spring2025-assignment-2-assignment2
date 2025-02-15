@@ -5,7 +5,7 @@ import AddDiet from "./screens/AddDiet";
 import AllActivities from "./screens/AllActivities";
 import AddActivity from "./screens/AddActivity";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Provider } from "./ThemeContext"; // 引入 ThemeProvider
+import { ThemeProvider } from "./ThemeContext"; // 引入 ThemeProvider
 import Settings from "./screens/Settings";
 
 
@@ -37,7 +37,7 @@ export default function App() {
 
 
     return (
-    <Provider>
+    <ThemeProvider>
     <SafeAreaView style={styles.safeContainer}> 
         <View style={styles.container}>
             {/* 顶部导航栏 */}
@@ -66,7 +66,7 @@ export default function App() {
 
         </View>
     </SafeAreaView>
-    </Provider>
+    </ThemeProvider>
     );
 }
 
