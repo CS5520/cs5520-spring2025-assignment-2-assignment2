@@ -19,7 +19,7 @@ export default function ItemsList({ type, openAdd}: ItemsListProps) {
                 const docData = doc.data();
                 return type === "diet"
                     ? ({ id: doc.id, ...docData } as Diet)
-                    : ({ id: doc.id, ...docData } as Activity);
+                    : ({ ...docData } as Activity);
             });
             setItems(data);
         });
@@ -33,21 +33,20 @@ export default function ItemsList({ type, openAdd}: ItemsListProps) {
             
             <FlatList
                 data={items}
-                keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <View style={styles.itemCard}>
-                        {/* 左侧：名称 + 是否重要 */}
+
                         <View style={styles.leftSection}>
                             <Text style={styles.itemTitle}>
-                                {type === "diet" ? (item as Diet).description : (item as Activity).name}
+                                {type === "diet" ? (item as Diet).description : (item as Activity).activity}
                             </Text>
                             {(item as Diet).important && <Text style={styles.warning}>⚠️</Text>}
                         </View>
 
-                        {/* 右侧：日期 + 数值 */}
+
                         <View style={styles.rightSection}>
                             <Text style={styles.dateText}>
-                                {new Date(item.date.seconds * 1000).toDateString()}
+                                {item.date ? new Date(item.date.seconds * 1000).toDateString() : "No Date Available"}
                             </Text>
                             <Text style={styles.valueText}>
                                 {type === "diet"

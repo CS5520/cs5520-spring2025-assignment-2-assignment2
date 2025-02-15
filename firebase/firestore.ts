@@ -2,32 +2,32 @@ import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { db } from "./firebaseSetup";
 
 export interface Diet {
-    id: string;
+    id?: string;
     calories: string;
     description: string;
-    date: Timestamp;
+    date: Timestamp | null;
     important: boolean;
 }
 
 export interface Activity {
-    id: string;
-    name: string;
+    id?: string;
+    activity: string;
     duration: string;
-    date: Timestamp;
+    date: Timestamp | null;
     important: boolean;
 }
 
-export async function writeToDB(data: Diet | Activity, collectionName: "diet" | "activity") {
+export async function writeToDB(collectionName: "diet" | "activities", data: Diet | Activity,) {
     try {
         const formattedData = collectionName === "diet" ? {
             description: (data as Diet).description,
             calories: (data as Diet).calories,
-            date: Timestamp.fromDate(data.date.toDate()),
+            date: data.date ? Timestamp.fromDate(data.date.toDate()) : Timestamp.fromDate(new Date()),
             important: data.important
         } : {
-            name: (data as Activity).name,
+            activity: (data as Activity).activity,
             duration: (data as Activity).duration,
-            date: Timestamp.fromDate(data.date.toDate()),
+            date: data.date ? Timestamp.fromDate(data.date.toDate()) : Timestamp.fromDate(new Date()),
             important: data.important
         };
 

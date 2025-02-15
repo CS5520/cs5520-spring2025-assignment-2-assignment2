@@ -3,12 +3,14 @@ import ItemsList from "../components/ItemsList";
 import { useState } from "react";
 import AddActivity from "./AddActivity";
 import { useTheme } from "../ThemeContext";
+import { ThemeContext } from"../ThemeContext"
+import { useContext } from "react";
 
 
 
 export default function AllActivities() {
   const [showAddActivity, setShowAddActivity] = useState(false);
-  const { theme } = useTheme();
+  const { theme } = useContext(ThemeContext);
   
   const openAddActivity = () => {
     setShowAddActivity(true);

@@ -5,6 +5,8 @@ import { writeToDB } from "../firebase/firestore";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useTheme } from "../ThemeContext";
+import { ThemeContext } from"../ThemeContext"
+import { useContext } from "react";
 
 
 interface AddActivityProps {
@@ -12,11 +14,11 @@ interface AddActivityProps {
 }
 
 export default function AddActivity({ closedActivity }: AddActivityProps) {
-  const [name, setName] = useState("");
+  const [activity, setActivity] = useState("");
   const [duration, setDuration] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const { theme } = useTheme();
+  const { theme } = useContext(ThemeContext);
 
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([
@@ -31,8 +33,8 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
 
 
   const handleSave = async () => {
-      if (!name || !duration || !date) {
-        alert("Please fill in all fields.");
+      if (!activity || !duration || !date) {
+        Alert.alert("Invalid Input", "Please check all fields.");
         return;
       }
       
@@ -42,19 +44,18 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
           return;
       }
 
-      const important = (name === "Running" || name === "Weights") && parsedDuration > 60;
+      const important = (activity === "Running" || activity === "Weights") && parsedDuration > 60;
 
       const newActivity = {
-        id: "", // Firestore will auto-generate an ID
-        name,
+        activity,
         duration,
-        date: Timestamp.fromDate(date),
+        date: date ? Timestamp.fromDate(date) : null,
         important,
       };
   
       try {
-        await writeToDB(newActivity, "activity");
-        setName("");
+        await writeToDB("activities", newActivity);
+        setActivity("");
         setDuration("");
         setDate(new Date());
         closedActivity();
@@ -86,10 +87,10 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
       <DropDownPicker
                 testID="dropdown-picker"
                 open={open}
-                value={name}
+                value={activity}
                 items={items}
                 setOpen={setOpen}
-                setValue={setName}
+                setValue={setActivity}
                 setItems={setItems}
                 style={styles.dropdown}
                 placeholder="Select Activity"
@@ -108,11 +109,13 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
       <TextInput
         style={styles.input}
         value={date.toDateString()}
-        onFocus={() => setShowDatePicker(true)}
+        onFocus={() => {setShowDatePicker(true)}}
+        placeholder="Date"
         showSoftInputOnFocus={false}
       />
       {showDatePicker && (
         <DateTimePicker
+          testID="datetime-picker"
           value={date}
           mode="date"
           display="inline" 

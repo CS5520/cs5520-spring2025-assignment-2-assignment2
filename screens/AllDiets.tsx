@@ -3,12 +3,14 @@ import ItemsList from "../components/ItemsList";
 import { useState } from "react";
 import AddDiet from "./AddDiet";
 import { useTheme } from "../ThemeContext";
+import { ThemeContext } from"../ThemeContext"
+import { useContext } from "react";
 
 
 
 export default function AllActivities() {
       const [showAddDiet, setShowAddDiet] = useState(false);
-      const { theme } = useTheme();
+      const { theme } = useContext(ThemeContext);
 
       const openAddDiet = () => {
         setShowAddDiet(true);

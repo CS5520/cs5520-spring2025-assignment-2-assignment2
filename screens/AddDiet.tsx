@@ -4,6 +4,8 @@ import { Timestamp } from "firebase/firestore";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { writeToDB } from "../firebase/firestore";
 import { useTheme } from "../ThemeContext";
+import { ThemeContext } from"../ThemeContext"
+import { useContext } from "react";
 
 interface AddDietProps {
   closeddDiet: () => void;
@@ -14,11 +16,11 @@ export default function AddDiet({closeddDiet}: AddDietProps) {
   const [calories, setCalories] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const { theme } = useTheme();
+  const { theme } = useContext(ThemeContext);
 
   const handleSave = async () => {
     if (!description || !calories || !date) {
-      alert("Please fill in all fields.");
+      Alert.alert("Invalid Input", "Please check all fields.");
       return;
     }
 
@@ -31,15 +33,14 @@ export default function AddDiet({closeddDiet}: AddDietProps) {
     const important = parsedCalories > 800;
 
     const newDiet = {
-      id: "", // Firestore will auto-generate an ID
       description,
       calories,
-      date: Timestamp.fromDate(date),
+      date: date ? Timestamp.fromDate(date) : null,
       important,
     };
 
     try {
-      await writeToDB(newDiet, "diet");
+      await writeToDB("diet",newDiet);
       setDescription("");
       setCalories("");
       setDate(new Date());
@@ -81,10 +82,12 @@ export default function AddDiet({closeddDiet}: AddDietProps) {
         style={styles.input}
         value={date.toDateString()}
         onFocus={() => setShowDatePicker(true)}
+        placeholder="Date"
         showSoftInputOnFocus={false}
       />
       {showDatePicker && (
         <DateTimePicker
+          testID="datetime-picker"
           value={date}
           mode="date"
           display="inline" 

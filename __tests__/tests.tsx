@@ -1,26 +1,18 @@
 import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
+import App from "@/App";
 import { onSnapshot, Timestamp } from "firebase/firestore";
-import { Alert, StyleSheet, View, Pressable } from "react-native";
+import { Alert, StyleSheet } from "react-native";
+import AddActivity from "@/screens/AddActivity";
 import { ThemeContext } from "@/ThemeContext";
 import { writeToDB } from "@/firebase/firestore";
-import { router } from "expo-router";
-import config from "@/config";
+import AddDiet from "@/screens/AddDiet";
+import Settings from "@/screens/Settings";
+import AllActivities from "@/screens/AllActivities";
+import AllDiets from "@/screens/AllDiets";
 
 jest.mock("firebase/app", () => ({
   initializeApp: jest.fn(),
 }));
-jest.mock("expo-font");
-jest.mock("@expo/vector-icons", () => {
-  const MockIcon = jest.fn(({ name, onPress, testID }) => <></>);
-
-  return new Proxy(
-    {},
-    {
-      get: () => MockIcon, // Returns the same mock component for any icon set
-    }
-  );
-});
-
 jest.mock("firebase/firestore", () => ({
   getFirestore: jest.fn(),
   doc: jest.fn(),
@@ -34,55 +26,130 @@ jest.mock("firebase/firestore", () => ({
     fromDate: jest.fn(),
   },
 }));
-jest.spyOn(require("@/firebase/firestore"), "writeToDB");
-
 const unsubscribeMock = jest.fn();
 
 // Update the mock to return our unsubscribe function
 (onSnapshot as jest.Mock).mockReturnValue(unsubscribeMock);
-jest.mock("expo-router", () => ({
-  ...jest.requireActual("expo-router"),
-  useLocalSearchParams: jest.fn(() => ({})), // Default mock
-  Stack: {
-    Screen: jest.fn(() => null), // Mock Stack.Screen
-  },
-  router: {
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
-  },
-}));
-const toggleThemeMock = jest.fn();
-const mockTheme = {
-  theme: {
-    backgroundColor: "white",
-    textColor: "black",
-    navigationBackgroundColor: "white",
-    navigationTextColor: "black",
-  },
-  toggleTheme: toggleThemeMock,
-};
-const newMockTheme = {
-  theme: {
-    backgroundColor: "black",
-    textColor: "white",
-    navigationBackgroundColor: "black",
-    navigationTextColor: "white",
-  },
-  toggleTheme: toggleThemeMock,
-};
+
+describe("App Component", () => {
+  test("renders Diet screen by default", () => {
+    const { getByTestId } = render(<App />);
+    expect(getByTestId("all-diets")).toBeTruthy(); // Verifies Diet screen button is visible
+  });
+
+  test("navigates to Activities screen when 'Activities' button is pressed", () => {
+    const { getByText, getByTestId } = render(<App />);
+    const activitiesButton = getByText(/Activities/i);
+
+    fireEvent.press(activitiesButton);
+
+    // Check that Activities screen is rendered
+    expect(getByTestId("all-activities")).toBeTruthy();
+  });
+
+  test("navigates to AddActivity screen from Activities", async () => {
+    const { getByText, getByTestId } = render(<App />);
+    const activitiesButton = getByText(/Activities/i);
+
+    fireEvent.press(activitiesButton); // Navigate to Activities
+
+    const addButton = getByText(/Add/i);
+    await waitFor(() => {
+      fireEvent.press(addButton); // Add activity
+    });
+
+    // Check that AddActivity screen is rendered
+    expect(getByTestId("add-activity")).toBeTruthy();
+  });
+
+  test("navigates to AddDiet screen from Diet", () => {
+    const { getByText, getByTestId } = render(<App />);
+    const addDietButton = getByText(/Add/i);
+
+    fireEvent.press(addDietButton);
+
+    // Check that AddDiet screen is rendered
+    expect(getByTestId("add-diet")).toBeTruthy();
+  });
+
+  test("navigates back to Diet screen from AddDiet when cancel", () => {
+    const { getByText, getByTestId } = render(<App />);
+    const addDietButton = getByText(/Add/i);
+
+    fireEvent.press(addDietButton); // Navigate to AddDiet
+
+    const backButton = getByText(/cancel/i);
+    fireEvent.press(backButton); // Navigate back to Diet
+
+    expect(getByTestId("all-diets")).toBeTruthy();
+  });
+
+  test("navigates back to Activities screen from Add Activity when cancel", () => {
+    const { getByText, getByTestId } = render(<App />);
+    const activitiesButton = getByText(/Activities/i);
+
+    fireEvent.press(activitiesButton); // Navigate to Activities
+
+    const addActivityButton = getByText(/Add/i);
+
+    fireEvent.press(addActivityButton); // Navigate to Add Activity
+
+    const backButton = getByText(/cancel/i);
+    fireEvent.press(backButton); // Navigate back to Activities
+
+    expect(getByTestId("all-activities")).toBeTruthy();
+  });
+
+  test("navigates to Settings screen when 'Settings' button is pressed", () => {
+    const { getByText } = render(<App />);
+    const settingsButton = getByText(/Settings/i);
+
+    fireEvent.press(settingsButton);
+
+    // Check that Settings screen is rendered
+    expect(getByText(/toggle theme/i)).toBeTruthy();
+  });
+
+  test("maintains button color based on active screen", async () => {
+    const { getAllByText, getByTestId } = render(<App />);
+    const activitiesButton = getAllByText(/\bactivities\b/i)[0];
+    const dietsButton = getAllByText(/\bdiets\b/i)[0];
+    let activitiesButtonFinalStyle = StyleSheet.flatten(
+      activitiesButton.props.style
+    );
+    let dietsButtonnFinalStyle = StyleSheet.flatten(dietsButton.props.style);
+    // Diet screen is default
+    expect(dietsButtonnFinalStyle.color).toBe("#007BFF");
+    expect(activitiesButtonFinalStyle.color).toBe("#CCC");
+    await waitFor(() => {
+      fireEvent.press(activitiesButton);
+    });
+    activitiesButtonFinalStyle = StyleSheet.flatten(
+      activitiesButton.props.style
+    );
+    dietsButtonnFinalStyle = StyleSheet.flatten(dietsButton.props.style);
+    // Check button color updates
+    expect(activitiesButtonFinalStyle.color).toBe("#007BFF");
+    expect(dietsButtonnFinalStyle.color).toBe("#CCC");
+  });
+});
 
 describe("AddActivity Screen", () => {
-  const AddActivity = require(config.AddActivityPath).default;
+  const toggleThemeMock = jest.fn();
+  const mockOnSave = jest.fn();
+  const mockTheme = {
+    theme: { backgroundColor: "white", textColor: "black" },
+    toggleTheme: toggleThemeMock,
+  };
 
   test("renders correctly with all inputs", () => {
     const { getByTestId, getByText, getByPlaceholderText } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddActivity />
+        <AddActivity onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
 
-    // expect(getByTestId("add-activity")).toBeTruthy();
+    expect(getByTestId("add-activity")).toBeTruthy();
     expect(getByText(/^Activity/i)).toBeTruthy();
     expect(getByTestId("dropdown-picker")).toBeTruthy();
 
@@ -96,23 +163,10 @@ describe("AddActivity Screen", () => {
     expect(getByText(/Save/i)).toBeTruthy();
   });
 
-  test("pressing cancel navigates back", async () => {
-    const { getByText } = render(
-      <ThemeContext.Provider value={mockTheme}>
-        <AddActivity />
-      </ThemeContext.Provider>
-    );
-    const backButton = getByText(/cancel/i);
-    await waitFor(() => {
-      fireEvent.press(backButton); // Navigate back
-    });
-    expect(router.back).toHaveBeenCalled();
-  });
-
   test("opening dropdown shows all the items", async () => {
-    const { getByTestId, findByText } = render(
+    const { getByTestId, debug, findByText } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddActivity />
+        <AddActivity onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
     const dropdown = getByTestId("dropdown-picker");
@@ -136,9 +190,9 @@ describe("AddActivity Screen", () => {
   });
 
   test("tapping on the date textinput brings up the datepicker and set it as today's date", async () => {
-    const { queryByTestId, getByPlaceholderText } = render(
+    const { getByTestId, queryByTestId, getByPlaceholderText } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddActivity />
+        <AddActivity onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
     let datepicker = queryByTestId("datetime-picker");
@@ -157,7 +211,7 @@ describe("AddActivity Screen", () => {
   test("shows error when submitting with empty inputs", async () => {
     const { getByText } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddActivity />
+        <AddActivity onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
 
@@ -175,7 +229,7 @@ describe("AddActivity Screen", () => {
   test("shows error when submitting with empty inputs", async () => {
     const { getByText } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddActivity />
+        <AddActivity onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
 
@@ -191,7 +245,7 @@ describe("AddActivity Screen", () => {
   test("shows error when submitting with invalid duration value (negative number or alphabetic)", async () => {
     const { getByText, queryByTestId, getByPlaceholderText } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddActivity />
+        <AddActivity onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
 
@@ -238,19 +292,23 @@ describe("AddActivity Screen", () => {
   });
 
   it("toggles theme in add activitiy when theme button is pressed ", async () => {
+    const toggleThemeMock = jest.fn();
+    const mockTheme = {
+      theme: { backgroundColor: "white", textColor: "black" },
+      toggleTheme: toggleThemeMock,
+    };
     const { getByTestId, rerender } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddActivity />
+        <AddActivity onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
-
     // Check that Activities screen is rendered
-    // const addActivityTitle = getByTestId("add-activity");
-    // expect(addActivityTitle).toBeTruthy();
-    // const originalTextColor = StyleSheet.flatten(
-    //   addActivityTitle.props.style
-    // ).color;
-    // expect(originalTextColor).toBe("black");
+    const addActivityTitle = getByTestId("add-activity");
+    expect(addActivityTitle).toBeTruthy();
+    const originalTextColor = StyleSheet.flatten(
+      addActivityTitle.props.style
+    ).color;
+    expect(originalTextColor).toBe("black");
 
     const originalAddDietsView = getByTestId("add-activity-view");
     expect(originalAddDietsView).toBeTruthy(); // Verifies Diet screen button is visible
@@ -259,19 +317,25 @@ describe("AddActivity Screen", () => {
     ).backgroundColor;
     expect(originalBackgroundColor).toBe("white");
 
+    // Update the theme context (simulate the toggle)
+    const newMockTheme = {
+      theme: { backgroundColor: "black", textColor: "white" },
+      toggleTheme: toggleThemeMock,
+    };
+
     // Re-render with the new theme
     rerender(
       <ThemeContext.Provider value={newMockTheme}>
-        <AddActivity />
+        <AddActivity onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
 
     // Check if the theme color has been updated
 
-    // const newTitle = getByTestId("add-activity");
-    // const newTextColor = StyleSheet.flatten(newTitle.props.style).color;
-    // expect(newTextColor).toBe("white");
-    // expect(newTextColor).not.toBe(originalTextColor);
+    const newTitle = getByTestId("add-activity");
+    const newTextColor = StyleSheet.flatten(newTitle.props.style).color;
+    expect(newTextColor).toBe("white");
+    expect(newTextColor).not.toBe(originalTextColor);
 
     const newDietsView = getByTestId("add-activity-view");
     expect(newDietsView).toBeTruthy(); // Verifies Diet screen button is visible
@@ -281,11 +345,12 @@ describe("AddActivity Screen", () => {
     expect(newBackgroundColor).toBe("black");
     expect(newBackgroundColor).not.toBe(originalBackgroundColor);
   });
-
   test("submits form successfully with valid inputs - important: false", async () => {
+    jest.spyOn(require("@/firebase/firestore"), "writeToDB");
+
     const { getByText, getByPlaceholderText, getByTestId } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddActivity />
+        <AddActivity onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
 
@@ -312,7 +377,7 @@ describe("AddActivity Screen", () => {
         date: Timestamp.fromDate(new Date()),
         important: false,
       });
-      expect(router.back).toHaveBeenCalled();
+      expect(mockOnSave).toHaveBeenCalled();
     });
   });
   test("submits form successfully with valid inputs - important: true , running", async () => {
@@ -320,7 +385,7 @@ describe("AddActivity Screen", () => {
 
     const { getByText, getByPlaceholderText, getByTestId } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddActivity />
+        <AddActivity onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
 
@@ -347,7 +412,7 @@ describe("AddActivity Screen", () => {
         date: Timestamp.fromDate(new Date()),
         important: true,
       });
-      expect(router.back).toHaveBeenCalled();
+      expect(mockOnSave).toHaveBeenCalled();
     });
   });
 
@@ -356,7 +421,7 @@ describe("AddActivity Screen", () => {
 
     const { getByText, getByPlaceholderText, getByTestId } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddActivity />
+        <AddActivity onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
 
@@ -383,20 +448,28 @@ describe("AddActivity Screen", () => {
         date: Timestamp.fromDate(new Date()),
         important: true,
       });
-      expect(router.back).toHaveBeenCalled();
+      expect(mockOnSave).toHaveBeenCalled();
     });
   });
 });
 
 describe("AddDiet Screen", () => {
-  const AddDiet = require(config.AddDietPath).default;
+  jest.spyOn(require("@/firebase/firestore"), "writeToDB");
+
+  const mockOnSave = jest.fn();
+  const mockTheme = {
+    theme: { backgroundColor: "white", textColor: "black" },
+    toggleTheme: jest.fn(),
+  };
 
   test("renders correctly with all inputs", () => {
     const { getByTestId, getByText, getByPlaceholderText } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddDiet />
+        <AddDiet onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
+
+    expect(getByTestId("add-diet")).toBeTruthy();
 
     expect(getByText(/description/i)).toBeTruthy();
     expect(getByPlaceholderText(/description/i)).toBeTruthy();
@@ -410,23 +483,11 @@ describe("AddDiet Screen", () => {
     expect(getByText(/Cancel/i)).toBeTruthy();
     expect(getByText(/Save/i)).toBeTruthy();
   });
-  test("pressing cancel navigates back", async () => {
-    const { getByText } = render(
-      <ThemeContext.Provider value={mockTheme}>
-        <AddDiet />
-      </ThemeContext.Provider>
-    );
-    const backButton = getByText(/cancel/i);
-    await waitFor(() => {
-      fireEvent.press(backButton); // Navigate back
-    });
-    expect(router.back).toHaveBeenCalled();
-  });
 
   test("tapping on the date textinput brings up the datepicker and set it as today's date", async () => {
-    const { queryByTestId, getByPlaceholderText } = render(
+    const { debug, queryByTestId, getByPlaceholderText } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddDiet />
+        <AddDiet onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
     let datepicker = queryByTestId("datetime-picker");
@@ -452,7 +513,7 @@ describe("AddDiet Screen", () => {
   test("shows error when submitting with empty inputs", async () => {
     const { getByText } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddDiet />
+        <AddDiet onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
 
@@ -468,7 +529,7 @@ describe("AddDiet Screen", () => {
   test("shows error when submitting with invalid calories value (negative number or alphabetic)", async () => {
     const { queryByTestId, getByPlaceholderText, getByText } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddDiet />
+        <AddDiet onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
     const descriptionInput = getByPlaceholderText(/description/i);
@@ -514,21 +575,24 @@ describe("AddDiet Screen", () => {
     );
   });
 
-  test("toggles theme in add diet when theme button is pressed", async () => {
-    // Update the theme context (simulate the toggle)
-
+  it("toggles theme in add diet when theme button is pressed", async () => {
+    const toggleThemeMock = jest.fn();
+    const mockTheme = {
+      theme: { backgroundColor: "white", textColor: "black" },
+      toggleTheme: toggleThemeMock,
+    };
     const { getByTestId, rerender } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddDiet />
+        <AddDiet onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
     // Check that Activities screen is rendered
-    // const addDietTitle = getByTestId("add-diet");
-    // expect(addDietTitle).toBeTruthy();
-    // const originalTextColor = StyleSheet.flatten(
-    //   addDietTitle.props.style
-    // ).color;
-    // expect(originalTextColor).toBe("black");
+    const addDietTitle = getByTestId("add-diet");
+    expect(addDietTitle).toBeTruthy();
+    const originalTextColor = StyleSheet.flatten(
+      addDietTitle.props.style
+    ).color;
+    expect(originalTextColor).toBe("black");
 
     const originalAddDietsView = getByTestId("add-diet-view");
     expect(originalAddDietsView).toBeTruthy(); // Verifies Diet screen button is visible
@@ -537,19 +601,25 @@ describe("AddDiet Screen", () => {
     ).backgroundColor;
     expect(originalBackgroundColor).toBe("white");
 
+    // Update the theme context (simulate the toggle)
+    const newMockTheme = {
+      theme: { backgroundColor: "black", textColor: "white" },
+      toggleTheme: toggleThemeMock,
+    };
+
     // Re-render with the new theme
     rerender(
       <ThemeContext.Provider value={newMockTheme}>
-        <AddDiet />
+        <AddDiet onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
 
     // Check if the theme color has been updated
 
-    // const newTitle = getByTestId("add-diet");
-    // const newTextColor = StyleSheet.flatten(newTitle.props.style).color;
-    // expect(newTextColor).toBe("white");
-    // expect(newTextColor).not.toBe(originalTextColor);
+    const newTitle = getByTestId("add-diet");
+    const newTextColor = StyleSheet.flatten(newTitle.props.style).color;
+    expect(newTextColor).toBe("white");
+    expect(newTextColor).not.toBe(originalTextColor);
 
     const newDietsView = getByTestId("add-diet-view");
     expect(newDietsView).toBeTruthy(); // Verifies Diet screen button is visible
@@ -561,9 +631,9 @@ describe("AddDiet Screen", () => {
   });
 
   test("submits form successfully with valid inputs - important: false", async () => {
-    const { getByText, getByPlaceholderText } = render(
+    const { debug, getByText, getByPlaceholderText, getByTestId } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddDiet />
+        <AddDiet onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
 
@@ -591,14 +661,16 @@ describe("AddDiet Screen", () => {
         date: Timestamp.fromDate(new Date()),
         important: false,
       });
-      expect(router.back).toHaveBeenCalled();
+      expect(mockOnSave).toHaveBeenCalled();
     });
   });
 
   test("submits form successfully with valid inputs - important: true", async () => {
-    const { getByText, getByPlaceholderText } = render(
+    jest.spyOn(require("@/firebase/firestore"), "writeToDB");
+
+    const { debug, getByText, getByPlaceholderText, getByTestId } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AddDiet />
+        <AddDiet onSave={mockOnSave} />
       </ThemeContext.Provider>
     );
 
@@ -626,13 +698,18 @@ describe("AddDiet Screen", () => {
         date: Timestamp.fromDate(new Date()),
         important: true,
       });
-      expect(router.back).toHaveBeenCalled();
+      expect(mockOnSave).toHaveBeenCalled();
     });
   });
 });
 
 describe("Settings Screen", () => {
-  const Settings = require(config.SettingsPath).default;
+  const toggleThemeMock = jest.fn(); // Create a mock function
+
+  const mockTheme = {
+    theme: { backgroundColor: "white", textColor: "black" },
+    toggleTheme: toggleThemeMock,
+  };
 
   it("renders with the correct initial theme", () => {
     const { getByRole } = render(
@@ -650,12 +727,12 @@ describe("Settings Screen", () => {
         <Settings />
       </ThemeContext.Provider>
     );
-    // const settingsTitle = getByTestId("settings");
-    // expect(settingsTitle).toBeTruthy(); // Verifies Diet screen button is visible
-    // const originalTextColor = StyleSheet.flatten(
-    //   settingsTitle.props.style
-    // ).color;
-    // expect(originalTextColor).toBe("black");
+    const settingsTitle = getByTestId("settings");
+    expect(settingsTitle).toBeTruthy(); // Verifies Diet screen button is visible
+    const originalTextColor = StyleSheet.flatten(
+      settingsTitle.props.style
+    ).color;
+    expect(originalTextColor).toBe("black");
 
     const settingsView = getByTestId("settings-view");
     expect(settingsView).toBeTruthy(); // Verifies Diet screen button is visible
@@ -669,6 +746,12 @@ describe("Settings Screen", () => {
       fireEvent.press(button);
     });
     expect(toggleThemeMock).toHaveBeenCalledTimes(1);
+    // Update the theme context (simulate the toggle)
+    const newMockTheme = {
+      theme: { backgroundColor: "black", textColor: "white" },
+      toggleTheme: toggleThemeMock,
+    };
+
     // Re-render with the new theme
     rerender(
       <ThemeContext.Provider value={newMockTheme}>
@@ -677,10 +760,10 @@ describe("Settings Screen", () => {
     );
 
     // Check if the theme color has been updated
-    // const newSettingsTitle = getByTestId("settings");
-    // const newTextColor = StyleSheet.flatten(newSettingsTitle.props.style).color;
-    // expect(newTextColor).toBe("white");
-    // expect(newTextColor).not.toBe(originalTextColor);
+    const newSettingsTitle = getByTestId("settings");
+    const newTextColor = StyleSheet.flatten(newSettingsTitle.props.style).color;
+    expect(newTextColor).toBe("white");
+    expect(newTextColor).not.toBe(originalTextColor);
 
     const newSettingsView = getByTestId("settings-view");
     expect(newSettingsView).toBeTruthy(); // Verifies Diet screen button is visible
@@ -693,20 +776,25 @@ describe("Settings Screen", () => {
 });
 
 describe("All Activities Screen", () => {
-  const AllActivities = require(config.AllActivitiesPath).default;
   it("toggles theme in all activities when button is pressed", async () => {
-    const { getByTestId, rerender } = render(
+    const mockOnAdd = jest.fn();
+    const toggleThemeMock = jest.fn();
+    const mockTheme = {
+      theme: { backgroundColor: "white", textColor: "black" },
+      toggleTheme: toggleThemeMock,
+    };
+    const { getByTestId, rerender, getByText } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AllActivities />
+        <AllActivities onAdd={mockOnAdd} />
       </ThemeContext.Provider>
     );
     // Check that Activities screen is rendered
-    // const activitiestTitle = getByTestId("all-activities");
-    // expect(activitiestTitle).toBeTruthy();
-    // const originalTextColor = StyleSheet.flatten(
-    //   activitiestTitle.props.style
-    // ).color;
-    // expect(originalTextColor).toBe("black");
+    const activitiestTitle = getByTestId("all-activities");
+    expect(activitiestTitle).toBeTruthy();
+    const originalTextColor = StyleSheet.flatten(
+      activitiestTitle.props.style
+    ).color;
+    expect(originalTextColor).toBe("black");
 
     const allAcitivitiesView = getByTestId("all-activities-view");
     expect(allAcitivitiesView).toBeTruthy(); // Verifies Diet screen button is visible
@@ -714,20 +802,27 @@ describe("All Activities Screen", () => {
       allAcitivitiesView.props.style
     ).backgroundColor;
     expect(originalBackgroundColor).toBe("white");
+
+    // Update the theme context (simulate the toggle)
+    const newMockTheme = {
+      theme: { backgroundColor: "black", textColor: "white" },
+      toggleTheme: toggleThemeMock,
+    };
+
     // Re-render with the new theme
     rerender(
       <ThemeContext.Provider value={newMockTheme}>
-        <AllActivities />
+        <AllActivities onAdd={mockOnAdd} />
       </ThemeContext.Provider>
     );
 
     // Check if the theme color has been updated
 
-    // const newTitle = getByTestId("all-activities");
-    // const newTextColor = StyleSheet.flatten(newTitle.props.style).color;
-    // expect(newTextColor).toBe("white");
+    const newTitle = getByTestId("all-activities");
+    const newTextColor = StyleSheet.flatten(newTitle.props.style).color;
+    expect(newTextColor).toBe("white");
 
-    // expect(newTextColor).not.toBe(originalTextColor);
+    expect(newTextColor).not.toBe(originalTextColor);
 
     const newAcitivitiesView = getByTestId("all-activities-view");
     expect(newAcitivitiesView).toBeTruthy(); // Verifies Diet screen button is visible
@@ -739,21 +834,25 @@ describe("All Activities Screen", () => {
   });
 });
 describe("All Diets Screen", () => {
-  const AllDiets = require(config.AllDietsPath).default;
-
   it("toggles theme in all diets when button is pressed", async () => {
+    const mockOnAdd = jest.fn();
+    const toggleThemeMock = jest.fn();
+    const mockTheme = {
+      theme: { backgroundColor: "white", textColor: "black" },
+      toggleTheme: toggleThemeMock,
+    };
     const { getByRole, getByTestId, rerender, getByText } = render(
       <ThemeContext.Provider value={mockTheme}>
-        <AllDiets />
+        <AllDiets onAdd={mockOnAdd} />
       </ThemeContext.Provider>
     );
     // Check that Activities screen is rendered
-    // const activitiestTitle = getByTestId("all-diets");
-    // expect(activitiestTitle).toBeTruthy();
-    // const originalTextColor = StyleSheet.flatten(
-    //   activitiestTitle.props.style
-    // ).color;
-    // expect(originalTextColor).toBe("black");
+    const activitiestTitle = getByTestId("all-diets");
+    expect(activitiestTitle).toBeTruthy();
+    const originalTextColor = StyleSheet.flatten(
+      activitiestTitle.props.style
+    ).color;
+    expect(originalTextColor).toBe("black");
 
     const originalDietsView = getByTestId("all-diets-view");
     expect(originalDietsView).toBeTruthy(); // Verifies Diet screen button is visible
@@ -762,19 +861,25 @@ describe("All Diets Screen", () => {
     ).backgroundColor;
     expect(originalBackgroundColor).toBe("white");
 
+    // Update the theme context (simulate the toggle)
+    const newMockTheme = {
+      theme: { backgroundColor: "black", textColor: "white" },
+      toggleTheme: toggleThemeMock,
+    };
+
     // Re-render with the new theme
     rerender(
       <ThemeContext.Provider value={newMockTheme}>
-        <AllDiets />
+        <AllDiets onAdd={mockOnAdd} />
       </ThemeContext.Provider>
     );
 
     // Check if the theme color has been updated
 
-    // const newTitle = getByTestId("all-diets");
-    // const newTextColor = StyleSheet.flatten(newTitle.props.style).color;
-    // expect(newTextColor).toBe("white");
-    // expect(newTextColor).not.toBe(originalTextColor);
+    const newTitle = getByTestId("all-diets");
+    const newTextColor = StyleSheet.flatten(newTitle.props.style).color;
+    expect(newTextColor).toBe("white");
+    expect(newTextColor).not.toBe(originalTextColor);
 
     const newDietsView = getByTestId("all-diets-view");
     expect(newDietsView).toBeTruthy(); // Verifies Diet screen button is visible

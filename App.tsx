@@ -1,13 +1,21 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Button, TouchableOpacity, Text  } from "react-native";
+import { StyleSheet, View, Button, TouchableOpacity, Text } from "react-native";
 import Diets from "./screens/AllDiets";
 import AllActivities from "./screens/AllActivities";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ThemeProvider } from "./ThemeContext"; 
+import { ThemeProvider } from "./ThemeContext";
 import Settings from "./screens/Settings";
 
-
 export default function App() {
+    return (
+        <ThemeProvider>
+            <AppContent />
+        </ThemeProvider>
+    );
+}
+
+
+function AppContent() {
     const [showDiets, setShowDiets] = useState(true);
     const [showActivity, setShowActivity] = useState(false);
     const [showSetting, setShowSetting] = useState(false);
@@ -35,35 +43,35 @@ export default function App() {
 
 
     return (
-    <ThemeProvider>
-        <SafeAreaView style={styles.safeContainer}> 
-            <View style={styles.container}>
+        <ThemeProvider>
+            <SafeAreaView style={styles.safeContainer}>
+                <View style={styles.container}>
 
-                <View style={styles.navbar}>
-                    <TouchableOpacity onPress={showActivities}>
-                        <Text style={[styles.navText, showActivity && styles.activeTab]}>Activities</Text>
-                    </TouchableOpacity>
+                    <View style={styles.navbar}>
+                        <TouchableOpacity onPress={showActivities}>
+                            <Text style={[styles.navText, showActivity && styles.activeTab]}>Activities</Text>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity onPress={showSet}>
-                    <Text style={[styles.title, showSetting && styles.activeTab]}>Settings</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={showSet}>
+                            <Text style={[styles.title, showSetting && styles.activeTab]}>Settings</Text>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity onPress={showDietsPage}>
-                        <Text style={[styles.navText, showDiets && styles.activeTab]}>Diets</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={showDietsPage}>
+                            <Text style={[styles.navText, showDiets && styles.activeTab]}>Diets</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {showSetting && <Settings />}
+
+
+                    {showDiets && <Diets />}
+
+
+                    {showActivity && <AllActivities />}
+
                 </View>
-
-                {showSetting && <Settings/>}
-
-
-                {showDiets && <Diets/>}
-
-
-                {showActivity && <AllActivities/>}
-
-            </View>
-        </SafeAreaView>
-    </ThemeProvider>
+            </SafeAreaView>
+        </ThemeProvider>
     );
 }
 
@@ -73,20 +81,20 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     navbar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    backgroundColor: "#333", 
-    paddingTop: 70 , 
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        backgroundColor: "#333",
+        paddingTop: 70,
     },
     navText: {
         fontSize: 16,
         color: "#CCC",
     },
     activeTab: {
-        color: "#007BFF", 
+        color: "#007BFF",
         fontWeight: "bold",
     },
     title: {
@@ -96,6 +104,6 @@ const styles = StyleSheet.create({
     },
     safeContainer: {
         flex: 1,
-        backgroundColor: "#333", 
+        backgroundColor: "#333",
     },
 });
