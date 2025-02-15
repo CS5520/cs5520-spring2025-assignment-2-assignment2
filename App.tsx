@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Button, TouchableOpacity, Text  } from "react-native";
 import Diets from "./screens/AllDiets";
-import AddDiet from "./screens/AddDiet";
 import AllActivities from "./screens/AllActivities";
-import AddActivity from "./screens/AddActivity";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ThemeProvider } from "./ThemeContext"; // 引入 ThemeProvider
+import { Provider } from "./ThemeContext"; 
 import Settings from "./screens/Settings";
 
 
@@ -37,36 +35,36 @@ export default function App() {
 
 
     return (
-    <ThemeProvider>
-    <SafeAreaView style={styles.safeContainer}> 
-        <View style={styles.container}>
-            {/* 顶部导航栏 */}
-            <View style={styles.navbar}>
-                <TouchableOpacity onPress={showActivities}>
-                    <Text style={[styles.navText, showActivity && styles.activeTab]}>Activities</Text>
-                </TouchableOpacity>
+    <Provider>
+        <SafeAreaView style={styles.safeContainer}> 
+            <View style={styles.container}>
+                {/* 顶部导航栏 */}
+                <View style={styles.navbar}>
+                    <TouchableOpacity onPress={showActivities}>
+                        <Text style={[styles.navText, showActivity && styles.activeTab]}>Activities</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity onPress={showSet}>
-                <Text style={[styles.title, showSetting && styles.activeTab]}>Settings</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity onPress={showSet}>
+                    <Text style={[styles.title, showSetting && styles.activeTab]}>Settings</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity onPress={showDietsPage}>
-                    <Text style={[styles.navText, showDiets && styles.activeTab]}>Diets</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity onPress={showDietsPage}>
+                        <Text style={[styles.navText, showDiets && styles.activeTab]}>Diets</Text>
+                    </TouchableOpacity>
+                </View>
+
+                {/* 显示 Settings 页面 */}
+                {showSetting && <Settings/>}
+
+                {/* 显示 Diet 页面 */}
+                {showDiets && <Diets/>}
+
+                {/* 显示 Activity 页面 */}
+                {showActivity && <AllActivities/>}
+
             </View>
-
-            {/* 显示 Settings 页面 */}
-            {showSetting && <Settings/>}
-
-            {/* 显示 Diet 页面 */}
-            {showDiets && <Diets/>}
-
-            {/* 显示 Activity 页面 */}
-            {showActivity && <AllActivities/>}
-
-        </View>
-    </SafeAreaView>
-    </ThemeProvider>
+        </SafeAreaView>
+    </Provider>
     );
 }
 
