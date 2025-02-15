@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Timestamp } from "firebase/firestore";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { writeToDB } from "../firebase/firestore";
+import { useTheme } from "../ThemeContext";
 
 interface AddDietProps {
   closeddDiet: () => void;
@@ -13,6 +14,7 @@ export default function AddDiet({closeddDiet}: AddDietProps) {
   const [calories, setCalories] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const { theme } = useTheme();
 
   const handleSave = async () => {
     if (!description || !calories || !date) {
@@ -57,7 +59,7 @@ export default function AddDiet({closeddDiet}: AddDietProps) {
   };
 
   return (
-    <View testID="add-diet-view" style={styles.absolutePage}>
+    <View testID="add-diet-view" style={[styles.absolutePage, { backgroundColor: theme.backgroundColor }]}>
       <Text testID="add-diet" style={styles.title}>Add Diet</Text>
       <Text style={styles.label}>Description *</Text>
       <TextInput

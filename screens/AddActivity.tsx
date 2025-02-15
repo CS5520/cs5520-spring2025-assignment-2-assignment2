@@ -4,6 +4,7 @@ import { Timestamp } from "firebase/firestore";
 import { writeToDB } from "../firebase/firestore";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import DropDownPicker from "react-native-dropdown-picker";
+import { useTheme } from "../ThemeContext";
 
 
 interface AddActivityProps {
@@ -15,6 +16,7 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
   const [duration, setDuration] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const { theme } = useTheme();
 
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([
@@ -78,7 +80,7 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
 
 
   return (
-    <View testID="add-activity-view" style={styles.absolutePage}>
+    <View testID="add-activity-view" style={[styles.absolutePage,{ backgroundColor: theme.backgroundColor }]} >
       <Text testID="add-activity" style={styles.title}>Add Activity</Text>
       <Text style={styles.label}>Activity *</Text>
       <DropDownPicker
