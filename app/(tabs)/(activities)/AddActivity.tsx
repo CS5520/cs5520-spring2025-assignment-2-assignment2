@@ -6,29 +6,13 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { writeToDB, deleteFromDB } from "@/firebase/firestore";
 import colours from "@/constants/styles";
 import { ThemeContext } from "@/ThemeContext";
-import { router, useNavigation } from "expo-router";
+import { router, Stack, useNavigation } from "expo-router";
 import { Ionicons } from '@expo/vector-icons';
 import PressableButton from "@/components/PressableButton";
 import ActivityForm, { Activity } from '@/components/ActivityForm'
 
 export default function AddActivity() {
   const {theme} = useContext(ThemeContext);
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <PressableButton 
-          pressedInHandler={()=> router.back()}>
-          <Ionicons name="trash-outline" size={24} color={theme.navigationTextColor} />
-        </PressableButton>
-      ),
-      headerRightContainerStyle: {
-        paddingRight: 15,
-      },
-    });
-  }, [navigation, theme]);
-
 
   async function handleAddSave(newActivity: Activity) {
     try {
@@ -40,14 +24,25 @@ export default function AddActivity() {
   }
 
   return (
-    <ActivityForm addSaveHandler={handleAddSave}/>
+    <View style={styles.container}>
+      <Stack.Screen 
+        options={{ 
+          headerRight: () => (
+            <PressableButton 
+              pressedInHandler={()=>router.back()}>
+              <Ionicons name="trash-outline" size={24} color={theme.navigationTextColor} />
+            </PressableButton>
+          ),
+        }}
+      />
+      <ActivityForm addSaveHandler={handleAddSave}/>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
   },
   title: {
     fontSize: 24,

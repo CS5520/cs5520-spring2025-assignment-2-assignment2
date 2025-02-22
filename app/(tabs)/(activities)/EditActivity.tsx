@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from 'react'
 import ActivityForm, { Activity } from '@/components/ActivityForm'
 import { onSnapshot, Timestamp } from 'firebase/firestore'
 import { deleteFromDB, updateDB } from '@/firebase/firestore'
-import { router, useLocalSearchParams, useNavigation } from 'expo-router'
+import { router, Stack, useLocalSearchParams, useNavigation } from 'expo-router'
 import { ItemFromDB } from '@/components/ItemsList'
 import PressableButton from '@/components/PressableButton'
 import colours from '@/constants/styles'
@@ -13,7 +13,6 @@ import { ThemeContext } from '@/ThemeContext'
 
 export default function EditActivity() {
   const params = useLocalSearchParams(); 
-  const navigation = useNavigation();
   const { theme } = useContext(ThemeContext);
 
   const item: ItemFromDB = {
@@ -23,20 +22,6 @@ export default function EditActivity() {
     isImportant: params.isImportant === 'true',
     date: Timestamp.fromDate(new Date(typeof(params.date) === "string"? params.date : "")),
   };
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <PressableButton 
-          pressedInHandler={handleEditDelete}>
-          <Ionicons name="trash-outline" size={24} color={theme.navigationTextColor} />
-        </PressableButton>
-      ),
-      headerRightContainerStyle: {
-        paddingRight: 15,
-      },
-    });
-  }, [navigation]);
 
   async function handleEditDelete() {
     Alert.alert(
@@ -88,8 +73,24 @@ export default function EditActivity() {
 
 
   return (
-    <ActivityForm initialData={item} editSaveHandler={handleEditSave}  />
-  )
+    <View style={styles.container}>
+      <Stack.Screen 
+        options={{ 
+          headerRight: () => (
+            <PressableButton 
+              pressedInHandler={handleEditDelete}>
+              <Ionicons name="trash-outline" size={24} color={theme.navigationTextColor} />
+            </PressableButton>
+          ),
+        }}
+      />
+      <ActivityForm initialData={item} editSaveHandler={handleEditSave}  />
+    </View>
+  );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  }
+})

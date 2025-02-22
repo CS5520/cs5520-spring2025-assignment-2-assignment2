@@ -10,29 +10,39 @@ import PressableButton from "@/components/PressableButton";
 
 export default function AllDiets() {
   const {theme} = useContext(ThemeContext);
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   function handleAdd() {
     router.push("/AddDiet");
   }
     
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <PressableButton 
-          pressedInHandler={handleAdd}>
-          <Ionicons name="add" size={24} color={theme.navigationTextColor} />
-        </PressableButton>
-      ),
-      headerRightContainerStyle: {
-        paddingRight: 15,
-      },
-    });
-  }, [navigation, theme]);
+  // useEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <PressableButton 
+  //         pressedInHandler={handleAdd}>
+  //         <Ionicons name="add" size={24} color={theme.navigationTextColor} />
+  //       </PressableButton>
+  //     ),
+  //     headerRightContainerStyle: {
+  //       paddingRight: 15,
+  //     },
+  //   });
+  // }, [navigation, theme]);
 
 
   return (
     <View testID="all-diets-view" style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+      <Stack.Screen 
+        options={{ 
+          headerRight: () => (
+            <PressableButton 
+              pressedInHandler={handleAdd}>
+              <Ionicons name="add" size={24} color={theme.navigationTextColor} />
+            </PressableButton>
+          ),
+        }}
+      />
       <ItemsList type="diets" />
     </View>
   );

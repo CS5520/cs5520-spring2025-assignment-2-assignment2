@@ -1,6 +1,6 @@
 import { Alert, StyleSheet, Text, View } from 'react-native'
 import React, { useContext, useEffect } from 'react'
-import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import { router, Stack, useLocalSearchParams, useNavigation } from 'expo-router';
 import PressableButton from '@/components/PressableButton';
 import { Ionicons } from '@expo/vector-icons';
 import colours from '@/constants/styles';
@@ -10,9 +10,9 @@ import { Timestamp } from 'firebase/firestore';
 import DietForm, { Diet } from '@/components/DietForm';
 import { ThemeContext } from '@/ThemeContext';
 
+
 export default function EditDiet() {
   const params = useLocalSearchParams(); 
-  const navigation = useNavigation();
   const { theme } = useContext(ThemeContext);
   
   const item: ItemFromDB = {
@@ -25,21 +25,6 @@ export default function EditDiet() {
 
   console.log("item: ", item);
   
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <PressableButton 
-          pressedInHandler={handleEditDelete}>
-          <Ionicons name="trash-outline" size={24} color={theme.navigationTextColor} />
-        </PressableButton>
-      ),
-      headerRightContainerStyle: {
-        paddingRight: 15,
-      },
-    });
-  }, [navigation]);
-
   
   async function handleEditDelete() {
     Alert.alert(
@@ -91,8 +76,24 @@ export default function EditDiet() {
   
 
   return (
-    <DietForm initialData={item} editSaveHandler={handleEditSave}  />
+    <View style={styles.container}>
+      <Stack.Screen 
+        options={{ 
+          headerRight: () => (
+            <PressableButton 
+              pressedInHandler={handleEditDelete}>
+              <Ionicons name="trash-outline" size={24} color={theme.navigationTextColor} />
+            </PressableButton>
+          ),
+        }}
+      />
+      <DietForm initialData={item} editSaveHandler={handleEditSave}  />
+    </View>
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+})
