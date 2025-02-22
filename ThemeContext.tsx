@@ -9,11 +9,15 @@ interface ThemeProps {
 const themes = {
   light: {
     backgroundColor: colours.lightBackground,
-    textColor: 'black'
+    textColor: colours.darkText,
+    navigationBackgroundColor: colours.darkBackground,
+    navigationTextColor: colours.lightText
   },
   dark: {
     backgroundColor: colours.darkBackground,
-    textColor: 'white'
+    textColor: colours.lightText,
+    navigationBackgroundColor: colours.lightBackground,
+    navigationTextColor: 'black'
   },
 };
 

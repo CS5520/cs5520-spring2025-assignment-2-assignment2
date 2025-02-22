@@ -1,8 +1,10 @@
-import { StyleSheet, Text, View, FlatList } from 'react-native'
+import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import {collection, onSnapshot, Timestamp} from 'firebase/firestore';
+import { Ionicons } from '@expo/vector-icons';
 import { database } from '../firebase/firebaseSetup';
 import colours from '../constants/styles';
+import { router } from 'expo-router';
 
 interface ItemsListProps {
   type: string;
@@ -46,18 +48,44 @@ export default function ItemsList({type}: ItemsListProps) {
     }
   }, [type])
 
+
+  function handlePress(item: ItemFromDB) {
+    if (type === 'diets') {
+      router.push({
+        pathname: "/EditDiet",
+        params: { 
+          ...item,
+          date: item.date.toDate().toISOString(),
+          isImportant: item.isImportant.toString(),
+        },
+      });
+    } else if (type === 'activities') {
+      router.push({
+        pathname:"/EditActivity",
+        params: {
+          ...item,
+          date: item.date.toDate().toISOString(),
+          isImportant: item.isImportant.toString(),
+        }
+      });
+    }
+  }
+
+
   return (
     <FlatList
       data={items}
       renderItem={({item}) => (
-        <View style={styles.itemContainer}>
-          <Text style={styles.itemTitle}>{item.title}</Text>
-          <View style={styles.importantPlaceholder}>
-            {item.isImportant && <Text style={styles.important}>{"\u26A0"}</Text>}
+        <Pressable onPressIn={() => handlePress(item)}>
+          <View style={styles.itemContainer}>
+            <Text style={styles.itemTitle}>{item.title}</Text>
+            <View style={styles.importantPlaceholder}>
+              {item.isImportant && <Ionicons name="warning" size={24} color="gold" />}
+            </View>
+            <Text style={styles.itemBox}>{item.date.toDate().toDateString()}</Text>
+            <Text style={styles.itemValue}>{item.value}{type === 'activities' ? ' min' : ''}</Text>
           </View>
-          <Text style={styles.itemBox}>{item.date.toDate().toDateString()}</Text>
-          <Text style={styles.itemValue}>{item.value}{type === 'activities' ? ' min' : ''}</Text>
-        </View>
+        </Pressable>
       )}
     />
   )
@@ -84,7 +112,7 @@ const styles = StyleSheet.create({
     alignItems: "center", 
   },
   important: {
-    color: "yellow",
+    color: "gold",
     fontSize: 18,
   },
   itemBox: {
