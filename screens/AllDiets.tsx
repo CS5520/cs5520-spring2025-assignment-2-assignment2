@@ -1,51 +1,45 @@
-import React, { useContext } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import ItemsList from "../components/ItemsList";
-import { ThemeContext } from "../ThemeContext";
-import { Spacing, Colors } from "../constants/styles";
+import { useState } from "react";
+import AddDiet from "./AddDiet";
+import { useTheme } from "../ThemeContext";
+import { ThemeContext } from"../ThemeContext"
+import { useContext } from "react";
+import {styles} from "../constants/styles";
 
-interface AllDietsProps {
-  onAdd: () => void;
-}
 
-const AllDiets: React.FC<AllDietsProps> = ({ onAdd }) => {
-  const { theme } = useContext(ThemeContext);
+
+export default function AllActivities() {
+      const [showAddDiet, setShowAddDiet] = useState(false);
+      const { theme } = useContext(ThemeContext);
+
+      const openAddDiet = () => {
+        setShowAddDiet(true);
+    };
+
+    const closeAddDiet = () => {
+      setShowAddDiet(false);
+  };
+
+
+      
 
   return (
-    <View testID="all-diets-view" style={[styles.container, { backgroundColor: theme.background }]}>
-      <Text testID="all-diets" style={{ ...styles.title, color: theme.text }} >
-        All Diets
-      </Text>
+    <View testID="all-diets-view" style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
+      <Text testID="all-diets" style = {[styles.header, { color: theme.textColor }]}>All Diets</Text>
 
-      <TouchableOpacity onPress={onAdd} style={styles.addWrapper}>
-        <Text style={[styles.addText, { color: "#007BFF" }]}>Add</Text>
+      <TouchableOpacity style={styles.button} onPress={openAddDiet}>
+          <Text style={styles.buttonText}>Add Diets</Text>
       </TouchableOpacity>
-
-      <ItemsList type="diet" />
+      
+      <ItemsList type="diet" openAdd={openAddDiet} />
+      {showAddDiet && <AddDiet onSave={closeAddDiet} />}
     </View>
   );
-};
+}
 
-export default AllDiets;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: Spacing.medium,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "600",
-    textAlign: "center",
-    marginBottom: Spacing.small,
-  },
-  addWrapper: {
-    alignSelf: "center",
-    marginBottom: Spacing.medium,
-  },
-  addText: {
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "center",
-  },
-});
+
+
+

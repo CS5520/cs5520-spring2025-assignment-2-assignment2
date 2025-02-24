@@ -1,46 +1,42 @@
+
+import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { db } from "./firebaseSetup";
-import {
-  collection,
-  query,
-  onSnapshot,
-  addDoc,
-  DocumentData,
-  Unsubscribe,
-} from "firebase/firestore";
 
-/**
- * Listen to a specific Firestore collection (real-time updates).
- * @param collectionName Name of the Firestore collection
- * @param callback Function to handle the new array of documents whenever data changes
- * @returns An unsubscribe function to stop listening
- */
-export function listenToCollection(
-  collectionName: string,
-  callback: (docs: Array<{ id: string } & DocumentData>) => void
-): Unsubscribe {
-  const q = query(collection(db, collectionName));
-  
-  const unsubscribe = onSnapshot(q, (snapshot) => {
-    const list: Array<{ id: string } & DocumentData> = [];
-    snapshot.forEach((doc) => {
-      list.push({ id: doc.id, ...doc.data() });
-    });
-    callback(list);
-  });
-
-  return unsubscribe;
+export interface Diet {
+    id?: string;
+    calories: string;
+    description: string;
+    date: Timestamp | null;
+    important: boolean;
 }
 
-/**
- * Write a new document to the specified collection.
- * @param collectionName Name of the Firestore collection
- * @param data The data object to be saved as a new document
- * @returns A Promise resolving to the newly created doc reference
- */
-export async function writeToDB(collectionName: string, data: any) {
-  try {
-    await addDoc(collection(db, collectionName), data);
-  } catch (err) {
-    console.error("Error writing document: ", err);
-  }
+export interface Activity {
+    id?: string;
+    activity: string;
+    duration: string;
+    date: Timestamp | null;
+    important: boolean;
+}
+
+export async function writeToDB(collectionName: "diet" | "activities", data: Diet | Activity,) {
+    try {
+        const formattedData = collectionName === "diet" ? {
+            description: (data as Diet).description,
+            calories: (data as Diet).calories,
+            date: data.date ? Timestamp.fromDate(data.date.toDate()) : Timestamp.fromDate(new Date()),
+            important: data.important
+        } : {
+            activity: (data as Activity).activity,
+            duration: (data as Activity).duration,
+            date: data.date ? Timestamp.fromDate(data.date.toDate()) : Timestamp.fromDate(new Date()),
+            important: data.important
+        };
+
+        const docRef = await addDoc(collection(db, collectionName === "diet" ? "diets" : "activities"), formattedData);
+        console.log("Document written with ID: ", docRef.id);
+        return docRef.id;
+    } catch (e) {
+        console.error("Error adding document: ", e);
+        throw e;
+    }
 }

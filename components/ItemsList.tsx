@@ -1,143 +1,111 @@
-// components/ItemsList.tsx
-import React, { useEffect, useState, useContext } from "react";
-import { FlatList, View, Text, StyleSheet } from "react-native";
-import { Timestamp } from "firebase/firestore";
-import { listenToCollection } from "../firebase/firestore";
-import { Spacing } from "../constants/styles";
-import { ThemeContext } from "../ThemeContext";
 
-interface Item {
-  id: string;
-  // For activities:
-  activity?: string;
-  duration?: string;
-  // For diets:
-  description?: string;
-  calories?: string;
-  date: Date;
-  important: boolean;
-}
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../firebase/firebaseSetup";
+import { Text, View, TouchableOpacity, StyleSheet, FlatList } from "react-native";
+import { Diet, Activity } from "../firebase/firestore";
+import { useEffect, useState } from "react";
+import {styles} from "../constants/styles";
 
 interface ItemsListProps {
-  type: "activity" | "diet";
+    type: "diet" | "activity";
+    openAdd: () => void;
 }
 
-const ItemsList: React.FC<ItemsListProps> = ({ type }) => {
-  const [items, setItems] = useState<Item[]>([]);
-  const { theme } = useContext(ThemeContext);
+export default function ItemsList({ type, openAdd}: ItemsListProps) {
+    const [items, setItems] = useState<(Diet | Activity)[]>([]);
 
-  useEffect(() => {
-    const collectionName = type === "activity" ? "activities" : "diets";
+    useEffect(() => {
+        const collectionRef = collection(db, type === "diet" ? "diets" : "activities");
+        const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+            const data = snapshot.docs.map((doc) => {
+                const docData = doc.data();
+                return type === "diet"
+                    ? ({ id: doc.id, ...docData } as Diet)
+                    : ({ ...docData } as Activity);
+            });
+            setItems(data);
+        });
 
-    const unsubscribe = listenToCollection(collectionName, (docs) => {
-      const newItems: Item[] = docs.map((doc) => {
-        // Convert Firestore Timestamp -> JS Date
-        let jsDate = new Date();
-        if (doc.date && doc.date.toDate) {
-          jsDate = doc.date.toDate(); 
-        }
-
-        return {
-          id: doc.id,
-          activity: doc.activity,
-          duration: doc.duration,
-          description: doc.description,
-          calories: doc.calories,
-          date: jsDate,
-          important: doc.important,
-        };
-      });
-      setItems(newItems);
-    });
-
-    return () => unsubscribe();
-  }, [type]);
-
-  const renderItem = ({ item }: { item: Item }) => {
-    const mainLabel = type === "diet" ? item.description : item.activity;
-    const numericVal =
-      type === "diet"
-        ? item.calories
-        : item.duration
-        ? `${item.duration} min`
-        : "";
-    const dateStr = item.date.toDateString();
+        return () => unsubscribe();
+    }, [type]);
 
     return (
-      <View style={[styles.card, { backgroundColor: theme.cardBackground }]}>
-        <View style={styles.leftPart}>
-          <Text style={[styles.mainLabel, { color: theme.cardText }]}>
-            {mainLabel}
-          </Text>
-          {item.important && <Text style={styles.warningIcon}>⚠️</Text>}
-        </View>
+        <View style={styles.container}>
+            
+            
+            <FlatList
+                data={items}
+                renderItem={({ item }) => (
+                    <View style={styles.itemCard}>
 
-        <View style={[styles.dateBox, { backgroundColor: theme.dateBackground }]}>
-          <Text style={[styles.dateText, { color: theme.dateText }]}>
-            {dateStr}
-          </Text>
-        </View>
+                        <View style={styles.leftSection}>
+                            <Text style={styles.itemTitle}>
+                                {type === "diet" ? (item as Diet).description : (item as Activity).activity}
+                            </Text>
+                            {(item as Diet).important && <Text style={styles.warning}>⚠️</Text>}
+                        </View>
 
-        <View style={[styles.numericBox, { backgroundColor: theme.numericBackground }]}>
-          <Text style={[styles.numericText, { color: theme.numericText }]}>
-            {numericVal}
-          </Text>
+
+                        <View style={styles.rightSection}>
+                            <Text style={styles.dateText}>
+                                {item.date ? new Date(item.date.seconds * 1000).toDateString() : "No Date Available"}
+                            </Text>
+                            <Text style={styles.valueText}>
+                                {type === "diet"
+                                    ? `${(item as Diet).calories} kcal`
+                                    : `${(item as Activity).duration} min`}
+                            </Text>
+                        </View>
+                    </View>
+                )}
+            />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            {/* <View style={styles.listContainer}>
+                {items.map((item) => (
+                    <View key={item.id} style={styles.itemCard}>
+                        {type === "diet" ? (
+                            <>
+                                <Text style={styles.itemText}>Description: {(item as Diet).description}</Text>
+                                <Text style={styles.itemText}>Calories: {(item as Diet).calories} kcal</Text>
+                            </>
+                        ) : (
+                            <>
+                                <Text style={styles.itemText}>Activity: {(item as Activity).name}</Text>
+                                <Text style={styles.itemText}>Duration: {(item as Activity).duration} min</Text>
+                            </>
+                        )}
+                        <Text style={styles.itemText}>
+                            Date: {new Date(item.date.seconds * 1000).toDateString()}
+                        </Text>
+                    </View>
+                ))}
+            </View> */}
         </View>
-      </View>
     );
-  };
+}
 
-  return (
-    <FlatList
-      data={items}
-      keyExtractor={(item) => item.id}
-      renderItem={renderItem}
-      contentContainerStyle={{ paddingBottom: 30 }}
-    />
-  );
-};
 
-export default ItemsList;
-
-const styles = StyleSheet.create({
-  card: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 8,
-    padding: Spacing.small,
-    marginBottom: Spacing.small,
-  },
-  leftPart: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-    marginRight: Spacing.small,
-  },
-  mainLabel: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginRight: 6,
-  },
-  warningIcon: {
-    fontSize: 16,
-  },
-  dateBox: {
-    borderRadius: 4,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    marginRight: Spacing.small,
-  },
-  dateText: {
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  numericBox: {
-    borderRadius: 4,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-  },
-  numericText: {
-    fontSize: 14,
-    fontWeight: "600",
-  },
-});

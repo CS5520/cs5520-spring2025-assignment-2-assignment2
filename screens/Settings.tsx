@@ -1,33 +1,20 @@
-import React, { useContext } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
-import { ThemeContext } from "../ThemeContext";
-import { Spacing } from "../constants/styles";
 
-const Settings: React.FC = () => {
-  const { theme, toggleTheme } = useContext(ThemeContext);
+import React from "react";
+import { View, Text, StyleSheet, Button } from "react-native";
+import { useTheme } from "../ThemeContext"; 
+import {styles} from "../constants/styles";
+
+const Settings = () => {
+  const { theme, toggleTheme } = useTheme(); 
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]} testID="settings-view">
-      {/* Modified line below */}
-      <Text style={{ ...styles.header, color: theme.text }} testID="settings">
-        Settings
-      </Text>
-      <Button title="Toggle Theme" onPress={toggleTheme} color="#007BFF" />
+    <View testID="settings-view" style={[styles.container_setting, { backgroundColor: theme.backgroundColor }]}>
+      <Text testID="settings" style={[styles.text, { color: theme.textColor }]}>Settings</Text>
+      <Button title="Toggle Theme" onPress={toggleTheme} />
+
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: Spacing.medium,
-  },
-  header: {
-    fontSize: 24,
-    marginBottom: Spacing.large,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-});
 
 export default Settings;

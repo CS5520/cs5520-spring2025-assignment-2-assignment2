@@ -1,48 +1,39 @@
-import React, { useContext } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import ItemsList from "../components/ItemsList";
-import { ThemeContext } from "../ThemeContext";
-import { Spacing, Colors } from "../constants/styles";
+import { useState } from "react";
+import AddActivity from "./AddActivity";
+import { useTheme } from "../ThemeContext";
+import { ThemeContext } from"../ThemeContext"
+import { useContext } from "react";
+import {styles} from "../constants/styles";
 
-interface AllActivitiesProps {
-  onAdd: () => void;
-}
 
-const AllActivities: React.FC<AllActivitiesProps> = ({ onAdd }) => {
+
+export default function AllActivities() {
+  const [showAddActivity, setShowAddActivity] = useState(false);
   const { theme } = useContext(ThemeContext);
-
-  return (
-    <View style={[styles.container, { backgroundColor: theme.background }]} testID="all-activities-view">
-      <Text style={{ ...styles.title, color: theme.text }}  testID="all-activities">All Activities</Text>
-      <View style={styles.addButtonWrapper}>
-        <Button
-          title="Add"
-          onPress={onAdd}
-          color={Colors.primary}
-        />
-      </View>
-      <ItemsList type="activity" />
-    </View>
-  );
+  
+  const openAddActivity = () => {
+    setShowAddActivity(true);
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: Spacing.medium,
-    paddingTop: Spacing.medium,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "600",
-    marginBottom: Spacing.small,
-    textAlign: "center",
-  },
-  addButtonWrapper: {
-    marginBottom: Spacing.medium,
-    alignSelf: "center",
-  },
-});
+const closeAddActivity = () => {
+    setShowAddActivity(false);
+};
 
 
-export default AllActivities;
+  return (
+    <View testID="all-activities-view" style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
+      <Text testID="all-activities" style = {[styles.header, { color: theme.textColor }]}>All Activities</Text>
+      <TouchableOpacity style={styles.button} onPress={openAddActivity}>
+                <Text style={styles.buttonText}>Add Activites</Text>
+      </TouchableOpacity>
+      <ItemsList type="activity" openAdd={openAddActivity} />
+      {showAddActivity && <AddActivity onSave={closeAddActivity} />}
+    </View>
+  );
+}
+
+
+

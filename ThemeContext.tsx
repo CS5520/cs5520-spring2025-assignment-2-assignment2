@@ -1,59 +1,28 @@
-import React, { createContext, useState, useContext } from "react";
 
-export interface Theme {
-  background: string;
-  text: string;
-  cardBackground: string;
-  cardText: string;
-  dateBackground: string;
-  dateText: string;
-  numericBackground: string;
-  numericText: string;
-  navBarBackground: string;
-  navBarText: string;
-}
+import React, { createContext, useContext, useState } from "react";
 
-const darkTheme: Theme = {
-  background: "#121212",
-  text: "white",
-  cardBackground: "#2F2F2F",
-  cardText: "white",
-  dateBackground: "#3A3A3C",
-  dateText: "white",
-  numericBackground: "white",
-  numericText: "black",
-  navBarBackground: "#1F1F1F",
-  navBarText: "white",
+const themes = {
+  light: {
+    backgroundColor: "#fff",
+    textColor: "#000",
+  },
+  dark: {
+    backgroundColor: "#121212",
+    textColor: "#fff",
+  },
 };
 
-const lightTheme: Theme = {
-  background: "#F0F0F0",
-  text: "black",
-  cardBackground: "white",
-  cardText: "black",
-  dateBackground: "#E5E5E5",
-  dateText: "black",
-  numericBackground: "white",
-  numericText: "black",
-  navBarBackground: "#ECECEC",
-  navBarText: "#007BFF",
-};
-
-interface ThemeContextProps {
-  theme: Theme;
-  toggleTheme: () => void;
-}
-
-export const ThemeContext = createContext<ThemeContextProps>({
-  theme: lightTheme,
-  toggleTheme: () => {},
+export const ThemeContext = createContext({
+  theme: themes.light, 
+  toggleTheme: () => {}, 
 });
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>(lightTheme);
+export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  const [theme, setTheme] = useState(themes.light);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === darkTheme ? lightTheme : darkTheme));
+    setTheme((prevTheme) => (prevTheme === themes.light ? themes.dark : themes.light));
+
   };
 
   return (
@@ -63,4 +32,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   );
 };
 
+
 export const useTheme = () => useContext(ThemeContext);
+
