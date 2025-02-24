@@ -3,6 +3,7 @@ import { db } from "../firebase/firebaseSetup";
 import { Text, View, TouchableOpacity, StyleSheet, FlatList } from "react-native";
 import { Diet, Activity } from "../firebase/firestore";
 import { useEffect, useState } from "react";
+import {styles} from "../constants/styles";
 
 interface ItemsListProps {
     type: "diet" | "activity";
@@ -106,72 +107,3 @@ export default function ItemsList({ type, openAdd}: ItemsListProps) {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-    },
-    header: {
-        fontSize: 20,
-        fontWeight: "bold",
-        marginBottom: 10,
-    },
-    button: {
-        backgroundColor: "#007BFF",
-        padding: 10,
-        borderRadius: 5,
-        alignItems: "center",
-        marginBottom: 10,
-    },
-    buttonText: {
-        color: "#fff",
-        fontSize: 16,
-    },
-    listContainer: {
-        marginTop: 10,
-    },
-    itemText: {
-        fontSize: 14,
-    },
-    itemCard: {
-        flexDirection: "row",
-        backgroundColor: "#1e1e1e",  // 卡片背景颜色
-        padding: 12,
-        borderRadius: 10,
-        marginBottom: 10,
-        alignItems: "center",
-        justifyContent: "space-between",
-        shadowColor: "#000",
-        shadowOpacity: 0.2,
-        shadowRadius: 5,
-        shadowOffset: { width: 0, height: 2 },
-        borderWidth: 1,
-        borderColor: "#333",
-    },
-    leftSection: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    itemTitle: {
-        fontSize: 16,
-        color: "#fff",
-        fontWeight: "bold",
-    },
-    warning: {
-        fontSize: 16,
-        color: "yellow",
-        marginLeft: 6,
-    },
-    rightSection: {
-        alignItems: "flex-end",
-    },
-    dateText: {
-        fontSize: 14,
-        color: "#bbb",
-    },
-    valueText: {
-        fontSize: 16,
-        fontWeight: "bold",
-        color: "#fff",
-    },
-});

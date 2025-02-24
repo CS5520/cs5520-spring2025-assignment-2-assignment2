@@ -5,6 +5,7 @@ import AddActivity from "./AddActivity";
 import { useTheme } from "../ThemeContext";
 import { ThemeContext } from"../ThemeContext"
 import { useContext } from "react";
+import {styles} from "../constants/styles";
 
 
 
@@ -26,37 +27,12 @@ const closeAddActivity = () => {
     <View testID="all-activities-view" style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
       <Text testID="all-activities" style = {[styles.header, { color: theme.textColor }]}>All Activities</Text>
       <TouchableOpacity style={styles.button} onPress={openAddActivity}>
-                <Text style={styles.buttonText}>Add Diets</Text>
+                <Text style={styles.buttonText}>Add Activites</Text>
       </TouchableOpacity>
       <ItemsList type="activity" openAdd={openAddActivity} />
-      {showAddActivity && <AddActivity closedActivity={closeAddActivity} />}
+      {showAddActivity && <AddActivity onSave={closeAddActivity} />}
     </View>
   );
 }
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: "#fff",
-  },
-  header: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",  
-    alignSelf: "center",
-},
-button: {
-  backgroundColor: "#007BFF",
-  padding: 10,
-  borderRadius: 5,
-  alignItems: "center",
-  marginBottom: 10,
-},
-buttonText: {
-  color: "#fff",
-  fontSize: 16,
-},
-});

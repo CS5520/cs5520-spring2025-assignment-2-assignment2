@@ -5,6 +5,7 @@ import AddDiet from "./AddDiet";
 import { useTheme } from "../ThemeContext";
 import { ThemeContext } from"../ThemeContext"
 import { useContext } from "react";
+import {styles} from "../constants/styles";
 
 
 
@@ -32,34 +33,11 @@ export default function AllActivities() {
       </TouchableOpacity>
       
       <ItemsList type="diet" openAdd={openAddDiet} />
-      {showAddDiet && <AddDiet closeddDiet={closeAddDiet} />}
+      {showAddDiet && <AddDiet onSave={closeAddDiet} />}
     </View>
   );
 }
 
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  header: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",  
-    alignSelf: "center",
-},
-button: {
-  backgroundColor: "#007BFF",
-  padding: 10,
-  borderRadius: 5,
-  alignItems: "center",
-  marginBottom: 10,
-},
-buttonText: {
-  color: "#fff",
-  fontSize: 16,
-},
-});
+

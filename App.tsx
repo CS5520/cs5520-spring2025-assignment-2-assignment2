@@ -5,6 +5,7 @@ import AllActivities from "./screens/AllActivities";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemeProvider } from "./ThemeContext";
 import Settings from "./screens/Settings";
+import {styles} from "./constants/styles";
 
 export default function App() {
     return (
@@ -45,7 +46,7 @@ function AppContent() {
     return (
         <ThemeProvider>
             <SafeAreaView style={styles.safeContainer}>
-                <View style={styles.container}>
+                <View style={styles.container_app}>
 
                     <View style={styles.navbar}>
                         <TouchableOpacity onPress={showActivities}>
@@ -53,7 +54,7 @@ function AppContent() {
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={showSet}>
-                            <Text style={[styles.title, showSetting && styles.activeTab]}>Settings</Text>
+                            <Text style={[styles.title_app, showSetting && styles.activeTab]}>Settings</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={showDietsPage}>
@@ -75,35 +76,3 @@ function AppContent() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-    },
-    navbar: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingVertical: 15,
-        paddingHorizontal: 20,
-        backgroundColor: "#333",
-        paddingTop: 70,
-    },
-    navText: {
-        fontSize: 16,
-        color: "#CCC",
-    },
-    activeTab: {
-        color: "#007BFF",
-        fontWeight: "bold",
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: "bold",
-        color: "#fff",
-    },
-    safeContainer: {
-        flex: 1,
-        backgroundColor: "#333",
-    },
-});

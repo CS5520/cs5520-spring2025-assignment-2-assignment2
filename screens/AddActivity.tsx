@@ -7,13 +7,14 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { useTheme } from "../ThemeContext";
 import { ThemeContext } from"../ThemeContext"
 import { useContext } from "react";
+import {styles} from "../constants/styles";
 
 
 interface AddActivityProps {
-  closedActivity: () => void;
+  onSave: () => void;
 }
 
-export default function AddActivity({ closedActivity }: AddActivityProps) {
+export default function AddActivity({ onSave }: AddActivityProps) {
   const [activity, setActivity] = useState("");
   const [duration, setDuration] = useState("");
   const [date, setDate] = useState(new Date());
@@ -58,7 +59,7 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
         setActivity("");
         setDuration("");
         setDate(new Date());
-        closedActivity();
+        onSave();
   
       } catch (error) {
         console.error("Failed to add activity entry:", error);
@@ -83,7 +84,7 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
   return (
     <View testID="add-activity-view" style={[styles.absolutePage,{ backgroundColor: theme.backgroundColor }]} >
       <Text testID="add-activity" style={[styles.title, { color: theme.textColor }]}>Add Activity</Text>
-      <Text style={styles.label}>Activity *</Text>
+      <Text style={[styles.label, { color: theme.textColor }]}>Activity *</Text>
       <DropDownPicker
                 testID="dropdown-picker"
                 open={open}
@@ -123,52 +124,10 @@ export default function AddActivity({ closedActivity }: AddActivityProps) {
         />
       )}
       <Button title="Save" onPress={handleSave} />
-      <Button title="Cancel" onPress= {closedActivity} />
+      <Button title="Cancel" onPress= {onSave} />
     </View>
   );
 }
 
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: "#fff",
-  },
-  absolutePage: {
-    position: "absolute",
-    top: 0, left: 0, right: 0, bottom: 0,
-},
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 10,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 5,
-    backgroundColor: "#fff",
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.3)", 
-  },
-  dropdown: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    backgroundColor: "#fff",
-},
-});

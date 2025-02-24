@@ -6,12 +6,13 @@ import { writeToDB } from "../firebase/firestore";
 import { useTheme } from "../ThemeContext";
 import { ThemeContext } from"../ThemeContext"
 import { useContext } from "react";
+import {styles} from "../constants/styles";
 
 interface AddDietProps {
-  closeddDiet: () => void;
+  onSave: () => void;
 }
 
-export default function AddDiet({closeddDiet}: AddDietProps) {
+export default function AddDiet({onSave}: AddDietProps) {
   const [description, setDescription] = useState("");
   const [calories, setCalories] = useState("");
   const [date, setDate] = useState(new Date());
@@ -40,11 +41,11 @@ export default function AddDiet({closeddDiet}: AddDietProps) {
     };
 
     try {
-      await writeToDB("diet",newDiet);
+      await writeToDB("diet", newDiet);
       setDescription("");
       setCalories("");
       setDate(new Date());
-      closeddDiet();
+      onSave();
 
     } catch (error) {
       console.error("Failed to add diet entry:", error);
@@ -95,64 +96,8 @@ export default function AddDiet({closeddDiet}: AddDietProps) {
         />
       )}
       <Button title="Save" onPress={handleSave} />
-      <Button title="Cancel" onPress= {closeddDiet} />
+      <Button title="Cancel" onPress= {onSave} />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: "#fff",
-  },
-  absolutePage: {
-    position: "absolute",
-    top: 0, left: 0, right: 0, bottom: 0,
-},
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 10,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 5,
-    alignSelf: "center",
-    width: "90%",
-    backgroundColor: "#fff"
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.3)", 
-  },
-  descriptionInput: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    backgroundColor: "#fff", 
-    paddingVertical: 12, 
-    paddingHorizontal: 10, 
-    borderRadius: 8, 
-    marginTop: 5,
-    fontSize: 16,
-    width: "90%", 
-    shadowColor: "#000", 
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 }, 
-    alignSelf: "center",
-    minHeight: 100,
-
-  },
-});
