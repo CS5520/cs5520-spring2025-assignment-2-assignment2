@@ -712,17 +712,17 @@ describe("Settings Screen", () => {
   };
 
   it("renders with the correct initial theme", () => {
-    const { getByRole } = render(
+    const { getByText } = render(
       <ThemeContext.Provider value={mockTheme}>
         <Settings />
       </ThemeContext.Provider>
     );
 
-    expect(getByRole("button", { name: "Toggle Theme" })).toBeTruthy();
+    expect(getByText("Toggle Theme")).toBeTruthy();
   });
 
   it("toggles theme when button is pressed", async () => {
-    const { getByRole, getByTestId, rerender } = render(
+    const { getByText, getByTestId, rerender } = render(
       <ThemeContext.Provider value={mockTheme}>
         <Settings />
       </ThemeContext.Provider>
@@ -741,7 +741,7 @@ describe("Settings Screen", () => {
     ).backgroundColor;
     expect(originalBackgroundColor).toBe("white");
 
-    const button = getByRole("button", { name: "Toggle Theme" });
+    const button = getByText("Toggle Theme");
     await waitFor(() => {
       fireEvent.press(button);
     });

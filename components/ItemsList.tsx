@@ -1,3 +1,4 @@
+
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/firebaseSetup";
 import { Text, View, TouchableOpacity, StyleSheet, FlatList } from "react-native";
@@ -106,4 +107,5 @@ export default function ItemsList({ type, openAdd}: ItemsListProps) {
         </View>
     );
 }
+
 

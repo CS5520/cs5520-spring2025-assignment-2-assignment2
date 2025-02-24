@@ -1,3 +1,4 @@
+
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import ItemsList from "../components/ItemsList";
 import { useState } from "react";
@@ -22,7 +23,6 @@ const closeAddActivity = () => {
 };
 
 
-
   return (
     <View testID="all-activities-view" style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
       <Text testID="all-activities" style = {[styles.header, { color: theme.textColor }]}>All Activities</Text>
@@ -34,5 +34,6 @@ const closeAddActivity = () => {
     </View>
   );
 }
+
 
 

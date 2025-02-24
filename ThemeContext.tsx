@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState } from "react";
 
 const themes = {
@@ -21,6 +22,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === themes.light ? themes.dark : themes.light));
+
   };
 
   return (
@@ -32,3 +34,4 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
 
 export const useTheme = () => useContext(ThemeContext);
+

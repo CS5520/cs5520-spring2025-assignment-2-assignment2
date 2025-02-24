@@ -1,3 +1,4 @@
+
 import { View, Text, StyleSheet, Alert, Button, TextInput,} from "react-native";
 import { useState } from "react";
 import { Timestamp } from "firebase/firestore";
@@ -13,6 +14,7 @@ import {styles} from "../constants/styles";
 interface AddActivityProps {
   onSave: () => void;
 }
+
 
 export default function AddActivity({ onSave }: AddActivityProps) {
   const [activity, setActivity] = useState("");
@@ -126,8 +128,10 @@ export default function AddActivity({ onSave }: AddActivityProps) {
       <Button title="Save" onPress={handleSave} />
       <Button title="Cancel" onPress= {onSave} />
     </View>
-  );
-}
 
+  );
+};
+
+export default AddActivity;
 
 

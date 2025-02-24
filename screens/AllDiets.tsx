@@ -1,3 +1,4 @@
+
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import ItemsList from "../components/ItemsList";
 import { useState } from "react";
@@ -37,6 +38,7 @@ export default function AllActivities() {
     </View>
   );
 }
+
 
 
 

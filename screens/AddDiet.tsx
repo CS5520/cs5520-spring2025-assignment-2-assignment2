@@ -1,3 +1,4 @@
+
 import { View, Text, StyleSheet, Alert, Button, TextInput,} from "react-native";
 import { useState } from "react";
 import { Timestamp } from "firebase/firestore";
@@ -8,9 +9,11 @@ import { ThemeContext } from"../ThemeContext"
 import { useContext } from "react";
 import {styles} from "../constants/styles";
 
+
 interface AddDietProps {
   onSave: () => void;
 }
+
 
 export default function AddDiet({onSave}: AddDietProps) {
   const [description, setDescription] = useState("");
@@ -97,7 +100,11 @@ export default function AddDiet({onSave}: AddDietProps) {
       )}
       <Button title="Save" onPress={handleSave} />
       <Button title="Cancel" onPress= {onSave} />
+
     </View>
   );
-}
+};
+
+export default AddDiet;
+
 
