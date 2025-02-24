@@ -1,14 +1,48 @@
-import { StyleSheet, Text, View } from "react-native";
+import React, { useContext } from "react";
+import { View, Text, Button, StyleSheet } from "react-native";
+import ItemsList from "../components/ItemsList";
+import { ThemeContext } from "../ThemeContext";
+import { Spacing, Colors } from "../constants/styles";
 
 interface AllActivitiesProps {
   onAdd: () => void;
 }
 
-export default function AllActivities({ onAdd }: AllActivitiesProps) {
+const AllActivities: React.FC<AllActivitiesProps> = ({ onAdd }) => {
+  const { theme } = useContext(ThemeContext);
+
   return (
-    <View testID="all-activities-view">
-      <Text testID="all-activities">All Activities</Text>
+    <View style={[styles.container, { backgroundColor: theme.background }]} testID="all-activities-view">
+      <Text style={{ ...styles.title, color: theme.text }}  testID="all-activities">All Activities</Text>
+      <View style={styles.addButtonWrapper}>
+        <Button
+          title="Add"
+          onPress={onAdd}
+          color={Colors.primary}
+        />
+      </View>
+      <ItemsList type="activity" />
     </View>
   );
-}
-const styles = StyleSheet.create({});
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: Spacing.medium,
+    paddingTop: Spacing.medium,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "600",
+    marginBottom: Spacing.small,
+    textAlign: "center",
+  },
+  addButtonWrapper: {
+    marginBottom: Spacing.medium,
+    alignSelf: "center",
+  },
+});
+
+
+export default AllActivities;

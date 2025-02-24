@@ -1,5 +1,6 @@
 {
   "expo": {
+    "newArchEnabled": true,
     "name": "assignment1-pt1",
     "slug": "assignment1-pt1",
     "version": "1.0.0",
